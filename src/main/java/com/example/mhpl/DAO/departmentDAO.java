@@ -1,0 +1,100 @@
+package com.example.mhpl.DAO;
+
+import java.sql.*;
+import java.util.ArrayList;
+
+import com.example.mhpl.DTO.departmentDTO;
+
+public class departmentDAO {
+    private MyDatabaseManager sql;
+    private Connection C;
+
+    public departmentDAO() {
+        this.C = sql.connect();
+    }
+
+    public ArrayList<departmentDTO> getAllDepartment() {
+        String query = "select * from Department;";
+        ResultSet R = null;
+        ArrayList<departmentDTO> lst = new ArrayList<departmentDTO>();
+        try {
+            PreparedStatement S = this.C.prepareStatement(query);
+            R = S.executeQuery();
+            while (R.next()) {
+                lst.add(new departmentDTO(R.getInt(1), R.getString(2), R.getDouble(3), R.getDate(4), R.getInt(6)));
+            }
+            return lst;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public ArrayList<departmentDTO> getDepartmentByID(int did) {
+        String query = "select * from Department where DepartmentID = ?;";
+        ResultSet R = null;
+        ArrayList<departmentDTO> lst = new ArrayList<departmentDTO>();
+        try {
+            PreparedStatement S = this.C.prepareStatement(query);
+            S.setInt(1, did);
+            R = S.executeQuery();
+            while (R.next()) {
+                lst.add(new departmentDTO(R.getInt(1), R.getString(2), R.getDouble(3), R.getDate(4), R.getInt(6)));
+            }
+            return lst;
+        } catch (SQLException e) {
+            return null;
+        }
+    }
+
+    public boolean deleteDepartment(int did) {
+        String query = "delete from Department where DepartmentID = ?;";
+        try {
+            PreparedStatement S = this.C.prepareStatement(query);
+            S.setInt(1, did);
+            S.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public boolean updateDepartment(departmentDTO dpm) {
+        String query = "update Department set DepartmentID = ?, Name = ?, Budget = ?, StartDate = ?, Administrator = ?;";
+        try {
+            PreparedStatement S = this.C.prepareStatement(query);
+            S.setInt(1, dpm.getdepartmentID());
+            S.setString(2, dpm.getname());
+            S.setDouble(3, dpm.getbudget());
+            S.setDate(4, dpm.getstartDate());
+            S.setInt(5, dpm.getadministrator());
+            S.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public boolean addDepartment(departmentDTO dpm) {
+        String query = "insert into Department values(?, ?, ?, ?, ?);";
+        try {
+            PreparedStatement S = this.C.prepareStatement(query);
+            S.setInt(1, dpm.getdepartmentID());
+            S.setString(2, dpm.getname());
+            S.setDouble(3, dpm.getbudget());
+            S.setDate(4, dpm.getstartDate());
+            S.setInt(5, dpm.getadministrator());
+            S.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public void closeConnection(){
+        try {
+            this.C.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
