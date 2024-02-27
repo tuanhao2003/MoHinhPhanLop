@@ -57,7 +57,7 @@ public class studentGradeDAO {
     }
 
     public boolean updateStudentGrade(studentGradeDTO studentGrade) {
-        String query = "update studentGrade set studentGradeID = ?, Lastname = ?, Firstname = ?, HireDate = ?, EnrollmentDate = ?;";
+        String query = "update StudentGrade set EnrollmentID = ?, CourseID = ?, StudentID = ?, Grade = ?";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setInt(1, studentGrade.getenrollmentID());
@@ -72,7 +72,7 @@ public class studentGradeDAO {
     }
 
     public boolean addstudentGrade(studentGradeDTO studentGrade) {
-        String query = "insert into studentGrade values(?, ?, ?, ?);";
+        String query = "insert into StudentGrade values(?, ?, ?, ?);";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setInt(1, studentGrade.getenrollmentID());

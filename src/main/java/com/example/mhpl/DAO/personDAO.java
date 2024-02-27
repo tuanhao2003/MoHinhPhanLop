@@ -19,7 +19,7 @@ public class personDAO {
             PreparedStatement S = this.C.prepareStatement(query);
             R = S.executeQuery();
             while (R.next()) {
-                lst.add(new personDTO(R.getInt(1), R.getString(2), R.getString(3), R.getDate(4), R.getDate(6)));
+                lst.add(new personDTO(R.getInt(1), R.getString(2), R.getString(3), R.getDate(4), R.getDate(5)));
             }
             return lst;
         } catch (SQLException e) {
@@ -27,24 +27,24 @@ public class personDAO {
         }
     }
 
-    public ArrayList<personDTO> getpersonByID(int pid) {
+    public personDTO getPersonByID(int pid) {
         String query = "select * from Person where PersonID = ?;";
         ResultSet R = null;
-        ArrayList<personDTO> lst = new ArrayList<personDTO>();
+        personDTO data = new personDTO();
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setInt(1, pid);
             R = S.executeQuery();
             while (R.next()) {
-                lst.add(new personDTO(R.getInt(1), R.getString(2), R.getString(3), R.getDate(4), R.getDate(6)));
+                data = new personDTO(R.getInt(1), R.getString(2), R.getString(3), R.getDate(4), R.getDate(5));
             }
-            return lst;
+            return data;
         } catch (SQLException e) {
             return null;
         }
     }
 
-    public boolean deleteperson(int pid) {
+    public boolean deletePerson(int pid) {
         String query = "delete from Person where personID = ?;";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
@@ -56,7 +56,7 @@ public class personDAO {
         }
     }
 
-    public boolean updateperson(personDTO person) {
+    public boolean updatePerson(personDTO person) {
         String query = "update Person set PersonID = ?, Lastname = ?, Firstname = ?, HireDate = ?, EnrollmentDate = ?;";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
@@ -72,8 +72,8 @@ public class personDAO {
         }
     }
 
-    public boolean addperson(personDTO person) {
-        String query = "insert into person values(?, ?, ?, ?, ?);";
+    public boolean addPerson(personDTO person) {
+        String query = "insert into Person values(?, ?, ?, ?, ?);";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setInt(1, person.getpersonID());

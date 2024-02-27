@@ -28,24 +28,24 @@ public class onlineCourseDAO {
         }
     }
 
-    public ArrayList<onlineCourseDTO> getAllOnlineCourseByCourseID(int cid) {
+    public onlineCourseDTO getAllOnlineCourseByCourseID(int cid) {
         String query = "select * from OnlineCourse where CourseID = ?;";
         ResultSet R = null;
-        ArrayList<onlineCourseDTO> lst = new ArrayList<onlineCourseDTO>();
+        onlineCourseDTO data = new onlineCourseDTO();
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setInt(1, cid);
             R = S.executeQuery();
             while (R.next()) {
-                lst.add(new onlineCourseDTO(R.getInt(1), R.getString(2)));
+                data =  new onlineCourseDTO(R.getInt(1), R.getString(2));
             }
-            return lst;
+            return data;
         } catch (SQLException e) {
             return null;
         }
     }
 
-    public boolean deleteOnlineCourseByCourseID(int cid) {
+    public boolean deleteOnlineCourse(int cid) {
         String query = "delete from OnlineCourse where CourseID = ?;";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
@@ -59,7 +59,7 @@ public class onlineCourseDAO {
 
 
     public boolean updateCourse(onlineCourseDTO onlCourse) {
-        String query = "update onlineCourse set CourseID = ?, PersonID = ?;";
+        String query = "update OnlineCourse set CourseID = ?, PersonID = ?;";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setInt(1, onlCourse.getcourseID());
@@ -71,8 +71,8 @@ public class onlineCourseDAO {
         }
     }
 
-    public boolean addonlineCourse(onlineCourseDTO onlCourse) {
-        String query = "insert into onlineCourse values(?, ?);";
+    public boolean addOnlineCourse(onlineCourseDTO onlCourse) {
+        String query = "insert into OnlineCourse values(?, ?);";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setInt(1, onlCourse.getcourseID());

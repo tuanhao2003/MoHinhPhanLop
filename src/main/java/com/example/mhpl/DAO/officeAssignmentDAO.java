@@ -28,7 +28,7 @@ public class officeAssignmentDAO {
         }
     }
 
-    public ArrayList<officeAssignmentDTO> getofficeAssignmentByID(int iid) {
+    public ArrayList<officeAssignmentDTO> getOfficeAssignmentByInstructorID(int iid) {
         String query = "select * from OfficeAssignment where InstructorID = ?;";
         ResultSet R = null;
         ArrayList<officeAssignmentDTO> lst = new ArrayList<officeAssignmentDTO>();
@@ -45,7 +45,7 @@ public class officeAssignmentDAO {
         }
     }
 
-    public boolean deleteofficeAssignment(int iid) {
+    public boolean deleteOfficeAssignment(int iid) {
         String query = "delete from OfficeAssignment where InstructorID = ?;";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
@@ -57,7 +57,7 @@ public class officeAssignmentDAO {
         }
     }
 
-    public boolean updateofficeAssignment(officeAssignmentDTO obm) {
+    public boolean updateOfficeAssignment(officeAssignmentDTO obm) {
         String query = "update officeAssignment set InstructorID = ?, Location = ?, Timestamp = ?;";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
@@ -71,7 +71,7 @@ public class officeAssignmentDAO {
         }
     }
 
-    public boolean addofficeAssignment(officeAssignmentDTO obm) {
+    public boolean addOfficeAssignment(officeAssignmentDTO obm) {
         String query = "insert into officeAssignment values(?, ?, ?);";
         try {
             PreparedStatement S = this.C.prepareStatement(query);

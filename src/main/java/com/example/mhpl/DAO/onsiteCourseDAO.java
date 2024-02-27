@@ -27,18 +27,18 @@ public class onsiteCourseDAO {
         }
     }
 
-    public ArrayList<onsiteCourseDTO> getOnsiteCourseByID(int did) {
+    public onsiteCourseDTO getOnsiteCourseByID(int did) {
         String query = "select * from OnsiteCourse where CourseID = ?;";
         ResultSet R = null;
-        ArrayList<onsiteCourseDTO> lst = new ArrayList<onsiteCourseDTO>();
+        onsiteCourseDTO data = new onsiteCourseDTO();
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setInt(1, did);
             R = S.executeQuery();
             while (R.next()) {
-                lst.add(new onsiteCourseDTO(R.getInt(1), R.getString(2), R.getString(3), R.getTime(4)));
+                data = new onsiteCourseDTO(R.getInt(1), R.getString(2), R.getString(3), R.getTime(4));
             }
-            return lst;
+            return data;
         } catch (SQLException e) {
             return null;
         }
@@ -56,8 +56,8 @@ public class onsiteCourseDAO {
         }
     }
 
-    public boolean updateonsiteCourse(onsiteCourseDTO oc) {
-        String query = "update onsiteCourse set CourseID = ?, Name = ?, Budget = ?, StartDate = ?, Administrator = ?;";
+    public boolean updateOnsiteCourse(onsiteCourseDTO oc) {
+        String query = "update OnsiteCourse set CourseID = ?, Location = ?, Days = ?, Time = ?";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setInt(1, oc.getcourseID());
@@ -71,8 +71,8 @@ public class onsiteCourseDAO {
         }
     }
 
-    public boolean addonsiteCourse(onsiteCourseDTO oc) {
-        String query = "insert into onsiteCourse values(?, ?, ?, ?);";
+    public boolean addOnsiteCourse(onsiteCourseDTO oc) {
+        String query = "insert into OnsiteCourse values(?, ?, ?, ?);";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setInt(1, oc.getcourseID());

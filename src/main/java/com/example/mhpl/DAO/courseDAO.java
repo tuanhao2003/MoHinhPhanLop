@@ -29,18 +29,18 @@ public class courseDAO {
         }
     }
 
-    public ArrayList<courseDTO> getCourseByCourseID(int cid) {
+    public courseDTO getCourseByCourseID(int cid) {
         String query = "select * from Course where CourseID = ?;";
         ResultSet R = null;
-        ArrayList<courseDTO> lst = new ArrayList<courseDTO>();
+        courseDTO data = new courseDTO();
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setInt(1, cid);
             R = S.executeQuery();
             while (R.next()) {
-                lst.add(new courseDTO(R.getInt(1), R.getString(2), R.getInt(3), R.getInt(4)));
+                data = new courseDTO(R.getInt(1), R.getString(2), R.getInt(3), R.getInt(4));
             }
-            return lst;
+            return data;
         } catch (SQLException e) {
             return null;
         }
@@ -93,13 +93,13 @@ public class courseDAO {
     }
 
     public boolean updateCourse(courseDTO course) {
-        String query = "update Course set CourseID = ?, Title = ?, Credits = ?, DepartmentID = ?;";
+        String query = "update Course set Title = ?, Credits = ?, DepartmentID = ? where CourseID = ?;";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
-            S.setInt(1, course.getcourseID());
-            S.setString(2, course.gettitle());
-            S.setInt(3, course.getcredits());
-            S.setInt(4, course.getdepartmentID());
+            S.setInt(4, course.getcourseID());
+            S.setString(1, course.gettitle());
+            S.setInt(2, course.getcredits());
+            S.setInt(3, course.getdepartmentID());
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -108,13 +108,12 @@ public class courseDAO {
     }
 
     public boolean addCourse(courseDTO course) {
-        String query = "insert into Department values(?, ?, ?, ?, ?);";
+        String query = "insert into Department values(?, ?, ?);";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
-            S.setInt(1, course.getcourseID());
             S.setString(2, course.gettitle());
             S.setInt(3, course.getcredits());
-            S.setInt(5, course.getdepartmentID());
+            S.setInt(4, course.getdepartmentID());
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
