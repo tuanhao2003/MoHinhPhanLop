@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import com.example.mhpl.DTO.courseDTO;
 
 public class courseDAO {
-    private MyDatabaseManager sql;
+    private MyDatabaseManager sql = new MyDatabaseManager() ;
     private Connection C;
 
     public courseDAO() {
-        this.C = sql.connect();
+        this.C = this.sql.connect();
     }
 
     public ArrayList<courseDTO> getAllCourse() {
@@ -108,12 +108,12 @@ public class courseDAO {
     }
 
     public boolean addCourse(courseDTO course) {
-        String query = "insert into Department values(?, ?, ?);";
+        String query = "insert into Course(Title, Credits, DepartmentID) values(?, ?, ?);";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
-            S.setString(2, course.gettitle());
-            S.setInt(3, course.getcredits());
-            S.setInt(4, course.getdepartmentID());
+            S.setString(1, course.gettitle());
+            S.setInt(2, course.getcredits());
+            S.setInt(3, course.getdepartmentID());
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -121,11 +121,5 @@ public class courseDAO {
         }
     }
 
-    public void closeConnection(){
-        try {
-            this.C.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+     
 }

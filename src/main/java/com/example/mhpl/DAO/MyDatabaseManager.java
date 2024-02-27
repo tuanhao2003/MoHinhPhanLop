@@ -12,7 +12,7 @@ public class MyDatabaseManager {
     public MyDatabaseManager() {
         this.host = "localhost";
         this.port = "3306";
-        this.dbName = "School";
+        this.dbName = "school";
         this.dbUser = "root";
         this.dbPassword = "";
         connect();

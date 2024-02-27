@@ -5,11 +5,11 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class officeAssignmentDAO {
-    private MyDatabaseManager sql;
+    private MyDatabaseManager sql = new MyDatabaseManager() ;
     private Connection C;
 
     public officeAssignmentDAO() {
-        this.C = sql.connect();
+        this.C = this.sql.connect();
     }
 
     public ArrayList<officeAssignmentDTO> getAllofficeAssignment() {
@@ -85,11 +85,5 @@ public class officeAssignmentDAO {
         }
     }
 
-    public void closeConnection(){
-        try {
-            this.C.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+     
 }

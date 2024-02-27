@@ -4,11 +4,11 @@ import com.example.mhpl.DTO.personDTO;
 import java.sql.*;
 import java.util.ArrayList;
 public class personDAO {
-    private MyDatabaseManager sql;
+    private MyDatabaseManager sql = new MyDatabaseManager() ;
     private Connection C;
 
     public personDAO() {
-        this.C = sql.connect();
+        this.C = this.sql.connect();
     }
 
     public ArrayList<personDTO> getAllPerson() {
@@ -73,14 +73,13 @@ public class personDAO {
     }
 
     public boolean addPerson(personDTO person) {
-        String query = "insert into Person values(?, ?, ?, ?, ?);";
+        String query = "insert into Person(Lastname, Firstname, HireDate, EnrollmentDate) values(?, ?, ?, ?, ?);";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
-            S.setInt(1, person.getpersonID());
-            S.setString(2, person.getlastName());
-            S.setString(3, person.getfirstName());
-            S.setDate(4, person.gethireDate());
-            S.setDate(5, person.getenrollmentDate());
+            S.setString(1, person.getlastName());
+            S.setString(2, person.getfirstName());
+            S.setDate(3, person.gethireDate());
+            S.setDate(4, person.getenrollmentDate());
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -88,11 +87,5 @@ public class personDAO {
         }
     }
 
-    public void closeConnection(){
-        try {
-            this.C.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+     
 }

@@ -5,11 +5,11 @@ import com.example.mhpl.DTO.onlineCourseDTO;
 import java.util.ArrayList;
 
 public class onlineCourseDAO {
-    private MyDatabaseManager sql;
+    private MyDatabaseManager sql = new MyDatabaseManager() ;
     private Connection C;
 
     public onlineCourseDAO() {
-        this.C = sql.connect();
+        this.C = this.sql.connect();
     }
 
     public ArrayList<onlineCourseDTO> getAllOnlineCourse() {
@@ -84,11 +84,5 @@ public class onlineCourseDAO {
         }
     }
 
-    public void closeConnection(){
-        try {
-            this.C.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+     
 }

@@ -15,6 +15,12 @@ public class courseInformationManageBLL {
     private onlineCourseDAO onlineCourseDAO;
     private onsiteCourseDAO onsiteCourseDAO;
 
+    public courseInformationManageBLL(){
+        this.courseDAO = new courseDAO();
+        this.onlineCourseDAO = new onlineCourseDAO();
+        this.onsiteCourseDAO = new onsiteCourseDAO();
+    }
+
     public ArrayList<courseDTO> getAllCourse(){
         return courseDAO.getAllCourse();
     }
@@ -61,6 +67,9 @@ public class courseInformationManageBLL {
         onlineCourseDAO.deleteOnlineCourse(id);
         onsiteCourseDAO.deleteOnsiteCourse(id);
         courseDAO.deleteCourse(id);
+        System.out.println(onlineCourseDAO.deleteOnlineCourse(id));
+        System.out.println(onsiteCourseDAO.deleteOnsiteCourse(id));
+        System.out.println(courseDAO.deleteCourse(id));
     }
 
     public void updateCourse(int id, String tt, int cd, int did){

@@ -4,11 +4,11 @@ import com.example.mhpl.DTO.studentGradeDTO;
 import java.sql.*;
 import java.util.ArrayList;
 public class studentGradeDAO {
-    private MyDatabaseManager sql;
+    private MyDatabaseManager sql = new MyDatabaseManager() ;
     private Connection C;
 
     public studentGradeDAO() {
-        this.C = sql.connect();
+        this.C = this.sql.connect();
     }
 
     public ArrayList<studentGradeDTO> getAllStudentGrade() {
@@ -86,11 +86,5 @@ public class studentGradeDAO {
         }
     }
 
-    public void closeConnection(){
-        try {
-            this.C.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+     
 }

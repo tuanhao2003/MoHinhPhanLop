@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import com.example.mhpl.DTO.departmentDTO;
 
 public class departmentDAO {
-    private MyDatabaseManager sql;
+    private MyDatabaseManager sql = new MyDatabaseManager() ;
     private Connection C;
 
     public departmentDAO() {
-        this.C = sql.connect();
+        this.C = this.sql.connect();
     }
 
     public ArrayList<departmentDTO> getAllDepartment() {
@@ -75,14 +75,13 @@ public class departmentDAO {
     }
 
     public boolean addDepartment(departmentDTO dpm) {
-        String query = "insert into Department values(?, ?, ?, ?, ?);";
+        String query = "insert into Department(Name, Budget, StartDate, Administrator) values(?, ?, ?, ?);";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
-            S.setInt(1, dpm.getdepartmentID());
-            S.setString(2, dpm.getname());
-            S.setDouble(3, dpm.getbudget());
-            S.setDate(4, dpm.getstartDate());
-            S.setInt(5, dpm.getadministrator());
+            S.setString(1, dpm.getname());
+            S.setDouble(2, dpm.getbudget());
+            S.setDate(3, dpm.getstartDate());
+            S.setInt(4, dpm.getadministrator());
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -90,11 +89,5 @@ public class departmentDAO {
         }
     }
 
-    public void closeConnection(){
-        try {
-            this.C.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+     
 }

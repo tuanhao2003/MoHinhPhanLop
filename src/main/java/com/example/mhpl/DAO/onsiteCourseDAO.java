@@ -4,11 +4,11 @@ import com.example.mhpl.DTO.onsiteCourseDTO;
 import java.sql.*;
 import java.util.ArrayList;
 public class onsiteCourseDAO {
-    private MyDatabaseManager sql;
+    private MyDatabaseManager sql = new MyDatabaseManager() ;
     private Connection C;
 
     public onsiteCourseDAO() {
-        this.C = sql.connect();
+        this.C = this.sql.connect();
     }
 
     public ArrayList<onsiteCourseDTO> getAllOnsiteCourse() {
@@ -86,11 +86,5 @@ public class onsiteCourseDAO {
         }
     }
 
-    public void closeConnection(){
-        try {
-            this.C.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
+     
 }
