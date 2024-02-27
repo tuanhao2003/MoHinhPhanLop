@@ -7,12 +7,13 @@ echo off
 cls
 
 :run
-echo Chọn chế độ(pull nhập 1, push nhập 2, reset branch nhập 3):
-choice /c 123 > nul
+echo Chọn chế độ(pull nhập 1, push nhập 2, reset branch nhập 3, set upstream nhập 4):
+choice /c 1234 > nul
 set "mode=%errorlevel%"
 if "%mode%"=="1" goto pull
 if "%mode%"=="2" goto push
 if "%mode%"=="3" goto reset
+if "%mode%"=="4" goto setup
 
 :pull
 set pullLog=
@@ -77,6 +78,9 @@ git.exe reset "--hard" %commitId%
 git.exe push -f origin %branch%
 echo Đã reset về commit %id%, nhớ nhắc mọi người clone code mới
 goto stop
+
+:setup
+git.exe branch --set-upstream-to=origin/main main
 
 :stop
 pause
