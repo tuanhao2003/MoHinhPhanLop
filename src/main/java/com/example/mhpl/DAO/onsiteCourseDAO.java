@@ -23,6 +23,7 @@ public class onsiteCourseDAO {
             }
             return lst;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -40,6 +41,7 @@ public class onsiteCourseDAO {
             }
             return data;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -52,21 +54,23 @@ public class onsiteCourseDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
 
     public boolean updateOnsiteCourse(onsiteCourseDTO oc) {
-        String query = "update OnsiteCourse set CourseID = ?, Location = ?, Days = ?, Time = ?";
+        String query = "update OnsiteCourse set Location = ?, Days = ?, Time = ? where CourseID = ?";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
-            S.setInt(1, oc.getcourseID());
-            S.setString(2, oc.getlocation());
-            S.setString(3, oc.getdays());
-            S.setTime(4, oc.gettime());
+            S.setInt(4, oc.getcourseID());
+            S.setString(1, oc.getlocation());
+            S.setString(2, oc.getdays());
+            S.setTime(3, oc.gettime());
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -82,6 +86,7 @@ public class onsiteCourseDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }

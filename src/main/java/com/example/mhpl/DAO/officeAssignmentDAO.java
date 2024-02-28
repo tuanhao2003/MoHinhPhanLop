@@ -24,6 +24,7 @@ public class officeAssignmentDAO {
             }
             return lst;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -41,6 +42,7 @@ public class officeAssignmentDAO {
             }
             return lst;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -53,6 +55,7 @@ public class officeAssignmentDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -67,6 +70,7 @@ public class officeAssignmentDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -81,6 +85,7 @@ public class officeAssignmentDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }

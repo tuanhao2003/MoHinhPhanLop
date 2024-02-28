@@ -25,6 +25,7 @@ public class departmentDAO {
             }
             return lst;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -42,6 +43,7 @@ public class departmentDAO {
             }
             return lst;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -54,6 +56,7 @@ public class departmentDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -70,6 +73,7 @@ public class departmentDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -85,6 +89,7 @@ public class departmentDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }

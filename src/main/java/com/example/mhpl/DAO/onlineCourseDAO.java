@@ -24,6 +24,7 @@ public class onlineCourseDAO {
             }
             return lst;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -41,6 +42,7 @@ public class onlineCourseDAO {
             }
             return data;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -53,20 +55,22 @@ public class onlineCourseDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
 
 
-    public boolean updateCourse(onlineCourseDTO onlCourse) {
-        String query = "update OnlineCourse set CourseID = ?, PersonID = ?;";
+    public boolean updateOnlineCourse(onlineCourseDTO onlCourse) {
+        String query = "update OnlineCourse set url = ? where  CourseID = ?;";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
-            S.setInt(1, onlCourse.getcourseID());
-            S.setString(2, onlCourse.geturl());
+            S.setInt(2, onlCourse.getcourseID());
+            S.setString(1, onlCourse.geturl());
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -80,6 +84,7 @@ public class onlineCourseDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }

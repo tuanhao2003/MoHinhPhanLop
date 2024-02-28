@@ -31,4 +31,16 @@ public class courseInstructorManageBLL {
         }
         return allCourse;
     }
+
+    public boolean addInstruction(int cid, int pid){
+        return courseInstructorDAO.addCourseInstructor(new courseInstructorDTO(cid, pid));
+    }
+
+    public boolean deleteInstruction(int cid){
+        return courseInstructorDAO.deleteCourseInstructorByCourseID(cid);
+    }
+    
+    public boolean updateInstruction(int cid, int pid){
+        return courseInstructorDAO.updateCourse(new courseInstructorDTO(cid, pid));
+    }
 }

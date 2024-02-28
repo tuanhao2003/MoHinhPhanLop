@@ -46,19 +46,33 @@ public class courseInformationManageBLL {
         return onsiteCourseDAO.getOnsiteCourseByID(id);
     }
 
+    public courseDTO getLastedCourse(){
+        return courseDAO.getLastedCourse();
+    }
+
     public void addCourse(String tt, int cd, int did){
         courseDTO course = new courseDTO(0, tt, cd, did);
         courseDAO.addCourse(course);
     }
 
-    public void addOnlineCourse(int cid, String tt, int cd, int did, String url){
+    public void addNewOnlineCourse(String tt, int cd, int did, String url){
         addCourse(tt, cd, did);
-        onlineCourseDTO course = new onlineCourseDTO(cid, url);
+        onlineCourseDTO course = new onlineCourseDTO(getLastedCourse().getcourseID() ,url);
         onlineCourseDAO.addOnlineCourse(course);
     }
 
-    public void addOnsiteCourse(int cid, String tt, int cd, int did, String location, String days, Time time){
+    public void addNewOnsiteCourse(String tt, int cd, int did, String location, String days, Time time){
         addCourse(tt, cd, did);
+        onsiteCourseDTO course = new onsiteCourseDTO(getLastedCourse().getcourseID(), location, days, time);
+        onsiteCourseDAO.addOnsiteCourse(course);
+    }
+
+    public void addOnlineCourse(int cid, String url){
+        onlineCourseDTO course = new onlineCourseDTO(cid ,url);
+        onlineCourseDAO.addOnlineCourse(course);
+    }
+
+    public void addOnsiteCourse(int cid, String location, String days, Time time){
         onsiteCourseDTO course = new onsiteCourseDTO(cid, location, days, time);
         onsiteCourseDAO.addOnsiteCourse(course);
     }
@@ -67,9 +81,6 @@ public class courseInformationManageBLL {
         onlineCourseDAO.deleteOnlineCourse(id);
         onsiteCourseDAO.deleteOnsiteCourse(id);
         courseDAO.deleteCourse(id);
-        System.out.println(onlineCourseDAO.deleteOnlineCourse(id));
-        System.out.println(onsiteCourseDAO.deleteOnsiteCourse(id));
-        System.out.println(courseDAO.deleteCourse(id));
     }
 
     public void updateCourse(int id, String tt, int cd, int did){
@@ -77,11 +88,63 @@ public class courseInformationManageBLL {
         courseDAO.updateCourse(course);
     }
 
-    public ArrayList<courseDTO> getOnsiteCourseByDepartmentID(int id){
+    public void updateOnlineCourse(int id, String url){
+        onlineCourseDTO course = new onlineCourseDTO(id, url);
+        onlineCourseDAO.updateOnlineCourse(course);
+    }
+
+    public void updateOnsiteCourse(int id, String lct, String days, Time time){
+        onsiteCourseDTO course = new onsiteCourseDTO(id, lct, days, time);
+        onsiteCourseDAO.updateOnsiteCourse(course);
+    }
+
+    public ArrayList<courseDTO> getCourseByDepartmentID(int id){
         return courseDAO.getCourseByDepartmentID(id);
     }
 
-    public ArrayList<courseDTO> getOnsiteCourseByCredits(int cd){
+    public ArrayList<courseDTO> getCourseByCredits(int cd){
         return courseDAO.getCourseByCredits(cd);
+    }
+
+    public ArrayList<courseDTO> filterOnlineCourse(ArrayList<courseDTO> allCourse){
+        ArrayList<courseDTO> listAdjusted = new ArrayList<courseDTO>();
+        ArrayList<Integer> onlineCourseIDList = new ArrayList<Integer>();
+        for(onlineCourseDTO i : getAllOnlineCourse()){
+            onlineCourseIDList.add(i.getcourseID());
+        }
+        for(courseDTO i : allCourse){
+            if(onlineCourseIDList.contains(i.getcourseID())){
+                listAdjusted.add(i);
+            }
+        }
+        return listAdjusted;
+    }
+
+    public ArrayList<courseDTO> filterOnsiteCourse(ArrayList<courseDTO> allCourse){
+        ArrayList<courseDTO> listAdjusted = new ArrayList<courseDTO>();
+        ArrayList<Integer> onsiteCourseIDList = new ArrayList<Integer>();
+        for(onsiteCourseDTO i : getAllOnsiteCourse()){
+            onsiteCourseIDList.add(i.getcourseID());
+        }
+        for(courseDTO i : allCourse){
+            if(onsiteCourseIDList.contains(i.getcourseID())){
+                listAdjusted.add(i);
+            }
+        }
+        return listAdjusted;
+    }
+
+    public ArrayList<courseDTO> sortCourseByID(ArrayList<courseDTO> allCourse){
+        ArrayList<courseDTO> listAdjusted = allCourse;
+        for(int i = 0; i< listAdjusted.size()-1; i++){
+            for(int j = i+1; j< listAdjusted.size(); j++){
+                if(listAdjusted.get(i).getcourseID() > listAdjusted.get(j).getcourseID()){
+                    courseDTO tmp = listAdjusted.get(i);
+                    listAdjusted.set(i, listAdjusted.get(j));
+                    listAdjusted.set(j, tmp);
+                }
+            }
+        }
+        return listAdjusted;
     }
 }

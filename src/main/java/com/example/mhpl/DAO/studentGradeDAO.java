@@ -23,6 +23,7 @@ public class studentGradeDAO {
             }
             return lst;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -40,6 +41,7 @@ public class studentGradeDAO {
             }
             return lst;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -52,6 +54,7 @@ public class studentGradeDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -67,6 +70,7 @@ public class studentGradeDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -82,6 +86,7 @@ public class studentGradeDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }

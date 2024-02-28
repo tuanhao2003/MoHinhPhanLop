@@ -25,6 +25,24 @@ public class courseDAO {
             }
             return lst;
         } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public courseDTO getLastedCourse() {
+        String query = "select * from Course;";
+        ResultSet R = null;
+        courseDTO data = new courseDTO();
+        try {
+            PreparedStatement S = this.C.prepareStatement(query);
+            R = S.executeQuery();
+            while (R.next()) {
+                data = new courseDTO(R.getInt(1), R.getString(2), R.getInt(3), R.getInt(4));
+            }
+            return data;
+        } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -42,6 +60,7 @@ public class courseDAO {
             }
             return data;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -59,6 +78,7 @@ public class courseDAO {
             }
             return lst;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -76,6 +96,7 @@ public class courseDAO {
             }
             return lst;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -88,6 +109,7 @@ public class courseDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -103,6 +125,7 @@ public class courseDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -117,6 +140,7 @@ public class courseDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }

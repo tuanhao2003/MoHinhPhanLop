@@ -23,6 +23,7 @@ public class personDAO {
             }
             return lst;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -40,6 +41,7 @@ public class personDAO {
             }
             return data;
         } catch (SQLException e) {
+            e.printStackTrace();
             return null;
         }
     }
@@ -52,6 +54,7 @@ public class personDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -68,6 +71,7 @@ public class personDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -83,6 +87,7 @@ public class personDAO {
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
     }
