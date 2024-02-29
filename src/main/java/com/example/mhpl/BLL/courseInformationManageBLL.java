@@ -218,4 +218,38 @@ public class courseInformationManageBLL {
     public studentDTO convertToStudent(personDTO ps){
         return new studentDTO(ps.getpersonID(), ps.getlastName(), ps.getfirstName(), ps.getenrollmentDate());
     }
+
+    public ArrayList<studentDTO> getCourseStudent(int cid){
+        ArrayList<Integer> studentInCourseID = new ArrayList<Integer>();
+        courseInstructorDAO.getAllCourseInstructorByCourseID(cid).forEach(stu -> {
+            if(stu.getcourseID() == cid){
+                studentInCourseID.add(stu.getpersonID());
+            }
+        });
+
+        ArrayList<studentDTO> result = new ArrayList<studentDTO>();
+        for(studentDTO i : getAllStudent()){
+            if(studentInCourseID.contains(i.getpersonID())){
+                result.add(i);
+            }
+        }
+        return result;
+    }
+
+    public ArrayList<teacherDTO> getCourseTeacher(int cid){
+        ArrayList<Integer> teacherInstrucedID = new ArrayList<Integer>();
+        courseInstructorDAO.getAllCourseInstructorByCourseID(cid).forEach(tc -> {
+            if(tc.getcourseID() == cid){
+                teacherInstrucedID.add(tc.getpersonID());
+            }
+        });
+
+        ArrayList<teacherDTO> result = new ArrayList<teacherDTO>();
+        for(teacherDTO i : getAllTeacher()){
+            if(teacherInstrucedID.contains(i.getpersonID())){
+                result.add(i);
+            }
+        }
+        return result;
+    }
 }
