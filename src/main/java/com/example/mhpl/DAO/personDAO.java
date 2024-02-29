@@ -1,6 +1,7 @@
 package com.example.mhpl.DAO;
 
 import com.example.mhpl.DTO.personDTO;
+
 import java.sql.*;
 import java.util.ArrayList;
 public class personDAO {
@@ -91,6 +92,4 @@ public class personDAO {
             return false;
         }
     }
-
-     
 }

@@ -21,7 +21,7 @@ public class departmentDAO {
             PreparedStatement S = this.C.prepareStatement(query);
             R = S.executeQuery();
             while (R.next()) {
-                lst.add(new departmentDTO(R.getInt(1), R.getString(2), R.getDouble(3), R.getDate(4), R.getInt(6)));
+                lst.add(new departmentDTO(R.getInt(1), R.getString(2), R.getDouble(3), R.getDate(4), R.getInt(5)));
             }
             return lst;
         } catch (SQLException e) {
@@ -30,18 +30,18 @@ public class departmentDAO {
         }
     }
 
-    public ArrayList<departmentDTO> getDepartmentByID(int did) {
+    public departmentDTO getDepartmentByID(int did) {
         String query = "select * from Department where DepartmentID = ?;";
         ResultSet R = null;
-        ArrayList<departmentDTO> lst = new ArrayList<departmentDTO>();
+        departmentDTO data = new departmentDTO();
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setInt(1, did);
             R = S.executeQuery();
             while (R.next()) {
-                lst.add(new departmentDTO(R.getInt(1), R.getString(2), R.getDouble(3), R.getDate(4), R.getInt(6)));
+                data = new departmentDTO(R.getInt(1), R.getString(2), R.getDouble(3), R.getDate(4), R.getInt(5));
             }
-            return lst;
+            return data;
         } catch (SQLException e) {
             e.printStackTrace();
             return null;

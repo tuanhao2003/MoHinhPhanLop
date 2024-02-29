@@ -4,21 +4,33 @@ import java.sql.Time;
 import java.util.ArrayList;
 
 import com.example.mhpl.DAO.courseDAO;
+import com.example.mhpl.DAO.courseInstructorDAO;
+import com.example.mhpl.DAO.departmentDAO;
 import com.example.mhpl.DAO.onlineCourseDAO;
 import com.example.mhpl.DTO.courseDTO;
 import com.example.mhpl.DTO.onlineCourseDTO;
 import com.example.mhpl.DTO.onsiteCourseDTO;
+import com.example.mhpl.DTO.personDTO;
+import com.example.mhpl.DTO.studentDTO;
+import com.example.mhpl.DTO.teacherDTO;
 import com.example.mhpl.DAO.onsiteCourseDAO;
+import com.example.mhpl.DAO.personDAO;
 
 public class courseInformationManageBLL {
     private courseDAO courseDAO;
     private onlineCourseDAO onlineCourseDAO;
     private onsiteCourseDAO onsiteCourseDAO;
+    private departmentDAO departmentDAO;
+    private courseInstructorDAO courseInstructorDAO;
+    private personDAO personDAO;
 
     public courseInformationManageBLL(){
         this.courseDAO = new courseDAO();
         this.onlineCourseDAO = new onlineCourseDAO();
         this.onsiteCourseDAO = new onsiteCourseDAO();
+        this.departmentDAO = new departmentDAO();
+        this.courseInstructorDAO = new courseInstructorDAO();
+        this.personDAO = new personDAO();
     }
 
     public ArrayList<courseDTO> getAllCourse(){
@@ -146,5 +158,64 @@ public class courseInformationManageBLL {
             }
         }
         return listAdjusted;
+    }
+    
+    public String getDepartmentName(int cid){
+        courseDTO course = getCourseByID(cid);
+        return this.departmentDAO.getDepartmentByID(course.getdepartmentID()).getname();
+    }
+    
+    public String getCourseStatus(int cid){
+        return this.courseInstructorDAO.getAllCourseInstructorByCourseID(cid).isEmpty() ? "Inactive" : "Active";
+    }
+    
+    public String getCourseType(int cid){
+        ArrayList<Integer> onlineCourseIDList = new ArrayList<Integer>();
+        ArrayList<Integer> onsiteCourseIDList = new ArrayList<Integer>();
+        for(onlineCourseDTO i : getAllOnlineCourse()){
+            onlineCourseIDList.add(i.getcourseID());
+        }
+        for(onsiteCourseDTO i : getAllOnsiteCourse()){
+            onsiteCourseIDList.add(i.getcourseID());
+        }
+        return onlineCourseIDList.contains(cid) ? "Online" : (onsiteCourseIDList.contains(cid) ? "Offline" : "New course");
+    }
+    
+    public boolean addTeacher(teacherDTO tc){
+        return this.personDAO.addPerson(tc);
+    }
+
+    public boolean addStudent(studentDTO sd){
+        return this.personDAO.addPerson(sd);
+    }
+
+    public ArrayList<teacherDTO> getAllTeacher(){
+        ArrayList<personDTO> psl = this.personDAO.getAllPerson();
+        ArrayList<teacherDTO> data = new ArrayList<teacherDTO>();
+        for(personDTO i : psl){
+            if(i.gethireDate() != null){
+                data.add(convertToTeacher(i));
+            }
+        }
+        return data;
+    }
+
+    public ArrayList<studentDTO> getAllStudent(){
+        ArrayList<personDTO> psl = this.personDAO.getAllPerson();
+        ArrayList<studentDTO> data = new ArrayList<studentDTO>();
+        for(personDTO i : psl){
+            if(i.getenrollmentDate() != null){
+                data.add(convertToStudent(i));
+            }
+        }
+        return data;
+    }
+
+    public teacherDTO convertToTeacher(personDTO ps){
+        return new teacherDTO(ps.getpersonID(), ps.getlastName(), ps.getfirstName(), ps.gethireDate());
+    }
+
+    public studentDTO convertToStudent(personDTO ps){
+        return new studentDTO(ps.getpersonID(), ps.getlastName(), ps.getfirstName(), ps.getenrollmentDate());
     }
 }
