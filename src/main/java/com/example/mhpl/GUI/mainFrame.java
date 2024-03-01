@@ -33,6 +33,8 @@ public class mainFrame extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(800, 600));
         setSize(new java.awt.Dimension(900, 700));
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
+
+        mainPanel.setLayout(new java.awt.GridLayout());
         getContentPane().add(mainPanel);
 
         pack();
