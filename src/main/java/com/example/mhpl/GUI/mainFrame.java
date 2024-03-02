@@ -30,11 +30,11 @@ public class mainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Course Managemet");
-        setPreferredSize(new java.awt.Dimension(800, 600));
-        setSize(new java.awt.Dimension(900, 700));
+        setPreferredSize(new java.awt.Dimension(1000, 600));
+        setSize(new java.awt.Dimension(1000, 600));
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
-        mainPanel.setLayout(new java.awt.GridLayout());
+        mainPanel.setLayout(new java.awt.GridLayout(1, 0));
         getContentPane().add(mainPanel);
 
         pack();
