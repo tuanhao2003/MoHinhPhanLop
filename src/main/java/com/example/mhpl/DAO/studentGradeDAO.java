@@ -28,13 +28,31 @@ public class studentGradeDAO {
         }
     }
 
-    public ArrayList<studentGradeDTO> getStudentGradeByID(int eid) {
+    public studentGradeDTO getStudentGradeByID(int eid) {
         String query = "select * from StudentGrade where EnrollmentID = ?;";
+        ResultSet R = null;
+        studentGradeDTO data = new studentGradeDTO();
+        try {
+            PreparedStatement S = this.C.prepareStatement(query);
+            S.setInt(1, eid);
+            R = S.executeQuery();
+            while (R.next()) {
+                data =  new studentGradeDTO(R.getInt(1), R.getInt(2), R.getInt(3), R.getInt(4));
+            }
+            return data;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
+    public ArrayList<studentGradeDTO> getStudentGradeByCourseID(int cid) {
+        String query = "select * from StudentGrade where CourseID = ?;";
         ResultSet R = null;
         ArrayList<studentGradeDTO> lst = new ArrayList<studentGradeDTO>();
         try {
             PreparedStatement S = this.C.prepareStatement(query);
-            S.setInt(1, eid);
+            S.setInt(1, cid);
             R = S.executeQuery();
             while (R.next()) {
                 lst.add(new studentGradeDTO(R.getInt(1), R.getInt(2), R.getInt(3), R.getInt(4)));
