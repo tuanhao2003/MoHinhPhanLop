@@ -16,6 +16,7 @@ import com.example.mhpl.DTO.teacherDTO;
 import com.example.mhpl.DAO.onsiteCourseDAO;
 import com.example.mhpl.DAO.personDAO;
 import com.example.mhpl.DAO.studentGradeDAO;
+import com.example.mhpl.DTO.departmentDTO;
 
 public class courseInformationManageBLL {
     private courseDAO courseDAO;
@@ -92,6 +93,11 @@ public class courseInformationManageBLL {
     public ArrayList<courseDTO> getCourseByCredits(int cd){
         return courseDAO.getCourseByCredits(cd);
     }
+    
+    public ArrayList<courseDTO> getCourseByTitle(String tt){
+        return courseDAO.getCourseByTitle(tt);
+    }
+    
     public ArrayList<teacherDTO> getAllTeacher(){
         ArrayList<personDTO> psl = this.personDAO.getAllPerson();
         ArrayList<teacherDTO> data = new ArrayList<teacherDTO>();
@@ -142,6 +148,10 @@ public class courseInformationManageBLL {
             }
         }
         return result;
+    }
+    
+    public ArrayList<departmentDTO> getAllDepartment(){
+        return departmentDAO.getAllDepartment();
     }
     
     

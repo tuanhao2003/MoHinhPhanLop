@@ -3,7 +3,6 @@ package com.example.mhpl.GUI;
 import com.example.mhpl.BLL.courseInformationManageBLL;
 import com.example.mhpl.DTO.courseDTO;
 import com.example.mhpl.DTO.teacherDTO;
-import com.sun.net.httpserver.Headers;
 
 import java.util.ArrayList;
 import javax.swing.*;
@@ -59,15 +58,6 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
             }
         });
         
-        this.addButton.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                cimBLL.addNewOnsiteCourse("Hao's Course", 1000, 1, "Sai Gon University", "2/3/2024", Time.valueOf("14:28:30"));
-                courseList = cimBLL.getAllCourse();
-                renderTable();
-            }
-        });
-        
         this.detailContainer.addContainerListener(new ContainerAdapter(){
             @Override
             public void componentRemoved(ContainerEvent e){
@@ -87,7 +77,7 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
             }
         });
         
-        deleteButton.addActionListener(new ActionListener(){
+        this.deleteButton.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
                 cimBLL.deleteCourse(currentCourse.getcourseID());
@@ -98,7 +88,7 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
             }
         });
         
-        courseContainer.getTableHeader().addMouseListener(new MouseAdapter(){
+        this.courseContainer.getTableHeader().addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent m){
                 if(courseContainer.columnAtPoint(m.getPoint()) == 0){
@@ -110,6 +100,54 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
                     }
                 }
                 renderTable();
+            }
+        });
+        
+        this.searchBox.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                courseList = cimBLL.getCourseByTitle(searchBox.getText());
+                renderTable();
+            }
+        });
+        
+        this.addButton.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                ArrayList<String> departmentName = new ArrayList<String>();
+                cimBLL.getAllDepartment().stream().forEach(department -> departmentName.add(department.getname()));
+                String[] optionList = new String[departmentName.size()];
+                for(int i =0; i < departmentName.size(); i++){
+                    optionList[i] = departmentName.get(i);
+                }
+                departmentInp.setModel(new javax.swing.DefaultComboBoxModel<>(optionList));
+                addDialog.setVisible(true);
+                addDialog.setLocationRelativeTo(null);
+                addBtn.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e1){
+                        try {
+                            Integer.parseInt(creditsInp1.getText());
+                            cimBLL.addCourse(titleInp1.getText(), Integer.parseInt(creditsInp1.getText()), cimBLL.getAllDepartment().get(departmentInp.getSelectedIndex()).getdepartmentID());
+                            titleInp1.setText("");
+                            creditsInp1.setText("");
+                            addDialog.dispose();
+                            courseList = cimBLL.getAllCourse();
+                            renderTable();
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Credits must be Integer");
+                        }
+                    }
+                });
+            }
+        });
+        this.cancelBtn.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e1){
+                titleInp1.setText("");
+                creditsInp1.setText("");
+                addDialog.dispose();
             }
         });
     }
@@ -135,15 +173,17 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jDialog1 = new javax.swing.JDialog();
+        addDialog = new javax.swing.JDialog();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        titleInp1 = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
+        creditsInp1 = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        departmentInp = new javax.swing.JComboBox<>();
         jPanel5 = new javax.swing.JPanel();
-        textField1 = new java.awt.TextField();
-        textField2 = new java.awt.TextField();
-        textField3 = new java.awt.TextField();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jDialog2 = new javax.swing.JDialog();
+        cancelBtn = new javax.swing.JButton();
+        addBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         courseContainer = new javax.swing.JTable(){
             public boolean editCellAt(int row, int column, java.util.EventObject e) {
@@ -158,90 +198,102 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         updateButton = new javax.swing.JButton();
         viewButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
+        searchBox = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
         addButton = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
 
-        jDialog1.setMinimumSize(new java.awt.Dimension(800, 600));
-        jDialog1.setModal(true);
-        jDialog1.setPreferredSize(new java.awt.Dimension(500, 500));
+        addDialog.setTitle("addCourse");
+        addDialog.setMinimumSize(new java.awt.Dimension(300, 400));
+        addDialog.setPreferredSize(new java.awt.Dimension(300, 400));
+        addDialog.setResizable(false);
+        addDialog.getContentPane().setLayout(new javax.swing.BoxLayout(addDialog.getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
-        jPanel5.setPreferredSize(new java.awt.Dimension(800, 629));
+        jPanel2.setPreferredSize(new java.awt.Dimension(300, 300));
+        jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jLabel2.setText("Title");
+        jLabel5.setText("Course title");
+        jLabel5.setPreferredSize(new java.awt.Dimension(100, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.ipadx = 40;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(65, 20, 0, 0);
+        jPanel2.add(jLabel5, gridBagConstraints);
 
-        jLabel3.setText("Credit");
+        titleInp1.setPreferredSize(new java.awt.Dimension(100, 50));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 36;
+        gridBagConstraints.ipady = 28;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(50, 0, 0, 80);
+        jPanel2.add(titleInp1, gridBagConstraints);
 
-        jLabel4.setText("Department ID");
+        jLabel6.setText("Course credits");
+        jLabel6.setPreferredSize(new java.awt.Dimension(100, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.ipadx = 25;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(65, 20, 0, 0);
+        jPanel2.add(jLabel6, gridBagConstraints);
 
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(45, 45, 45)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGap(45, 45, 45)
-                                .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addGap(46, 46, 46)
-                                .addComponent(textField2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textField3, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(458, Short.MAX_VALUE))
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(89, 89, 89)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(textField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(40, 40, 40)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel3)
-                    .addComponent(textField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(32, 32, 32)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(textField3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(264, Short.MAX_VALUE))
-        );
+        creditsInp1.setPreferredSize(new java.awt.Dimension(100, 50));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 36;
+        gridBagConstraints.ipady = 28;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(50, 0, 0, 80);
+        jPanel2.add(creditsInp1, gridBagConstraints);
 
-        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
-        jDialog1.getContentPane().setLayout(jDialog1Layout);
-        jDialog1Layout.setHorizontalGroup(
-            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
-        );
-        jDialog1Layout.setVerticalGroup(
-            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialog1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
-                .addContainerGap())
-        );
+        jLabel7.setText("Department ID");
+        jLabel7.setPreferredSize(new java.awt.Dimension(100, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.ipadx = 23;
+        gridBagConstraints.ipady = 4;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(65, 20, 0, 0);
+        jPanel2.add(jLabel7, gridBagConstraints);
 
-        javax.swing.GroupLayout jDialog2Layout = new javax.swing.GroupLayout(jDialog2.getContentPane());
-        jDialog2.getContentPane().setLayout(jDialog2Layout);
-        jDialog2Layout.setHorizontalGroup(
-            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jDialog2Layout.setVerticalGroup(
-            jDialog2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        departmentInp.setPreferredSize(new java.awt.Dimension(100, 50));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridheight = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 28;
+        gridBagConstraints.ipady = 28;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.insets = new java.awt.Insets(50, 0, 17, 80);
+        jPanel2.add(departmentInp, gridBagConstraints);
+
+        addDialog.getContentPane().add(jPanel2);
+
+        jPanel5.setPreferredSize(new java.awt.Dimension(900, 50));
+        jPanel5.setLayout(new java.awt.GridLayout());
+
+        cancelBtn.setText("Cancel");
+        jPanel5.add(cancelBtn);
+
+        addBtn.setText("Add");
+        jPanel5.add(addBtn);
+
+        addDialog.getContentPane().add(jPanel5);
 
         setPreferredSize(new java.awt.Dimension(800, 600));
         setLayout(new java.awt.GridBagLayout());
@@ -333,9 +385,8 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         jPanel3.setPreferredSize(new java.awt.Dimension(500, 100));
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
-        jTextField1.setText("jTextField1");
-        jTextField1.setPreferredSize(new java.awt.Dimension(200, 50));
-        jPanel3.add(jTextField1, new java.awt.GridBagConstraints());
+        searchBox.setPreferredSize(new java.awt.Dimension(200, 50));
+        jPanel3.add(searchBox, new java.awt.GridBagConstraints());
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -347,11 +398,6 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         addButton.setText("+");
         addButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addButton.setPreferredSize(new java.awt.Dimension(100, 50));
-        addButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addButtonActionPerformed(evt);
-            }
-        });
         jPanel3.add(addButton, new java.awt.GridBagConstraints());
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -385,33 +431,31 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         add(jPanel4, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
-        jDialog1.setVisible(true);
-    }//GEN-LAST:event_addButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addBtn;
     private javax.swing.JButton addButton;
+    private javax.swing.JDialog addDialog;
     private javax.swing.JPanel buttonPanel;
+    private javax.swing.JButton cancelBtn;
     private javax.swing.JTable courseContainer;
+    private javax.swing.JTextField creditsInp1;
     private javax.swing.JButton deleteButton;
+    private javax.swing.JComboBox<String> departmentInp;
     private javax.swing.JPanel detailContainer;
     private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JDialog jDialog1;
-    private javax.swing.JDialog jDialog2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private java.awt.TextField textField1;
-    private java.awt.TextField textField2;
-    private java.awt.TextField textField3;
+    private javax.swing.JTextField searchBox;
+    private javax.swing.JTextField titleInp1;
     private javax.swing.JButton updateButton;
     private javax.swing.JButton viewButton;
     // End of variables declaration//GEN-END:variables

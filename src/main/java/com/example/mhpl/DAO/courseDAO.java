@@ -100,6 +100,24 @@ public class courseDAO {
             return null;
         }
     }
+    
+    public ArrayList<courseDTO> getCourseByTitle(String tt) {
+        String query = "select * from Course where Title like ?;";
+        ResultSet R = null;
+        ArrayList<courseDTO> lst = new ArrayList<courseDTO>();
+        try {
+            PreparedStatement S = this.C.prepareStatement(query);
+            S.setString(1, '%'+tt+'%');
+            R = S.executeQuery();
+            while (R.next()) {
+                lst.add(new courseDTO(R.getInt(1), R.getString(2), R.getInt(3), R.getInt(4)));
+            }
+            return lst;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public boolean deleteCourse(int cid) {
         String query = "delete from Course where CourseID = ?;";
