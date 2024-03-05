@@ -64,6 +64,25 @@ public class studentGradeDAO {
         }
     }
 
+    public studentGradeDTO getStudentGradeByCourseAndStudentID(int cid, int sid){
+        String query = "select * from StudentGrade where CourseID = ? and StudentID =?;";
+        ResultSet R = null;
+        studentGradeDTO data = new studentGradeDTO();
+        try {
+            PreparedStatement S = this.C.prepareStatement(query);
+            S.setInt(1, cid);
+            S.setInt(2, sid);
+            R = S.executeQuery();
+            while (R.next()) {
+                data=new studentGradeDTO(R.getInt(1), R.getInt(2), R.getInt(3), R.getInt(4));
+            }
+            return data;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    
     public boolean deleteStudentGrade(int eid) {
         String query = "delete from StudentGrade where EnrollmentID = ?;";
         try {
@@ -78,13 +97,13 @@ public class studentGradeDAO {
     }
 
     public boolean updateStudentGrade(studentGradeDTO studentGrade) {
-        String query = "update StudentGrade set EnrollmentID = ?, CourseID = ?, StudentID = ?, Grade = ?";
+        String query = "update StudentGrade set CourseID = ?, StudentID = ?, Grade = ? where EnrollmentID = ?;";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
-            S.setInt(1, studentGrade.getenrollmentID());
-            S.setInt(2, studentGrade.getcourseID());
-            S.setInt(3, studentGrade.getstudentID());
-            S.setInt(4, studentGrade.getgrade());
+            S.setInt(4, studentGrade.getenrollmentID());
+            S.setInt(1, studentGrade.getcourseID());
+            S.setInt(2, studentGrade.getstudentID());
+            S.setDouble(3, studentGrade.getgrade());
             S.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -94,13 +113,12 @@ public class studentGradeDAO {
     }
 
     public boolean addstudentGrade(studentGradeDTO studentGrade) {
-        String query = "insert into StudentGrade values(?, ?, ?, ?);";
+        String query = "insert into StudentGrade(CourseID, StudentID, Grade) values(?, ?, ?);";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
-            S.setInt(1, studentGrade.getenrollmentID());
-            S.setInt(2, studentGrade.getcourseID());
-            S.setInt(3, studentGrade.getstudentID());
-            S.setInt(4, studentGrade.getgrade());
+            S.setInt(1, studentGrade.getcourseID());
+            S.setInt(2, studentGrade.getstudentID());
+            S.setDouble(3, studentGrade.getgrade());
             S.executeUpdate();
             return true;
         } catch (SQLException e) {

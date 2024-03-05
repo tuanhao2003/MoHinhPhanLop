@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
-import java.sql.Time;
 //detailContainer đổi thành add panel vào
 public class courseInformationManageGUI extends javax.swing.JPanel {
     private courseInformationManageBLL cimBLL;
@@ -23,7 +22,7 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         eventHandler();
     }
     
-    public void eventHandler(){
+    private void eventHandler(){
         renderTable();
         this.courseContainer.addMouseListener(new MouseAdapter(){
             @Override
@@ -115,7 +114,7 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e){
                 ArrayList<String> departmentName = new ArrayList<String>();
-                cimBLL.getAllDepartment().stream().forEach(department -> departmentName.add(department.getname()));
+                cimBLL.getAllDepartment().forEach(department -> departmentName.add(department.getname()));
                 String[] optionList = new String[departmentName.size()];
                 for(int i =0; i < departmentName.size(); i++){
                     optionList[i] = departmentName.get(i);
@@ -151,8 +150,7 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
             }
         });
     }
-    
-    public void renderTable(){
+    private void renderTable(){
         DefaultTableModel model = (DefaultTableModel) this.courseContainer.getModel();
         model.setRowCount(0);   
         
@@ -164,11 +162,17 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         this.courseContainer.updateUI();
     }
 
-    public void reload(JPanel screen){
+    private void reload(JPanel screen){
         screen.repaint();
         screen.revalidate();
     }
-
+    
+    public JButton getviewButton(){
+        return this.viewButton;
+    }
+    public int getCurrentCourseID(){
+        return this.currentCourse.getcourseID();
+    }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -184,12 +188,20 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         jPanel5 = new javax.swing.JPanel();
         cancelBtn = new javax.swing.JButton();
         addBtn = new javax.swing.JButton();
+        jPanel8 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        searchBox = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        addButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         courseContainer = new javax.swing.JTable(){
             public boolean editCellAt(int row, int column, java.util.EventObject e) {
                 return false;
             }
         };
+        jPanel7 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         detailContainer = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -197,16 +209,9 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         deleteButton = new javax.swing.JButton();
         updateButton = new javax.swing.JButton();
         viewButton = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        searchBox = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        addButton = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
 
         addDialog.setTitle("addCourse");
         addDialog.setMinimumSize(new java.awt.Dimension(300, 400));
-        addDialog.setPreferredSize(new java.awt.Dimension(300, 400));
         addDialog.setResizable(false);
         addDialog.getContentPane().setLayout(new javax.swing.BoxLayout(addDialog.getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
@@ -285,7 +290,7 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         addDialog.getContentPane().add(jPanel2);
 
         jPanel5.setPreferredSize(new java.awt.Dimension(900, 50));
-        jPanel5.setLayout(new java.awt.GridLayout());
+        jPanel5.setLayout(new java.awt.GridLayout(1, 0));
 
         cancelBtn.setText("Cancel");
         jPanel5.add(cancelBtn);
@@ -298,6 +303,38 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         setPreferredSize(new java.awt.Dimension(800, 600));
         setLayout(new java.awt.GridBagLayout());
 
+        jPanel8.setAlignmentX(0.0F);
+        jPanel8.setAlignmentY(0.0F);
+        jPanel8.setLayout(new java.awt.GridBagLayout());
+
+        jPanel3.setPreferredSize(new java.awt.Dimension(500, 100));
+        jPanel3.setLayout(new java.awt.GridBagLayout());
+
+        searchBox.setPreferredSize(new java.awt.Dimension(200, 50));
+        jPanel3.add(searchBox, new java.awt.GridBagConstraints());
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jComboBox1.setMinimumSize(new java.awt.Dimension(100, 50));
+        jComboBox1.setPreferredSize(new java.awt.Dimension(100, 50));
+        jPanel3.add(jComboBox1, new java.awt.GridBagConstraints());
+
+        addButton.setFont(new java.awt.Font("Verdana", 0, 24)); // NOI18N
+        addButton.setText("+");
+        addButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        addButton.setPreferredSize(new java.awt.Dimension(100, 50));
+        jPanel3.add(addButton, new java.awt.GridBagConstraints());
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 299;
+        gridBagConstraints.ipady = 50;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        jPanel8.add(jPanel3, gridBagConstraints);
+
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(500, 500));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(500, 500));
 
         courseContainer.setModel(new javax.swing.table.DefaultTableModel(
@@ -311,38 +348,63 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridheight = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        jPanel8.add(jScrollPane1, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        add(jPanel8, gridBagConstraints);
+
+        jPanel7.setAlignmentX(1.0F);
+        jPanel7.setAlignmentY(0.0F);
+        jPanel7.setPreferredSize(new java.awt.Dimension(300, 600));
+        jPanel7.setLayout(new java.awt.GridBagLayout());
+
+        jPanel4.setBackground(new java.awt.Color(0, 102, 255));
+        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel4.setPreferredSize(new java.awt.Dimension(300, 100));
+        jPanel4.setLayout(new java.awt.GridLayout(1, 0));
+
+        jLabel1.setBackground(new java.awt.Color(0, 102, 255));
+        jLabel1.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Course Information");
+        jPanel4.add(jLabel1);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.ipadx = 37;
+        gridBagConstraints.ipady = 68;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        add(jScrollPane1, gridBagConstraints);
+        jPanel7.add(jPanel4, gridBagConstraints);
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
         jPanel6.setPreferredSize(new java.awt.Dimension(300, 300));
+        jPanel6.setLayout(new java.awt.GridLayout());
 
         detailContainer.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.gray));
         detailContainer.setFont(new java.awt.Font("Verdana", 2, 18)); // NOI18N
+        detailContainer.setMaximumSize(new java.awt.Dimension(300, 300));
+        detailContainer.setMinimumSize(new java.awt.Dimension(300, 300));
         detailContainer.setPreferredSize(new java.awt.Dimension(300, 300));
         detailContainer.setLayout(new javax.swing.BoxLayout(detailContainer, javax.swing.BoxLayout.Y_AXIS));
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(detailContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(detailContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
+        jPanel6.add(detailContainer);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        add(jPanel6, gridBagConstraints);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.weightx = 1.0;
+        jPanel7.add(jPanel6, gridBagConstraints);
 
         jPanel1.setMinimumSize(new java.awt.Dimension(300, 200));
         jPanel1.setPreferredSize(new java.awt.Dimension(300, 200));
@@ -379,58 +441,19 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        add(jPanel1, gridBagConstraints);
-
-        jPanel3.setPreferredSize(new java.awt.Dimension(500, 100));
-        jPanel3.setLayout(new java.awt.GridBagLayout());
-
-        searchBox.setPreferredSize(new java.awt.Dimension(200, 50));
-        jPanel3.add(searchBox, new java.awt.GridBagConstraints());
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jComboBox1.setMinimumSize(new java.awt.Dimension(100, 50));
-        jComboBox1.setPreferredSize(new java.awt.Dimension(100, 50));
-        jPanel3.add(jComboBox1, new java.awt.GridBagConstraints());
-
-        addButton.setFont(new java.awt.Font("Verdana", 0, 24)); // NOI18N
-        addButton.setText("+");
-        addButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addButton.setPreferredSize(new java.awt.Dimension(100, 50));
-        jPanel3.add(addButton, new java.awt.GridBagConstraints());
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 299;
-        gridBagConstraints.ipady = 50;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        add(jPanel3, gridBagConstraints);
-
-        jPanel4.setBackground(new java.awt.Color(0, 102, 255));
-        jPanel4.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jPanel4.setPreferredSize(new java.awt.Dimension(300, 100));
-        jPanel4.setLayout(new java.awt.GridLayout(1, 0));
-
-        jLabel1.setBackground(new java.awt.Color(0, 102, 255));
-        jLabel1.setFont(new java.awt.Font("Verdana", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Course Information");
-        jPanel4.add(jLabel1);
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.weightx = 1.0;
+        jPanel7.add(jPanel1, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 37;
-        gridBagConstraints.ipady = 68;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        add(jPanel4, gridBagConstraints);
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
+        gridBagConstraints.weightx = 1.0;
+        add(jPanel7, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addBtn;
     private javax.swing.JButton addButton;
@@ -453,6 +476,8 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField searchBox;
     private javax.swing.JTextField titleInp1;

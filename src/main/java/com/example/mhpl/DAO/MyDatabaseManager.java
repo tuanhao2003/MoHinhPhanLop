@@ -9,7 +9,7 @@ public class MyDatabaseManager {
     private String dbUser;
     private String dbPassword;
 
-    public MyDatabaseManager() {
+    protected MyDatabaseManager() {
         this.host = "localhost";
         this.port = "3306";
         this.dbName = "school";
@@ -18,7 +18,7 @@ public class MyDatabaseManager {
         connect();
     }
 
-    public Connection connect() {
+    protected Connection connect() {
         try {
             return DriverManager.getConnection("jdbc:mysql://" + this.host + ":" + this.port + "/" + this.dbName,
                     this.dbUser, this.dbPassword);

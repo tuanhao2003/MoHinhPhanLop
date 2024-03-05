@@ -4,7 +4,7 @@ public class studentGradeDTO {
     private int enrollmentID;
     private int courseID;
     private int studentID;
-    private int grade;
+    private double grade;
 
     public studentGradeDTO() {
         this.enrollmentID = 0;
@@ -13,7 +13,7 @@ public class studentGradeDTO {
         this.grade = 0;
     }
 
-    public studentGradeDTO(int eid, int cid, int sid, int gr) {
+    public studentGradeDTO(int eid, int cid, int sid, double gr) {
         this.enrollmentID = eid;
         this.courseID = cid;
         this.studentID = sid;
@@ -32,7 +32,7 @@ public class studentGradeDTO {
         this.studentID = sid;
     }
 
-    public void setgrade(int gr) {
+    public void setgrade(double gr) {
         this.grade = gr;
     }
 
@@ -48,7 +48,7 @@ public class studentGradeDTO {
         return this.studentID;
     }
 
-    public int getgrade() {
+    public double getgrade() {
         return this.grade;
     }
 }

@@ -1,21 +1,43 @@
 package com.example.mhpl.GUI;
 
+import java.awt.event.*;
 import javax.swing.JPanel;
 
 public class mainFrame extends javax.swing.JFrame {
+    courseInformationManageGUI courseInformationGUI;
+    courseResultManageGUI courseResultManageGUI;
     public mainFrame() {
+        this.courseInformationGUI = new courseInformationManageGUI();
+        this.courseResultManageGUI = new courseResultManageGUI();
         initComponents();
         eventHandler();
     }
     
-    public void eventHandler(){
-        this.mainPanel.add(new courseInformationManageGUI());
-        reload(this.mainPanel);
+    private void eventHandler(){
+        this.mainPanel.add(this.courseInformationGUI);
+        reload();
+        this.courseInformationGUI.getviewButton().addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                courseResultManageGUI.receiveData(courseInformationGUI.getCurrentCourseID());
+                mainPanel.removeAll();
+                mainPanel.add(courseResultManageGUI);
+                reload();
+            }
+        });
+        this.courseResultManageGUI.backButton().addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                mainPanel.removeAll();
+                mainPanel.add(courseInformationGUI);
+                reload();
+            }
+        });
     }
     
-    public void reload(JPanel panel){
-        panel.repaint();
-        panel.revalidate();
+    private void reload(){
+        mainPanel.repaint();
+        mainPanel.revalidate();
     }
     
     public static void main(String[] args) {
@@ -26,28 +48,21 @@ public class mainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
         mainPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Course Managemet");
-        setPreferredSize(new java.awt.Dimension(1000, 650));
-        setSize(new java.awt.Dimension(1000, 600));
+        setPreferredSize(new java.awt.Dimension(900, 650));
+        setResizable(false);
+        setSize(new java.awt.Dimension(900, 650));
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
-        jTabbedPane1.setBackground(new java.awt.Color(0, 102, 255));
-        jTabbedPane1.setForeground(new java.awt.Color(255, 255, 255));
-        jTabbedPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-
         mainPanel.setLayout(new java.awt.GridLayout(1, 0));
-        jTabbedPane1.addTab("Course Information", mainPanel);
-
-        getContentPane().add(jTabbedPane1);
+        getContentPane().add(mainPanel);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JPanel mainPanel;
     // End of variables declaration//GEN-END:variables
 }
