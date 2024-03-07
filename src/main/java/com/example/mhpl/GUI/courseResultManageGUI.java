@@ -1,13 +1,14 @@
 package com.example.mhpl.GUI;
 
 import com.example.mhpl.BLL.courseResultManageBLL;
-import com.example.mhpl.DTO.studentDTO;
 import com.example.mhpl.DTO.studentGradeDTO;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.HeadlessException;
+import java.awt.Point;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
 import java.util.ArrayList;
+import javax.swing.event.*;
 
 public class courseResultManageGUI extends javax.swing.JPanel {
     private courseResultManageBLL crmBLL;
@@ -34,27 +35,49 @@ public class courseResultManageGUI extends javax.swing.JPanel {
     }
     private void renderTable(){
         DefaultTableModel model = (DefaultTableModel) this.studentList.getModel();
-        model.setRowCount(0);   
+        model.setRowCount(0);
+        for(int i = 0; i< studentList.getColumnCount(); i++){
+            if(i == 3){
+                studentList.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(new JTextField()));
+            }else{
+                studentList.getColumnModel().getColumn(i).setCellEditor(null);
+            }
+        }
+
         for(int i = 0; i< crmBLL.getCourseStudent().size(); i++){
-//            đổi cái point thành xử lý sự kiện khi lost focus form col3 row i
-            JTextField point = new JTextField();
-            point.setText(Double.toString(this.studentGradeList.get(i).getgrade()));
-            Object[] data = {this.crmBLL.getCourseStudent().get(i).getfirstName(), this.crmBLL.getCourseStudent().get(i).getlastName(), crmBLL.getCourseStudent().get(i).getenrollmentDate().toString(), point};
+            Object[] data = {this.crmBLL.getCourseStudent().get(i).getfirstName(), this.crmBLL.getCourseStudent().get(i).getlastName(), crmBLL.getCourseStudent().get(i).getenrollmentDate().toString(), Double.toString(this.studentGradeList.get(i).getgrade())};
             model.addRow(data);
-            int sid = this.crmBLL.getCourseResult().get(i).getstudentID();
-            int eid = this.crmBLL.getByCourseAndStudentID(sid).getenrollmentID();
-            point.addActionListener(new ActionListener(){
+            this.studentList.getTableHeader().setReorderingAllowed(false);//unable dragging
+
+            int sid = studentGradeList.get(i).getstudentID();
+            int eid = crmBLL.getByCourseAndStudentID(sid).getenrollmentID();
+            final int j = i;
+            
+            studentList.addMouseListener(new MouseAdapter(){
                 @Override
-                public void actionPerformed(ActionEvent e){
-                    crmBLL.saveResult(eid, sid, Double.parseDouble(point.getText()));
-                    if(crmBLL.saveResult(eid, sid, Double.parseDouble(point.getText()))==false){
-                        JOptionPane.showMessageDialog(null, "Grade type must be double");
+                public void mouseClicked(MouseEvent e){
+                    if(studentList.columnAtPoint(e.getPoint())==3){
+                        studentList.setValueAt("", studentList.rowAtPoint(e.getPoint()), 3);
                     }
                 }
             });
+                    
+            studentList.getColumnModel().getColumn(3).getCellEditor().addCellEditorListener(new CellEditorListener(){
+                @Override
+                public void editingStopped(ChangeEvent te){
+                    double grade;
+                    try {
+                        grade = Double.parseDouble(studentList.getValueAt(j, 3).toString());
+                        crmBLL.saveResult(eid, sid, grade);
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Grade type must be double");
+                    }
+                }
+                @Override
+                public void editingCanceled(ChangeEvent e) {}
+            });
+            this.studentList.updateUI();
         }
-        this.studentList.getTableHeader().setReorderingAllowed(false);//unable dragging
-        this.studentList.updateUI();
     }
     
     private void reload(JPanel screen){
@@ -76,16 +99,20 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         addStudentBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        studentList = new javax.swing.JTable();
+        studentList = new javax.swing.JTable() {
+            public boolean isCellEditable(int row,int column){
+                if(column != 3) return false;
+                return true;
+            }
+        };
 
         addStudentDialog.setMinimumSize(new java.awt.Dimension(300, 400));
-        addStudentDialog.setPreferredSize(new java.awt.Dimension(300, 400));
         addStudentDialog.setResizable(false);
-        addStudentDialog.getContentPane().setLayout(new java.awt.GridLayout());
+        addStudentDialog.getContentPane().setLayout(new java.awt.GridLayout(1, 0));
         addStudentDialog.getContentPane().add(jPanel3);
 
         setPreferredSize(new java.awt.Dimension(800, 600));
-        setLayout(new java.awt.GridLayout());
+        setLayout(new java.awt.GridLayout(1, 0));
 
         jPanel1.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 5, 0));
 

@@ -156,6 +156,9 @@
                   <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {{}},&#xa;    new String [] {&#xa;        &quot;First Name&quot;, &quot;Last Name&quot;, &quot;Enrollment Date&quot;, &quot;Grade&quot;&#xa;    }&#xa;)" type="code"/>
                 </Property>
               </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JTable() {  &#xa;    public boolean isCellEditable(int row,int column){  &#xa;      if(column != 3) return false;  &#xa;      return true;  &#xa;    }  &#xa;}"/>
+              </AuxValues>
             </Component>
           </SubComponents>
         </Container>
