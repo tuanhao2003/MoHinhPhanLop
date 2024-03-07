@@ -40,6 +40,16 @@ public class courseInformationManageBLL {
     public ArrayList<courseDTO> getAllCourse(){
         return courseDAO.getAllCourse();
     }
+    
+    public ArrayList<courseDTO> getInstructedCourse(){
+        ArrayList<courseDTO> instructedCourseList = new ArrayList<courseDTO>();
+        getAllCourse().forEach(course -> {
+            if("Active".equals(getCourseStatus(course.getcourseID()))) {
+                instructedCourseList.add(course);
+            }
+        });
+        return instructedCourseList;
+    }
 
     public ArrayList<onlineCourseDTO> getAllOnlineCourse(){
         return onlineCourseDAO.getAllOnlineCourse();
@@ -65,7 +75,7 @@ public class courseInformationManageBLL {
         return courseDAO.getLastedCourse();
     }
     
-        public String getDepartmentName(int cid){
+    public String getDepartmentName(int cid){
         courseDTO course = getCourseByID(cid);
         return this.departmentDAO.getDepartmentByID(course.getdepartmentID()).getname();
     }

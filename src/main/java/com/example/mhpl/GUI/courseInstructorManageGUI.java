@@ -1,10 +1,7 @@
 package com.example.mhpl.GUI;
 
-import com.example.mhpl.BLL.courseResultManageBLL;
-import com.example.mhpl.DTO.studentDTO;
-import com.example.mhpl.DTO.studentGradeDTO;
-import java.awt.Checkbox;
-import java.awt.Component;
+import com.example.mhpl.BLL.courseInstructorManageBLL;
+import com.example.mhpl.DTO.courseDTO;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import javax.swing.*;
@@ -12,139 +9,65 @@ import javax.swing.table.*;
 import java.util.ArrayList;
 import javax.swing.event.*;
 
-public class courseResultManageGUI extends javax.swing.JPanel {
-    private courseResultManageBLL crmBLL;
-    private ArrayList<studentGradeDTO> studentGradeList;
+public class courseInstructorManageGUI extends javax.swing.JPanel {
+    private courseInstructorManageBLL cinmBLL;
+    private ArrayList<courseDTO> courseList;
     private ArrayList<Integer> addIntendList;
     
-    public courseResultManageGUI() {
-        this.crmBLL = new courseResultManageBLL();
-        this.studentGradeList = new ArrayList<studentGradeDTO>();
+    public courseInstructorManageGUI() {
+        this.cinmBLL = new courseInstructorManageBLL();
+        this.courseList = new ArrayList<courseDTO>();
         this.addIntendList = new ArrayList<Integer>();
         initComponents();
         eventHandler();
     }
     private void eventHandler(){
-        this.addStudentBtn.addActionListener(new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){
-                addStudentDialog.setVisible(true);
-                addStudentDialog.setLocationRelativeTo(null);
-                availableStudent.removeAll();
-                crmBLL.getNoneInCourse().forEach(stu -> {
-                    JPanel panel = new JPanel();
-                    JCheckBox cb = new JCheckBox();
-                    cb.addActionListener(new ActionListener(){
-                        @Override
-                        public void actionPerformed(ActionEvent cbe) {
-                            if(cb.isSelected()){
-                                addIntendList.add(stu.getpersonID());
-                            }else{
-                                addIntendList.remove(stu.getpersonID());
-                            }
-                        }
-                    });
-                    panel.setSize(300, 50);
-                    panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
-                    panel.add(cb);
-                    panel.add(new JLabel(Integer.toString(stu.getpersonID())+" "));
-                    panel.add(new JLabel(stu.getfirstName()+" "));
-                    panel.add(new JLabel(stu.getlastName()));
-                    availableStudent.add(panel);
-                });
-                formContainer.add(availableStudentForm);
-                reload(formContainer);
-            }
-        });
-        
-        this.chooseFunction.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(chooseFunction.getSelectedIndex()==0){
-                    formContainer.removeAll();
-                    formContainer.add(availableStudentForm);
-                }else{
-                    formContainer.removeAll();
-                    formContainer.add(newStudentForm);
-                }
-                reload(formContainer);
-            }
-        });
-        
-        this.studentList.addMouseListener(new MouseAdapter(){
-            @Override
-            public void mouseClicked(MouseEvent e){
-                if(studentList.columnAtPoint(e.getPoint())==3){
-                    studentList.setValueAt("", studentList.rowAtPoint(e.getPoint()), 3);
-                }
-            }
-        });
-        this.addStudent.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if(chooseFunction.getSelectedIndex()==0){
-                    for(int sid : addIntendList){
-                        crmBLL.addStudentToCourse(sid);
-                        studentGradeList=crmBLL.getCourseResult();
-                        renderTable();
-                        firstNameInp.setText("");
-                        lastNameInp.setText("");
-                        addStudentDialog.dispose();
-                    }
-                }else{
-                    crmBLL.addStudentToCourse(firstNameInp.getText(), lastNameInp.getText());
-                    studentGradeList=crmBLL.getCourseResult();
-                    renderTable();
-                    firstNameInp.setText("");
-                    lastNameInp.setText("");
-                    addStudentDialog.dispose();
-                }
-            }
-        });
-    }
-    public void receiveData(int cid){
-        this.crmBLL.setCourseID(cid);
-        this.studentGradeList = crmBLL.getCourseResult();
+        this.courseList=cinmBLL.getNonInstructedCourse();
         renderTable();
-    }
-    private void renderTable(){
-        DefaultTableModel model = (DefaultTableModel) this.studentList.getModel();
-        model.setRowCount(0);
-        for(int i = 0; i< studentList.getColumnCount(); i++){
-            if(i == 3){
-                studentList.getColumnModel().getColumn(i).setCellEditor(new DefaultCellEditor(new JTextField()));
-            }else{
-                studentList.getColumnModel().getColumn(i).setCellEditor(null);
-            }
-        }
-
-        for(int i = 0; i< crmBLL.getCourseStudent().size(); i++){
-            Object[] data = {this.crmBLL.getCourseStudent().get(i).getfirstName(), this.crmBLL.getCourseStudent().get(i).getlastName(), crmBLL.getCourseStudent().get(i).getenrollmentDate().toString(), Double.toString(this.studentGradeList.get(i).getgrade())};
-            model.addRow(data);
-            this.studentList.getTableHeader().setReorderingAllowed(false);//unable dragging
-
-            int sid = studentGradeList.get(i).getstudentID();
-            int eid = crmBLL.getByCourseAndStudentID(sid).getenrollmentID();
-            final int j = i;
-                    
-            studentList.getColumnModel().getColumn(3).getCellEditor().addCellEditorListener(new CellEditorListener(){
-                @Override
-                public void editingStopped(ChangeEvent te){
-                    double grade;
-                    try {
-                        grade = Double.parseDouble(studentList.getValueAt(j, 3).toString());
-                        crmBLL.saveResult(eid, sid, grade);
-                    } catch (Exception e) {
-                        JOptionPane.showMessageDialog(null, "Grade type must be double");
-                    }
-                }
-                @Override
-                public void editingCanceled(ChangeEvent e) {}
-            });
-            this.studentList.updateUI();
-        }
+//        this.courseContainer.addMouseListener(new MouseAdapter(){
+//            @Override
+//            public void mouseClicked(MouseEvent m){
+//                addTeacherDialog.setVisible(true);
+//                addTeacherDialog.setLocationRelativeTo(null);
+//                availableStudent.removeAll();
+//                cinmBLL.getNoneInCourse().forEach(stu -> {
+//                    JPanel panel = new JPanel();
+//                    JCheckBox cb = new JCheckBox();
+//                    cb.addActionListener(new ActionListener(){
+//                        @Override
+//                        public void actionPerformed(ActionEvent cbe) {
+//                            if(cb.isSelected()){
+//                                addIntendList.add(stu.getpersonID());
+//                            }else{
+//                                addIntendList.remove(stu.getpersonID());
+//                            }
+//                        }
+//                    });
+//                    panel.setSize(300, 50);
+//                    panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
+//                    panel.add(cb);
+//                    panel.add(new JLabel(Integer.toString(stu.getpersonID())+" "));
+//                    panel.add(new JLabel(stu.getfirstName()+" "));
+//                    panel.add(new JLabel(stu.getlastName()));
+//                    availableStudent.add(panel);
+//                });
+//                formContainer.add(availableStudentForm);
+//                reload(formContainer);
+//            }
+//        });
     }
     
+    private void renderTable(){
+        DefaultTableModel model = (DefaultTableModel) this.courseContainer.getModel();
+        model.setRowCount(0);   
+        
+        for(courseDTO i : courseList){
+            Object[] data = {i.getcourseID(), i.gettitle(), this.cinmBLL.getDepartmentName(i.getcourseID()), this.cinmBLL.getCourseStatus(i.getcourseID())};
+            model.addRow(data);
+        }
+        this.courseContainer.getTableHeader().setReorderingAllowed(false);//unable dragging
+        this.courseContainer.updateUI();
+    }
     private void reload(JPanel screen){
         screen.repaint();
         screen.revalidate();
@@ -156,7 +79,7 @@ public class courseResultManageGUI extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        addStudentDialog = new javax.swing.JDialog();
+        addTeacherDialog = new javax.swing.JDialog();
         dialogContainer = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
@@ -164,10 +87,10 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         addStudent = new javax.swing.JButton();
         chooseFunction = new javax.swing.JComboBox<>();
         formContainer = new javax.swing.JPanel();
-        availableStudentForm = new javax.swing.JPanel();
+        availableTeacherForm = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         availableStudent = new javax.swing.JPanel();
-        newStudentForm = new javax.swing.JPanel();
+        newTeacherForm = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         firstNameInp = new javax.swing.JTextField();
@@ -178,22 +101,20 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         backBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        addStudentBtn = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        studentList = new javax.swing.JTable() {
-            public boolean isCellEditable(int row,int column){
-                if(column != 3) return false;
-                return true;
+        courseContainer = new javax.swing.JTable(){
+            public boolean editCellAt(int row, int column, java.util.EventObject e) {
+                return false;
             }
         };
 
-        addStudentDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        addStudentDialog.setTitle("Student Assignment");
-        addStudentDialog.setBackground(new java.awt.Color(255, 255, 255));
-        addStudentDialog.setMinimumSize(new java.awt.Dimension(300, 450));
-        addStudentDialog.setPreferredSize(new java.awt.Dimension(300, 450));
-        addStudentDialog.setResizable(false);
-        addStudentDialog.getContentPane().setLayout(new java.awt.GridLayout(1, 0));
+        addTeacherDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addTeacherDialog.setTitle("Student Assignment");
+        addTeacherDialog.setBackground(new java.awt.Color(255, 255, 255));
+        addTeacherDialog.setMinimumSize(new java.awt.Dimension(300, 450));
+        addTeacherDialog.setResizable(false);
+        addTeacherDialog.getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
         dialogContainer.setMinimumSize(new java.awt.Dimension(300, 400));
         dialogContainer.setPreferredSize(new java.awt.Dimension(300, 400));
@@ -232,19 +153,19 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         gridBagConstraints.weighty = 1.0;
         dialogContainer.add(formContainer, gridBagConstraints);
 
-        addStudentDialog.getContentPane().add(dialogContainer);
+        addTeacherDialog.getContentPane().add(dialogContainer);
 
-        availableStudentForm.setEnabled(false);
-        availableStudentForm.setPreferredSize(new java.awt.Dimension(300, 300));
-        availableStudentForm.setLayout(new java.awt.GridLayout(1, 0));
+        availableTeacherForm.setEnabled(false);
+        availableTeacherForm.setPreferredSize(new java.awt.Dimension(300, 300));
+        availableTeacherForm.setLayout(new java.awt.GridLayout(1, 0));
 
         availableStudent.setLayout(new javax.swing.BoxLayout(availableStudent, javax.swing.BoxLayout.Y_AXIS));
         jScrollPane2.setViewportView(availableStudent);
 
-        availableStudentForm.add(jScrollPane2);
+        availableTeacherForm.add(jScrollPane2);
 
-        newStudentForm.setPreferredSize(new java.awt.Dimension(300, 300));
-        newStudentForm.setLayout(new java.awt.GridLayout(2, 0, 0, 50));
+        newTeacherForm.setPreferredSize(new java.awt.Dimension(300, 300));
+        newTeacherForm.setLayout(new java.awt.GridLayout(2, 0, 0, 50));
 
         jPanel7.setBackground(new java.awt.Color(0, 102, 255));
         jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -275,7 +196,7 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         gridBagConstraints.weightx = 1.0;
         jPanel7.add(firstNameInp, gridBagConstraints);
 
-        newStudentForm.add(jPanel7);
+        newTeacherForm.add(jPanel7);
 
         jPanel10.setBackground(new java.awt.Color(0, 102, 255));
         jPanel10.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -304,7 +225,7 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         gridBagConstraints.weightx = 1.0;
         jPanel10.add(lastNameInp, gridBagConstraints);
 
-        newStudentForm.add(jPanel10);
+        newTeacherForm.add(jPanel10);
 
         setPreferredSize(new java.awt.Dimension(800, 600));
         setLayout(new java.awt.GridLayout(1, 0));
@@ -332,7 +253,7 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         jLabel1.setFont(new java.awt.Font("Verdana", 3, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Student List ");
+        jLabel1.setText("Non Instructed Course");
         jLabel1.setAlignmentX(0.5F);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -340,31 +261,23 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         gridBagConstraints.weightx = 0.5;
         jPanel2.add(jLabel1, gridBagConstraints);
 
-        addStudentBtn.setBackground(new java.awt.Color(0, 102, 255));
-        addStudentBtn.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        addStudentBtn.setForeground(new java.awt.Color(255, 255, 255));
-        addStudentBtn.setText("+");
-        addStudentBtn.setAlignmentX(1.0F);
-        addStudentBtn.setMaximumSize(new java.awt.Dimension(100, 50));
-        addStudentBtn.setMinimumSize(new java.awt.Dimension(100, 50));
-        addStudentBtn.setPreferredSize(new java.awt.Dimension(100, 50));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        jPanel2.add(addStudentBtn, gridBagConstraints);
+        jLabel4.setMaximumSize(new java.awt.Dimension(100, 50));
+        jLabel4.setMinimumSize(new java.awt.Dimension(100, 50));
+        jLabel4.setPreferredSize(new java.awt.Dimension(100, 50));
+        jPanel2.add(jLabel4, new java.awt.GridBagConstraints());
 
         jPanel1.add(jPanel2);
 
-        jScrollPane1.setPreferredSize(new java.awt.Dimension(800, 550));
+        jScrollPane1.setMinimumSize(new java.awt.Dimension(800, 600));
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(800, 600));
 
-        studentList.setModel(new javax.swing.table.DefaultTableModel(
+        courseContainer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {{}},
             new String [] {
-                "First Name", "Last Name", "Enrollment Date", "Grade"
+                "Course ID", "Title", "Department", "Status"
             }
         ));
-        jScrollPane1.setViewportView(studentList);
+        jScrollPane1.setViewportView(courseContainer);
 
         jPanel1.add(jScrollPane1);
 
@@ -372,19 +285,20 @@ public class courseResultManageGUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addStudent;
-    private javax.swing.JButton addStudentBtn;
-    private javax.swing.JDialog addStudentDialog;
+    private javax.swing.JDialog addTeacherDialog;
     private javax.swing.JPanel availableStudent;
-    private javax.swing.JPanel availableStudentForm;
+    private javax.swing.JPanel availableTeacherForm;
     private javax.swing.JButton backBtn;
     private javax.swing.JButton cancelAddStudent;
     private javax.swing.JComboBox<String> chooseFunction;
+    private javax.swing.JTable courseContainer;
     private javax.swing.JPanel dialogContainer;
     private javax.swing.JTextField firstNameInp;
     private javax.swing.JPanel formContainer;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
@@ -394,7 +308,6 @@ public class courseResultManageGUI extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField lastNameInp;
-    private javax.swing.JPanel newStudentForm;
-    private javax.swing.JTable studentList;
+    private javax.swing.JPanel newTeacherForm;
     // End of variables declaration//GEN-END:variables
 }

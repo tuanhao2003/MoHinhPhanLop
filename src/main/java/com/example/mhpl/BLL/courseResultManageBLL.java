@@ -23,9 +23,9 @@ public class courseResultManageBLL {
     
     public ArrayList<studentGradeDTO> getCourseResult(){
         ArrayList<studentGradeDTO> gradeList = new ArrayList<studentGradeDTO>();
-        studentGradeDAO.getStudentGradeByCourseID(this.courseID).forEach(stu -> {
-            gradeList.add(stu);
-        });
+        for(studentDTO i : getCourseStudent()){
+            gradeList.add(getByCourseAndStudentID(i.getpersonID()));
+        }
         return gradeList;
     }
     
@@ -88,5 +88,18 @@ public class courseResultManageBLL {
     public void addStudentToCourse(String fn, String ln){
         this.personDAO.addPerson(new studentDTO(0, ln, fn, new Date(System.currentTimeMillis())));
         this.studentGradeDAO.addstudentGrade(new studentGradeDTO(0, this.courseID, this.personDAO.getLastestPersonID(), 0));
+    }
+    
+    public ArrayList<studentDTO> getNoneInCourse(){
+        ArrayList<Integer> courseStudentID = new ArrayList<Integer>();
+        getCourseStudent().forEach(stu -> courseStudentID.add(stu.getpersonID()));
+        
+        ArrayList<studentDTO> remainCourse = new ArrayList<studentDTO>();
+        for(studentDTO i : getAllStudent()){
+            if(!courseStudentID.contains(i.getpersonID())){
+                remainCourse.add(i);
+            }
+        }
+        return remainCourse;
     }
 }

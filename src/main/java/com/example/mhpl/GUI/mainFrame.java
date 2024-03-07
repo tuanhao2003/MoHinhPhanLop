@@ -3,11 +3,14 @@ package com.example.mhpl.GUI;
 import java.awt.event.*;
 
 public class mainFrame extends javax.swing.JFrame {
-    courseInformationManageGUI courseInformationGUI;
-    courseResultManageGUI courseResultManageGUI;
+    private courseInformationManageGUI courseInformationGUI;
+    private courseResultManageGUI courseResultManageGUI;
+    private courseInstructorManageGUI courseInstructorManageGUI;
+    
     public mainFrame() {
         this.courseInformationGUI = new courseInformationManageGUI();
         this.courseResultManageGUI = new courseResultManageGUI();
+        this.courseInstructorManageGUI = new courseInstructorManageGUI();
         initComponents();
         eventHandler();
     }
@@ -24,7 +27,27 @@ public class mainFrame extends javax.swing.JFrame {
                 reload();
             }
         });
+        this.courseInformationGUI.getComboBox().addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if(courseInformationGUI.getComboBox().getSelectedIndex() != 0){
+                    mainPanel.removeAll();
+                    mainPanel.add(courseInstructorManageGUI);
+                    reload();
+                }
+                
+            }
+        });
         this.courseResultManageGUI.backButton().addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                mainPanel.removeAll();
+                mainPanel.add(courseInformationGUI);
+                reload();
+            }
+        });
+        
+        this.courseInstructorManageGUI.backButton().addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
                 mainPanel.removeAll();

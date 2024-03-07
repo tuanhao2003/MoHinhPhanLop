@@ -16,7 +16,7 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
 
     public courseInformationManageGUI() {
         this.cimBLL = new courseInformationManageBLL();
-        this.courseList = cimBLL.getAllCourse();;
+        this.courseList = cimBLL.getInstructedCourse();
         this.currentCourse=null;
         initComponents();
         eventHandler();
@@ -60,7 +60,7 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         this.detailContainer.addContainerListener(new ContainerAdapter(){
             @Override
             public void componentRemoved(ContainerEvent e){
-                if(detailContainer.getComponentCount() == 0){
+                if(detailContainer.getComponentCount() >= 0){
                     deleteButton.setEnabled(false);
                     updateButton.setEnabled(false);
                     reload(buttonPanel);
@@ -172,6 +172,10 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
     }
     public int getCurrentCourseID(){
         return this.currentCourse.getcourseID();
+    }
+    
+    public JComboBox getComboBox(){
+        return jComboBox1;
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -310,17 +314,19 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
         jPanel3.setPreferredSize(new java.awt.Dimension(500, 100));
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
+        searchBox.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         searchBox.setPreferredSize(new java.awt.Dimension(200, 50));
         jPanel3.add(searchBox, new java.awt.GridBagConstraints());
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        jComboBox1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jComboBox1.setMinimumSize(new java.awt.Dimension(100, 50));
-        jComboBox1.setPreferredSize(new java.awt.Dimension(100, 50));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Course Active", "Course Inactive" }));
+        jComboBox1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jComboBox1.setMinimumSize(new java.awt.Dimension(150, 50));
+        jComboBox1.setPreferredSize(new java.awt.Dimension(150, 50));
         jPanel3.add(jComboBox1, new java.awt.GridBagConstraints());
 
         addButton.setFont(new java.awt.Font("Verdana", 0, 24)); // NOI18N
         addButton.setText("+");
+        addButton.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         addButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addButton.setPreferredSize(new java.awt.Dimension(100, 50));
         jPanel3.add(addButton, new java.awt.GridBagConstraints());
@@ -388,7 +394,7 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
         jPanel6.setPreferredSize(new java.awt.Dimension(300, 300));
-        jPanel6.setLayout(new java.awt.GridLayout());
+        jPanel6.setLayout(new java.awt.GridLayout(1, 0));
 
         detailContainer.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED, java.awt.Color.lightGray, java.awt.Color.gray));
         detailContainer.setFont(new java.awt.Font("Verdana", 2, 18)); // NOI18N

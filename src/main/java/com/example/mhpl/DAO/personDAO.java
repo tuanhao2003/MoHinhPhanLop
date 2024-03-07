@@ -78,7 +78,7 @@ public class personDAO {
     }
 
     public boolean addPerson(personDTO person) {
-        String query = "insert into Person(Lastname, Firstname, HireDate, EnrollmentDate) values(?, ?, ?, ?, ?);";
+        String query = "insert into Person(Lastname, Firstname, HireDate, EnrollmentDate) values(?, ?, ?, ?);";
         try {
             PreparedStatement S = this.C.prepareStatement(query);
             S.setString(1, person.getlastName());
