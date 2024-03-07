@@ -92,4 +92,7 @@ public class personDAO {
             return false;
         }
     }
+    public int getLastestPersonID(){
+        return getAllPerson().get(getAllPerson().size()-1).getpersonID();
+    }
 }

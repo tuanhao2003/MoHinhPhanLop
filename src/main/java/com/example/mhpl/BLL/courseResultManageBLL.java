@@ -5,6 +5,7 @@ import com.example.mhpl.DAO.studentGradeDAO;
 import com.example.mhpl.DTO.personDTO;
 import com.example.mhpl.DTO.studentDTO;
 import com.example.mhpl.DTO.studentGradeDTO;
+import java.sql.Date;
 import java.util.ArrayList;
 
 public class courseResultManageBLL {
@@ -43,7 +44,7 @@ public class courseResultManageBLL {
         return studentGradeDAO.getStudentGradeByCourseAndStudentID(this.courseID, sid);
     }
     
-    private ArrayList<studentDTO> getAllStudent(){
+    public ArrayList<studentDTO> getAllStudent(){
         ArrayList<personDTO> psl = this.personDAO.getAllPerson();
         ArrayList<studentDTO> data = new ArrayList<studentDTO>();
         for(personDTO i : psl){
@@ -79,5 +80,13 @@ public class courseResultManageBLL {
     
     private studentDTO convertToStudent(personDTO ps){
         return new studentDTO(ps.getpersonID(), ps.getlastName(), ps.getfirstName(), ps.getenrollmentDate());
+    }
+    
+    public void addStudentToCourse(int sid){
+        this.studentGradeDAO.addstudentGrade(new studentGradeDTO(0, this.courseID, sid, 0.0));
+    }
+    public void addStudentToCourse(String fn, String ln){
+        this.personDAO.addPerson(new studentDTO(0, ln, fn, new Date(System.currentTimeMillis())));
+        this.studentGradeDAO.addstudentGrade(new studentGradeDTO(0, this.courseID, this.personDAO.getLastestPersonID(), 0));
     }
 }

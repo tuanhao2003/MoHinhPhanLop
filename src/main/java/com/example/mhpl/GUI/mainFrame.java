@@ -1,7 +1,6 @@
 package com.example.mhpl.GUI;
 
 import java.awt.event.*;
-import javax.swing.JPanel;
 
 public class mainFrame extends javax.swing.JFrame {
     courseInformationManageGUI courseInformationGUI;
