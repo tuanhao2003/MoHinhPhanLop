@@ -230,15 +230,15 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
                     @Override
                     public void actionPerformed(ActionEvent e1){
                         try {
-                            Integer.parseInt(creditsInp.getText());
-                            cimBLL.updateCourse(currentCourse.getcourseID(), titleInp.getText(), Integer.valueOf(creditsInp.getText()), cimBLL.getAllDepartment().get(departmentInp1.getSelectedIndex()).getdepartmentID());
+                            Integer.parseInt(creditsInp1.getText());
+                            cimBLL.updateCourse(currentCourse.getcourseID(), titleInp1.getText(), Integer.valueOf(creditsInp1.getText()), cimBLL.getAllDepartment().get(departmentInp1.getSelectedIndex()).getdepartmentID());
                             if(courseType1.getSelectedIndex()==0){
                                 cimBLL.updateOnlineCourse(currentCourse.getcourseID(), urlInp1.getText());
                             }else{
                                 cimBLL.updateOnsiteCourse(currentCourse.getcourseID(), locationInp1.getText(), daysInp1.getText(),Time.valueOf(timeInp1.getText()));
                             }
-                            titleInp.setText("");
-                            creditsInp.setText("");
+                            titleInp1.setText("");
+                            creditsInp1.setText("");
                             urlInp1.setText("");
                             locationInp1.setText("");
                             daysInp1.setText("");
