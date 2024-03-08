@@ -7,17 +7,22 @@ import com.example.mhpl.DAO.courseInstructorDAO;
 import com.example.mhpl.DAO.departmentDAO;
 import com.example.mhpl.DTO.courseDTO;
 import com.example.mhpl.DTO.courseInstructorDTO;
+import com.example.mhpl.DAO.personDAO;
+import com.example.mhpl.DTO.personDTO;
 import com.example.mhpl.DTO.teacherDTO;
+import java.sql.Date;
 
 public class courseInstructorManageBLL {
     private courseInstructorDAO courseInstructorDAO;
     private courseDAO courseDAO;
     private departmentDAO departmentDAO;
+    private personDAO personDAO;
 
     public courseInstructorManageBLL() {
         this.courseInstructorDAO = new courseInstructorDAO();
         this.courseDAO = new courseDAO();
         this.departmentDAO = new departmentDAO();
+        this.personDAO = new personDAO();
     }
 
     public ArrayList<courseDTO> getNonInstructedCourse(){
@@ -46,8 +51,8 @@ public class courseInstructorManageBLL {
         return this.courseInstructorDAO.getAllCourseInstructorByCourseID(cid).isEmpty() ? "Inactive" : "Active";
     }
 
-    public boolean addInstruction(int cid, int pid){
-        return courseInstructorDAO.addCourseInstructor(new courseInstructorDTO(cid, pid));
+    public boolean addInstruction(int cid, int tid){
+        return courseInstructorDAO.addCourseInstructor(new courseInstructorDTO(cid, tid));
     }
 
     public boolean deleteInstruction(int cid){
@@ -58,16 +63,42 @@ public class courseInstructorManageBLL {
         return courseInstructorDAO.updateCourse(new courseInstructorDTO(cid, pid));
     }
     
-//    public ArrayList<teacherDTO> getNoneInCourse(){
-//        ArrayList<Integer> courseStudentID = new ArrayList<Integer>();
-//        getCourseStudent().forEach(stu -> courseStudentID.add(stu.getpersonID()));
-//        
-//        ArrayList<teacherDTO> remainCourse = new ArrayList<teacherDTO>();
-//        for(teacherDTO i : getAllStudent()){
-//            if(!courseStudentID.contains(i.getpersonID())){
-//                remainCourse.add(i);
-//            }
-//        }
-//        return remainCourse;
-//    }
+    
+    public teacherDTO convertToTeacher(personDTO ps){
+        return new teacherDTO(ps.getpersonID(), ps.getlastName(), ps.getfirstName(), ps.gethireDate());
+    }
+    
+    public ArrayList<teacherDTO> getAllTeacher(){
+        ArrayList<personDTO> psl = this.personDAO.getAllPerson();
+        ArrayList<teacherDTO> data = new ArrayList<teacherDTO>();
+        for(personDTO i : psl){
+            if(i.gethireDate() != null){
+                data.add(convertToTeacher(i));
+            }
+        }
+        return data;
+    }
+    
+    public ArrayList<teacherDTO> getCourseTeacher(int cid){
+        ArrayList<Integer> teacherInstrucedID = new ArrayList<Integer>();
+        courseInstructorDAO.getAllCourseInstructorByCourseID(cid).forEach(tc -> {
+            teacherInstrucedID.add(tc.getpersonID());
+        });
+
+        ArrayList<teacherDTO> result = new ArrayList<teacherDTO>();
+        for(teacherDTO i : getAllTeacher()){
+            if(teacherInstrucedID.contains(i.getpersonID())){
+                result.add(i);
+            }
+        }
+        return result;
+    }
+    
+    public void assignTeacherToCourse(int cid, int tid){
+        this.courseInstructorDAO.addCourseInstructor(new courseInstructorDTO(cid, tid));
+    }
+    public void assignTeacherToCourse(String fn, String ln, int cid){
+        this.personDAO.addPerson(new teacherDTO(0, ln, fn, new Date(System.currentTimeMillis())));
+        this.courseInstructorDAO.addCourseInstructor(new courseInstructorDTO(cid, personDAO.getLastestPersonID()));
+    }
 }

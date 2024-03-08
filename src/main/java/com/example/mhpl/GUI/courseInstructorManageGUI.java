@@ -12,49 +12,95 @@ import javax.swing.event.*;
 public class courseInstructorManageGUI extends javax.swing.JPanel {
     private courseInstructorManageBLL cinmBLL;
     private ArrayList<courseDTO> courseList;
-    private ArrayList<Integer> addIntendList;
+    private Integer addIntend;
+    private int currentCourseID;
     
     public courseInstructorManageGUI() {
         this.cinmBLL = new courseInstructorManageBLL();
         this.courseList = new ArrayList<courseDTO>();
-        this.addIntendList = new ArrayList<Integer>();
+        this.addIntend = 0;
+        this.currentCourseID = 0;
         initComponents();
         eventHandler();
     }
     private void eventHandler(){
         this.courseList=cinmBLL.getNonInstructedCourse();
         renderTable();
-//        this.courseContainer.addMouseListener(new MouseAdapter(){
-//            @Override
-//            public void mouseClicked(MouseEvent m){
-//                addTeacherDialog.setVisible(true);
-//                addTeacherDialog.setLocationRelativeTo(null);
-//                availableStudent.removeAll();
-//                cinmBLL.getNoneInCourse().forEach(stu -> {
-//                    JPanel panel = new JPanel();
-//                    JCheckBox cb = new JCheckBox();
-//                    cb.addActionListener(new ActionListener(){
-//                        @Override
-//                        public void actionPerformed(ActionEvent cbe) {
-//                            if(cb.isSelected()){
-//                                addIntendList.add(stu.getpersonID());
-//                            }else{
-//                                addIntendList.remove(stu.getpersonID());
-//                            }
-//                        }
-//                    });
-//                    panel.setSize(300, 50);
-//                    panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
-//                    panel.add(cb);
-//                    panel.add(new JLabel(Integer.toString(stu.getpersonID())+" "));
-//                    panel.add(new JLabel(stu.getfirstName()+" "));
-//                    panel.add(new JLabel(stu.getlastName()));
-//                    availableStudent.add(panel);
-//                });
-//                formContainer.add(availableStudentForm);
-//                reload(formContainer);
-//            }
-//        });
+        this.courseContainer.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent m){
+                currentCourseID = Integer.parseInt(courseContainer.getValueAt(courseContainer.rowAtPoint(m.getPoint()), 0).toString());
+                addTeacherDialog.setVisible(true);
+                addTeacherDialog.setLocationRelativeTo(null);
+                availableTeacher.removeAll();
+                ButtonGroup btg = new ButtonGroup();
+                cinmBLL.getAllTeacher().forEach(tea -> {
+                    JPanel panel = new JPanel();
+                    JRadioButton cb = new JRadioButton();
+                    btg.add(cb);
+                    cb.addActionListener(new ActionListener(){
+                        @Override
+                        public void actionPerformed(ActionEvent cbe) {
+                            addIntend =tea.getpersonID();
+                        }
+                    });
+                    panel.setSize(300, 50);
+                    panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
+                    panel.add(cb);
+                    panel.add(new JLabel(Integer.toString(tea.getpersonID())+" "));
+                    panel.add(new JLabel(tea.getfirstName()+" "));
+                    panel.add(new JLabel(tea.getlastName()));
+                    availableTeacher.add(panel);
+                });
+                formContainer.add(availableTeacherForm);
+                reload(formContainer);
+            }
+        });
+        
+        
+        this.addTeacher.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(chooseFunction.getSelectedIndex()==0){
+                    cinmBLL.assignTeacherToCourse(currentCourseID, addIntend);
+                    courseList=cinmBLL.getNonInstructedCourse();
+                    renderTable();
+                    firstNameInp.setText("");
+                    lastNameInp.setText("");
+                    addTeacherDialog.dispose();
+                }else{
+                    cinmBLL.assignTeacherToCourse(firstNameInp.getText(), lastNameInp.getText(), currentCourseID);
+                    courseList=cinmBLL.getNonInstructedCourse();
+                    renderTable();
+                    firstNameInp.setText("");
+                    lastNameInp.setText("");
+                    addTeacherDialog.dispose();
+                }
+            }
+        });
+        
+        this.chooseFunction.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(chooseFunction.getSelectedIndex()==0){
+                    formContainer.removeAll();
+                    formContainer.add(availableTeacherForm);
+                }else{
+                    formContainer.removeAll();
+                    formContainer.add(newTeacherForm);
+                }
+                reload(formContainer);
+            }
+        });
+        
+        this.cancelAddBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                firstNameInp.setText("");
+                lastNameInp.setText("");
+                addTeacherDialog.dispose();
+            }
+        });
     }
     
     private void renderTable(){
@@ -75,6 +121,10 @@ public class courseInstructorManageGUI extends javax.swing.JPanel {
     public JButton backButton(){
         return this.backBtn;
     }
+    public void reloadData(){
+        this.courseList = cinmBLL.getNonInstructedCourse();
+        renderTable();
+    }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
@@ -83,13 +133,13 @@ public class courseInstructorManageGUI extends javax.swing.JPanel {
         dialogContainer = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
-        cancelAddStudent = new javax.swing.JButton();
-        addStudent = new javax.swing.JButton();
+        cancelAddBtn = new javax.swing.JButton();
+        addTeacher = new javax.swing.JButton();
         chooseFunction = new javax.swing.JComboBox<>();
         formContainer = new javax.swing.JPanel();
         availableTeacherForm = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        availableStudent = new javax.swing.JPanel();
+        availableTeacher = new javax.swing.JPanel();
         newTeacherForm = new javax.swing.JPanel();
         jPanel7 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -126,15 +176,15 @@ public class courseInstructorManageGUI extends javax.swing.JPanel {
 
         jPanel6.setLayout(new java.awt.GridLayout(1, 0));
 
-        cancelAddStudent.setText("Cancel");
-        jPanel6.add(cancelAddStudent);
+        cancelAddBtn.setText("Cancel");
+        jPanel6.add(cancelAddBtn);
 
-        addStudent.setText("Add");
-        jPanel6.add(addStudent);
+        addTeacher.setText("Add");
+        jPanel6.add(addTeacher);
 
         jPanel4.add(jPanel6);
 
-        chooseFunction.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Available Student", "New Student" }));
+        chooseFunction.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Available Teacher", "New Teacher" }));
         jPanel4.add(chooseFunction);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -159,8 +209,8 @@ public class courseInstructorManageGUI extends javax.swing.JPanel {
         availableTeacherForm.setPreferredSize(new java.awt.Dimension(300, 300));
         availableTeacherForm.setLayout(new java.awt.GridLayout(1, 0));
 
-        availableStudent.setLayout(new javax.swing.BoxLayout(availableStudent, javax.swing.BoxLayout.Y_AXIS));
-        jScrollPane2.setViewportView(availableStudent);
+        availableTeacher.setLayout(new javax.swing.BoxLayout(availableTeacher, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane2.setViewportView(availableTeacher);
 
         availableTeacherForm.add(jScrollPane2);
 
@@ -284,12 +334,12 @@ public class courseInstructorManageGUI extends javax.swing.JPanel {
         add(jPanel1);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton addStudent;
+    private javax.swing.JButton addTeacher;
     private javax.swing.JDialog addTeacherDialog;
-    private javax.swing.JPanel availableStudent;
+    private javax.swing.JPanel availableTeacher;
     private javax.swing.JPanel availableTeacherForm;
     private javax.swing.JButton backBtn;
-    private javax.swing.JButton cancelAddStudent;
+    private javax.swing.JButton cancelAddBtn;
     private javax.swing.JComboBox<String> chooseFunction;
     private javax.swing.JTable courseContainer;
     private javax.swing.JPanel dialogContainer;

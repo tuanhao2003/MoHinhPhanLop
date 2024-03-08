@@ -36,10 +36,8 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
                 int courseCredits = currentCourse.getcredits();
                 String departmentName = cimBLL.getDepartmentName(id);
                 int courseQuantity = cimBLL.getCourseStudent(id).size();
-                String courseTeacher = "";
-                for(teacherDTO i : cimBLL.getCourseTeacher(id)){
-                    courseTeacher = courseTeacher + i.getfirstName() + " " + i.getlastName() + "\n";
-                }
+                String courseTeacher = cimBLL.getCourseTeacher(id).getfirstName() + " " + cimBLL.getCourseTeacher(id).getlastName();
+               
                 
                 detailContainer.add(new JLabel("Course type: " + courseType + "\n"));
                 detailContainer.add(new JLabel("Course title: " + courseTitle + "\n"));
@@ -81,7 +79,7 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent e){
                 cimBLL.deleteCourse(currentCourse.getcourseID());
                 detailContainer.removeAll();
-                courseList = cimBLL.getAllCourse();
+                courseList = cimBLL.getInstructedCourse();
                 renderTable();
                 reload(detailContainer);
             }
@@ -131,7 +129,7 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
                             titleInp1.setText("");
                             creditsInp1.setText("");
                             addDialog.dispose();
-                            courseList = cimBLL.getAllCourse();
+                            courseList = cimBLL.getInstructedCourse();
                             renderTable();
                         } catch (Exception ex) {
                             ex.printStackTrace();
@@ -165,6 +163,11 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
     private void reload(JPanel screen){
         screen.repaint();
         screen.revalidate();
+    }
+    
+    public void reloadData(){
+        this.courseList = cimBLL.getInstructedCourse();
+        renderTable();
     }
     
     public JButton getviewButton(){

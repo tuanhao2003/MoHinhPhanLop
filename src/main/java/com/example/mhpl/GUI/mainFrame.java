@@ -32,6 +32,7 @@ public class mainFrame extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e){
                 if(courseInformationGUI.getComboBox().getSelectedIndex() != 0){
                     mainPanel.removeAll();
+                    courseInstructorManageGUI.reloadData();
                     mainPanel.add(courseInstructorManageGUI);
                     reload();
                 }
@@ -42,6 +43,7 @@ public class mainFrame extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e){
                 mainPanel.removeAll();
+                courseInformationGUI.reloadData();
                 mainPanel.add(courseInformationGUI);
                 reload();
             }
@@ -51,6 +53,7 @@ public class mainFrame extends javax.swing.JFrame {
             @Override
             public void actionPerformed(ActionEvent e){
                 mainPanel.removeAll();
+                courseInformationGUI.reloadData();
                 mainPanel.add(courseInformationGUI);
                 reload();
             }

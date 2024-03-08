@@ -101,12 +101,22 @@ public class courseResultManageGUI extends javax.swing.JPanel {
                 }
             }
         });
+        
+        this.cancelAddStudent.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                firstNameInp.setText("");
+                lastNameInp.setText("");
+                addStudentDialog.dispose();
+            }
+        });
     }
     public void receiveData(int cid){
         this.crmBLL.setCourseID(cid);
         this.studentGradeList = crmBLL.getCourseResult();
         renderTable();
     }
+    
     private void renderTable(){
         DefaultTableModel model = (DefaultTableModel) this.studentList.getModel();
         model.setRowCount(0);

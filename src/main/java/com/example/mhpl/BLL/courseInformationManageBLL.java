@@ -145,16 +145,16 @@ public class courseInformationManageBLL {
         return result;
     }
 
-    public ArrayList<teacherDTO> getCourseTeacher(int cid){
+    public teacherDTO getCourseTeacher(int cid){
         ArrayList<Integer> teacherInstrucedID = new ArrayList<Integer>();
         courseInstructorDAO.getAllCourseInstructorByCourseID(cid).forEach(tc -> {
             teacherInstrucedID.add(tc.getpersonID());
         });
 
-        ArrayList<teacherDTO> result = new ArrayList<teacherDTO>();
+        teacherDTO result = new teacherDTO();
         for(teacherDTO i : getAllTeacher()){
             if(teacherInstrucedID.contains(i.getpersonID())){
-                result.add(i);
+                result = i;
             }
         }
         return result;

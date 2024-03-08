@@ -59,12 +59,12 @@
                     <Property name="rows" type="int" value="1"/>
                   </Layout>
                   <SubComponents>
-                    <Component class="javax.swing.JButton" name="cancelAddStudent">
+                    <Component class="javax.swing.JButton" name="cancelAddBtn">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Cancel"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JButton" name="addStudent">
+                    <Component class="javax.swing.JButton" name="addTeacher">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Add"/>
                       </Properties>
@@ -75,8 +75,8 @@
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="2">
-                        <StringItem index="0" value="Available Student"/>
-                        <StringItem index="1" value="New Student"/>
+                        <StringItem index="0" value="Available Teacher"/>
+                        <StringItem index="1" value="New Teacher"/>
                       </StringArray>
                     </Property>
                   </Properties>
@@ -119,7 +119,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Container class="javax.swing.JPanel" name="availableStudent">
+            <Container class="javax.swing.JPanel" name="availableTeacher">
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout">
                 <Property name="axis" type="int" value="1"/>
