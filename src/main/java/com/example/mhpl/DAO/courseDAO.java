@@ -163,5 +163,7 @@ public class courseDAO {
         }
     }
 
-     
+     public int getLastestCourseID(){
+        return getAllCourse().get(getAllCourse().size()-1).getcourseID();
+    }
 }

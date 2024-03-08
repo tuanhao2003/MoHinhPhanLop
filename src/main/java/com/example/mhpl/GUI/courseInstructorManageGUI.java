@@ -29,31 +29,37 @@ public class courseInstructorManageGUI extends javax.swing.JPanel {
         this.courseContainer.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent m){
-                currentCourseID = Integer.parseInt(courseContainer.getValueAt(courseContainer.rowAtPoint(m.getPoint()), 0).toString());
-                addTeacherDialog.setVisible(true);
-                addTeacherDialog.setLocationRelativeTo(null);
-                availableTeacher.removeAll();
-                ButtonGroup btg = new ButtonGroup();
-                cinmBLL.getAllTeacher().forEach(tea -> {
-                    JPanel panel = new JPanel();
-                    JRadioButton cb = new JRadioButton();
-                    btg.add(cb);
-                    cb.addActionListener(new ActionListener(){
-                        @Override
-                        public void actionPerformed(ActionEvent cbe) {
-                            addIntend =tea.getpersonID();
-                        }
+                if( courseContainer.columnAtPoint(m.getPoint())==4){
+                    int cid = Integer.parseInt(courseContainer.getValueAt(courseContainer.rowAtPoint(m.getPoint()), 0).toString());
+                    cinmBLL.deleteCourse(cid);
+                    reloadData();
+                }else{
+                    currentCourseID = Integer.parseInt(courseContainer.getValueAt(courseContainer.rowAtPoint(m.getPoint()), 0).toString());
+                    addTeacherDialog.setVisible(true);
+                    addTeacherDialog.setLocationRelativeTo(null);
+                    availableTeacher.removeAll();
+                    ButtonGroup btg = new ButtonGroup();
+                    cinmBLL.getAllTeacher().forEach(tea -> {
+                        JPanel panel = new JPanel();
+                        JRadioButton cb = new JRadioButton();
+                        btg.add(cb);
+                        cb.addActionListener(new ActionListener(){
+                            @Override
+                            public void actionPerformed(ActionEvent cbe) {
+                                addIntend =tea.getpersonID();
+                            }
+                        });
+                        panel.setSize(300, 50);
+                        panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
+                        panel.add(cb);
+                        panel.add(new JLabel(Integer.toString(tea.getpersonID())+" "));
+                        panel.add(new JLabel(tea.getfirstName()+" "));
+                        panel.add(new JLabel(tea.getlastName()));
+                        availableTeacher.add(panel);
                     });
-                    panel.setSize(300, 50);
-                    panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
-                    panel.add(cb);
-                    panel.add(new JLabel(Integer.toString(tea.getpersonID())+" "));
-                    panel.add(new JLabel(tea.getfirstName()+" "));
-                    panel.add(new JLabel(tea.getlastName()));
-                    availableTeacher.add(panel);
-                });
-                formContainer.add(availableTeacherForm);
-                reload(formContainer);
+                    formContainer.add(availableTeacherForm);
+                    reload(formContainer);
+                }
             }
         });
         
@@ -62,19 +68,23 @@ public class courseInstructorManageGUI extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(chooseFunction.getSelectedIndex()==0){
-                    cinmBLL.assignTeacherToCourse(currentCourseID, addIntend);
-                    courseList=cinmBLL.getNonInstructedCourse();
-                    renderTable();
-                    firstNameInp.setText("");
-                    lastNameInp.setText("");
-                    addTeacherDialog.dispose();
+                    if(currentCourseID != 0){
+                        cinmBLL.assignTeacherToCourse(currentCourseID, addIntend);
+                        courseList=cinmBLL.getNonInstructedCourse();
+                        renderTable();
+                        firstNameInp.setText("");
+                        lastNameInp.setText("");
+                        addTeacherDialog.dispose();
+                    }
                 }else{
-                    cinmBLL.assignTeacherToCourse(firstNameInp.getText(), lastNameInp.getText(), currentCourseID);
-                    courseList=cinmBLL.getNonInstructedCourse();
-                    renderTable();
-                    firstNameInp.setText("");
-                    lastNameInp.setText("");
-                    addTeacherDialog.dispose();
+                    if(firstNameInp.getText()!=null && lastNameInp.getText() !=null){
+                        cinmBLL.assignTeacherToCourse(firstNameInp.getText(), lastNameInp.getText(), currentCourseID);
+                        courseList=cinmBLL.getNonInstructedCourse();
+                        renderTable();
+                        firstNameInp.setText("");
+                        lastNameInp.setText("");
+                        addTeacherDialog.dispose();
+                    }
                 }
             }
         });
@@ -162,7 +172,8 @@ public class courseInstructorManageGUI extends javax.swing.JPanel {
         addTeacherDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addTeacherDialog.setTitle("Student Assignment");
         addTeacherDialog.setBackground(new java.awt.Color(255, 255, 255));
-        addTeacherDialog.setMinimumSize(new java.awt.Dimension(300, 450));
+        addTeacherDialog.setMinimumSize(new java.awt.Dimension(600, 400));
+        addTeacherDialog.setPreferredSize(new java.awt.Dimension(600, 400));
         addTeacherDialog.setResizable(false);
         addTeacherDialog.getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
@@ -191,13 +202,14 @@ public class courseInstructorManageGUI extends javax.swing.JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         dialogContainer.add(jPanel4, gridBagConstraints);
 
+        formContainer.setMinimumSize(new java.awt.Dimension(300, 400));
+        formContainer.setPreferredSize(new java.awt.Dimension(300, 400));
         formContainer.setLayout(new java.awt.GridLayout(1, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -215,11 +227,12 @@ public class courseInstructorManageGUI extends javax.swing.JPanel {
         availableTeacherForm.add(jScrollPane2);
 
         newTeacherForm.setPreferredSize(new java.awt.Dimension(300, 300));
-        newTeacherForm.setLayout(new java.awt.GridLayout(2, 0, 0, 50));
+        newTeacherForm.setLayout(new java.awt.GridLayout(2, 0, 0, 100));
 
         jPanel7.setBackground(new java.awt.Color(0, 102, 255));
         jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jPanel7.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel7.setPreferredSize(new java.awt.Dimension(300, 50));
         jPanel7.setLayout(new java.awt.GridBagLayout());
 
         jLabel2.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
@@ -324,7 +337,7 @@ public class courseInstructorManageGUI extends javax.swing.JPanel {
         courseContainer.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {{}},
             new String [] {
-                "Course ID", "Title", "Department", "Status"
+                "Course ID", "Title", "Department", "Status", "Delete"
             }
         ));
         jScrollPane1.setViewportView(courseContainer);

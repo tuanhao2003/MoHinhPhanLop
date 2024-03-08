@@ -164,6 +164,14 @@ public class courseInformationManageBLL {
         return departmentDAO.getAllDepartment();
     }
     
+    public String getCourseData(int cid){
+        if(getCourseType(cid).equals("Online")){
+            return "Link course: " + getOnlineCourseByID(cid).geturl();
+        }else if(getCourseType(cid).equals("Offline")){
+            return "Course location: " + getOnsiteCourseByID(cid).getlocation() +"#" + "Days: "+ getOnsiteCourseByID(cid).getdays()+"#"+"Time: "+getOnsiteCourseByID(cid).gettime().toString();
+        }
+        return "";
+    }
     
     
     
@@ -227,9 +235,11 @@ public class courseInformationManageBLL {
     
     
     public void deleteCourse(int id){
-        onlineCourseDAO.deleteOnlineCourse(id);
-        onsiteCourseDAO.deleteOnsiteCourse(id);
-        courseDAO.deleteCourse(id);
+        this.courseInstructorDAO.deleteCourseInstructorByCourseID(id);
+        this.studentGradeDAO.deleteStudentGradeByCourseID(id);
+        this.onlineCourseDAO.deleteOnlineCourse(id);
+        this.onsiteCourseDAO.deleteOnsiteCourse(id);
+        this.courseDAO.deleteCourse(id);
     }
     
     
@@ -304,5 +314,9 @@ public class courseInformationManageBLL {
             }
         }
         return listAdjusted;
+    }
+    
+    public int getLastedCourseID(){
+        return this.courseDAO.getLastestCourseID();
     }
 }

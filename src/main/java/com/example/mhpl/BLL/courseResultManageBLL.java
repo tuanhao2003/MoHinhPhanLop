@@ -102,4 +102,8 @@ public class courseResultManageBLL {
         }
         return remainCourse;
     }
+    
+    public void deleteCourseResult(int eid){
+        this.studentGradeDAO.deleteStudentGrade(eid);
+    }
 }

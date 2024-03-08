@@ -95,6 +95,20 @@ public class studentGradeDAO {
             return false;
         }
     }
+    public boolean deleteStudentGradeByCourseID(int cid) {
+        String query = "delete from StudentGrade where CourseID = ?;";
+        try {
+            PreparedStatement S = this.C.prepareStatement(query);
+            S.setInt(1, cid);
+            S.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    
 
     public boolean updateStudentGrade(studentGradeDTO studentGrade) {
         String query = "update StudentGrade set CourseID = ?, StudentID = ?, Grade = ? where EnrollmentID = ?;";

@@ -1,10 +1,7 @@
 package com.example.mhpl.GUI;
 
 import com.example.mhpl.BLL.courseResultManageBLL;
-import com.example.mhpl.DTO.studentDTO;
 import com.example.mhpl.DTO.studentGradeDTO;
-import java.awt.Checkbox;
-import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import javax.swing.*;
@@ -30,6 +27,7 @@ public class courseResultManageGUI extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent e){
                 addStudentDialog.setVisible(true);
                 addStudentDialog.setLocationRelativeTo(null);
+                formContainer.removeAll();
                 availableStudent.removeAll();
                 crmBLL.getNoneInCourse().forEach(stu -> {
                     JPanel panel = new JPanel();
@@ -89,6 +87,7 @@ public class courseResultManageGUI extends javax.swing.JPanel {
                         renderTable();
                         firstNameInp.setText("");
                         lastNameInp.setText("");
+                        chooseFunction.setSelectedIndex(0);
                         addStudentDialog.dispose();
                     }
                 }else{
@@ -97,6 +96,8 @@ public class courseResultManageGUI extends javax.swing.JPanel {
                     renderTable();
                     firstNameInp.setText("");
                     lastNameInp.setText("");
+                    chooseFunction.setSelectedIndex(0);
+
                     addStudentDialog.dispose();
                 }
             }
@@ -107,7 +108,21 @@ public class courseResultManageGUI extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent e) {
                 firstNameInp.setText("");
                 lastNameInp.setText("");
+                chooseFunction.setSelectedIndex(0);
                 addStudentDialog.dispose();
+            }
+        });
+        
+        this.studentList.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent m){
+                int sid = studentGradeList.get(studentList.rowAtPoint(m.getPoint())).getstudentID();
+                int eid = crmBLL.getByCourseAndStudentID(sid).getenrollmentID();
+                if( studentList.columnAtPoint(m.getPoint())==4){
+                    crmBLL.deleteCourseResult(eid);
+                    studentGradeList = crmBLL.getCourseResult();
+                    renderTable();
+                }
             }
         });
     }
@@ -159,6 +174,7 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         screen.repaint();
         screen.revalidate();
     }
+    
     public JButton backButton(){
         return this.backBtn;
     }
@@ -200,8 +216,8 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         addStudentDialog.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addStudentDialog.setTitle("Student Assignment");
         addStudentDialog.setBackground(new java.awt.Color(255, 255, 255));
-        addStudentDialog.setMinimumSize(new java.awt.Dimension(300, 450));
-        addStudentDialog.setPreferredSize(new java.awt.Dimension(300, 450));
+        addStudentDialog.setMinimumSize(new java.awt.Dimension(600, 400));
+        addStudentDialog.setPreferredSize(new java.awt.Dimension(600, 400));
         addStudentDialog.setResizable(false);
         addStudentDialog.getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
@@ -230,13 +246,15 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weighty = 0.5;
         dialogContainer.add(jPanel4, gridBagConstraints);
 
+        formContainer.setMinimumSize(new java.awt.Dimension(300, 400));
+        formContainer.setPreferredSize(new java.awt.Dimension(300, 400));
         formContainer.setLayout(new java.awt.GridLayout(1, 0));
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -254,7 +272,7 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         availableStudentForm.add(jScrollPane2);
 
         newStudentForm.setPreferredSize(new java.awt.Dimension(300, 300));
-        newStudentForm.setLayout(new java.awt.GridLayout(2, 0, 0, 50));
+        newStudentForm.setLayout(new java.awt.GridLayout(2, 0, 0, 100));
 
         jPanel7.setBackground(new java.awt.Color(0, 102, 255));
         jPanel7.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -371,7 +389,7 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         studentList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {{}},
             new String [] {
-                "First Name", "Last Name", "Enrollment Date", "Grade"
+                "First Name", "Last Name", "Enrollment Date", "Grade", "Delete"
             }
         ));
         jScrollPane1.setViewportView(studentList);

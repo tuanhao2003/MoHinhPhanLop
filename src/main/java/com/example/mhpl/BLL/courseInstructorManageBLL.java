@@ -5,9 +5,12 @@ import java.util.ArrayList;
 import com.example.mhpl.DAO.courseDAO;
 import com.example.mhpl.DAO.courseInstructorDAO;
 import com.example.mhpl.DAO.departmentDAO;
+import com.example.mhpl.DAO.onlineCourseDAO;
+import com.example.mhpl.DAO.onsiteCourseDAO;
 import com.example.mhpl.DTO.courseDTO;
 import com.example.mhpl.DTO.courseInstructorDTO;
 import com.example.mhpl.DAO.personDAO;
+import com.example.mhpl.DAO.studentGradeDAO;
 import com.example.mhpl.DTO.personDTO;
 import com.example.mhpl.DTO.teacherDTO;
 import java.sql.Date;
@@ -17,12 +20,18 @@ public class courseInstructorManageBLL {
     private courseDAO courseDAO;
     private departmentDAO departmentDAO;
     private personDAO personDAO;
+    private studentGradeDAO studentGradeDAO;
+    private onlineCourseDAO onlineCourseDAO;
+    private onsiteCourseDAO onsiteCourseDAO;
 
     public courseInstructorManageBLL() {
         this.courseInstructorDAO = new courseInstructorDAO();
         this.courseDAO = new courseDAO();
         this.departmentDAO = new departmentDAO();
         this.personDAO = new personDAO();
+        this.studentGradeDAO = new studentGradeDAO();
+        this.onlineCourseDAO = new onlineCourseDAO();
+        this.onsiteCourseDAO = new onsiteCourseDAO();
     }
 
     public ArrayList<courseDTO> getNonInstructedCourse(){
@@ -100,5 +109,12 @@ public class courseInstructorManageBLL {
     public void assignTeacherToCourse(String fn, String ln, int cid){
         this.personDAO.addPerson(new teacherDTO(0, ln, fn, new Date(System.currentTimeMillis())));
         this.courseInstructorDAO.addCourseInstructor(new courseInstructorDTO(cid, personDAO.getLastestPersonID()));
+    }
+    
+    public void deleteCourse(int id){
+        this.studentGradeDAO.deleteStudentGradeByCourseID(id);
+        this.onlineCourseDAO.deleteOnlineCourse(id);
+        this.onsiteCourseDAO.deleteOnsiteCourse(id);
+        this.courseDAO.deleteCourse(id);
     }
 }
