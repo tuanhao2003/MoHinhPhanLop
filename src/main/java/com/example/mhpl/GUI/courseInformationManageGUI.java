@@ -230,8 +230,7 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
                     @Override
                     public void actionPerformed(ActionEvent e1){
                         try {
-                            Integer.parseInt(creditsInp1.getText());
-                            cimBLL.updateCourse(currentCourse.getcourseID(), titleInp1.getText(), Integer.valueOf(creditsInp1.getText()), cimBLL.getAllDepartment().get(departmentInp1.getSelectedIndex()).getdepartmentID());
+                            cimBLL.updateCourse(currentCourse.getcourseID(), titleInp1.getText(), Integer.parseInt(creditsInp1.getText()), cimBLL.getAllDepartment().get(departmentInp1.getSelectedIndex()).getdepartmentID());
                             if(courseType1.getSelectedIndex()==0){
                                 cimBLL.updateOnlineCourse(currentCourse.getcourseID(), urlInp1.getText());
                             }else{
@@ -248,7 +247,6 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
                             renderTable();
                         } catch (Exception ex) {
                             ex.printStackTrace();
-                            JOptionPane.showMessageDialog(null, "Credits must be Integer");
                         }
                     }
                 });
