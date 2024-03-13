@@ -1,4 +1,4 @@
-package com.example.mhpl.DTO;
+package com.example.mhpl.DAO;
 
 import java.sql.*;
 

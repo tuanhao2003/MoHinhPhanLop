@@ -3,7 +3,6 @@ package com.example.mhpl.DAO;
 import java.sql.*;
 import java.util.ArrayList;
 
-import com.example.mhpl.DTO.courseDTO;
 
 public class courseDAO {
     private MyDatabaseManager sql = new MyDatabaseManager() ;

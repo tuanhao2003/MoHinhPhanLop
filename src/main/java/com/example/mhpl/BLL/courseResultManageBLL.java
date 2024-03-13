@@ -2,9 +2,9 @@ package com.example.mhpl.BLL;
 
 import com.example.mhpl.DAO.personDAO;
 import com.example.mhpl.DAO.studentGradeDAO;
-import com.example.mhpl.DTO.personDTO;
-import com.example.mhpl.DTO.studentDTO;
-import com.example.mhpl.DTO.studentGradeDTO;
+import com.example.mhpl.DAO.personDTO;
+import com.example.mhpl.DAO.studentDTO;
+import com.example.mhpl.DAO.studentGradeDTO;
 import java.sql.Date;
 import java.util.ArrayList;
 

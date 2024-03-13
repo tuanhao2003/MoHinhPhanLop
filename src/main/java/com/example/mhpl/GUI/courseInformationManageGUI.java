@@ -1,7 +1,7 @@
 package com.example.mhpl.GUI;
 
 import com.example.mhpl.BLL.courseInformationManageBLL;
-import com.example.mhpl.DTO.courseDTO;
+import com.example.mhpl.DAO.courseDTO;
 
 import java.util.ArrayList;
 import javax.swing.*;

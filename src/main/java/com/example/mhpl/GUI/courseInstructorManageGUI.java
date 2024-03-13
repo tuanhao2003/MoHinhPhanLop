@@ -1,7 +1,7 @@
 package com.example.mhpl.GUI;
 
 import com.example.mhpl.BLL.courseInstructorManageBLL;
-import com.example.mhpl.DTO.courseDTO;
+import com.example.mhpl.DAO.courseDTO;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import javax.swing.*;

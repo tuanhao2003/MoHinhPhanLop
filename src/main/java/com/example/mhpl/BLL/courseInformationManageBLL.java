@@ -7,16 +7,16 @@ import com.example.mhpl.DAO.courseDAO;
 import com.example.mhpl.DAO.courseInstructorDAO;
 import com.example.mhpl.DAO.departmentDAO;
 import com.example.mhpl.DAO.onlineCourseDAO;
-import com.example.mhpl.DTO.courseDTO;
-import com.example.mhpl.DTO.onlineCourseDTO;
-import com.example.mhpl.DTO.onsiteCourseDTO;
-import com.example.mhpl.DTO.personDTO;
-import com.example.mhpl.DTO.studentDTO;
-import com.example.mhpl.DTO.teacherDTO;
+import com.example.mhpl.DAO.courseDTO;
+import com.example.mhpl.DAO.onlineCourseDTO;
+import com.example.mhpl.DAO.onsiteCourseDTO;
+import com.example.mhpl.DAO.personDTO;
+import com.example.mhpl.DAO.studentDTO;
+import com.example.mhpl.DAO.teacherDTO;
 import com.example.mhpl.DAO.onsiteCourseDAO;
 import com.example.mhpl.DAO.personDAO;
 import com.example.mhpl.DAO.studentGradeDAO;
-import com.example.mhpl.DTO.departmentDTO;
+import com.example.mhpl.DAO.departmentDTO;
 
 public class courseInformationManageBLL {
     private courseDAO courseDAO;

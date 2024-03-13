@@ -7,12 +7,12 @@ import com.example.mhpl.DAO.courseInstructorDAO;
 import com.example.mhpl.DAO.departmentDAO;
 import com.example.mhpl.DAO.onlineCourseDAO;
 import com.example.mhpl.DAO.onsiteCourseDAO;
-import com.example.mhpl.DTO.courseDTO;
-import com.example.mhpl.DTO.courseInstructorDTO;
+import com.example.mhpl.DAO.courseDTO;
+import com.example.mhpl.DAO.courseInstructorDTO;
 import com.example.mhpl.DAO.personDAO;
 import com.example.mhpl.DAO.studentGradeDAO;
-import com.example.mhpl.DTO.personDTO;
-import com.example.mhpl.DTO.teacherDTO;
+import com.example.mhpl.DAO.personDTO;
+import com.example.mhpl.DAO.teacherDTO;
 import java.sql.Date;
 
 public class courseInstructorManageBLL {

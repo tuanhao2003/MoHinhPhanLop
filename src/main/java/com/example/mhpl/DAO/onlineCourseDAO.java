@@ -1,7 +1,6 @@
 package com.example.mhpl.DAO;
 
 import java.sql.*;
-import com.example.mhpl.DTO.onlineCourseDTO;
 import java.util.ArrayList;
 
 public class onlineCourseDAO {
