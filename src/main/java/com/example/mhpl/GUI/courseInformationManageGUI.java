@@ -198,6 +198,19 @@ public class courseInformationManageGUI extends javax.swing.JPanel {
                 }
             }
         });
+        this.cancelBtn.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                addDialog.dispose();
+            }
+        });
+        
+        this.cancelBtn1.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                changeDialog.dispose();
+            }
+        });
         
         this.updateButton.addActionListener(new ActionListener(){
             @Override

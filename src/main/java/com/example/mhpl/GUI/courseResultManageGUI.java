@@ -200,6 +200,7 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         jPanel10 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         lastNameInp = new javax.swing.JTextField();
+        viewStudentInfor = new javax.swing.JDialog();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         backBtn = new javax.swing.JButton();
@@ -334,6 +335,8 @@ public class courseResultManageGUI extends javax.swing.JPanel {
 
         newStudentForm.add(jPanel10);
 
+        viewStudentInfor.setPreferredSize(new java.awt.Dimension(600, 400));
+
         setPreferredSize(new java.awt.Dimension(800, 600));
         setLayout(new java.awt.GridLayout(1, 0));
 
@@ -424,5 +427,6 @@ public class courseResultManageGUI extends javax.swing.JPanel {
     private javax.swing.JTextField lastNameInp;
     private javax.swing.JPanel newStudentForm;
     private javax.swing.JTable studentList;
+    private javax.swing.JDialog viewStudentInfor;
     // End of variables declaration//GEN-END:variables
 }

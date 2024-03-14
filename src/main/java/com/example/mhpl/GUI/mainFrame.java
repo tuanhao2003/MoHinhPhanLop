@@ -54,6 +54,7 @@ public class mainFrame extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e){
                 mainPanel.removeAll();
                 courseInformationGUI.reloadData();
+                courseInformationGUI.getComboBox().setSelectedIndex(0);
                 mainPanel.add(courseInformationGUI);
                 reload();
             }
