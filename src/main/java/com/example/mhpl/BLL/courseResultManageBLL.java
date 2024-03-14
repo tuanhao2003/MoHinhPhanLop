@@ -31,9 +31,13 @@ public class courseResultManageBLL {
     
     public boolean saveResult(int eid, int sid, double grade){
         try {
-            studentGradeDTO stuGrade = new studentGradeDTO(eid, this.courseID, sid, grade);
-            studentGradeDAO.updateStudentGrade(stuGrade);
-            return true;
+            if(grade > 0.0 && grade < 4.0){
+                studentGradeDTO stuGrade = new studentGradeDTO(eid, this.courseID, sid, grade);
+                studentGradeDAO.updateStudentGrade(stuGrade);
+                return true;
+            }else{
+                return false;
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return false;
