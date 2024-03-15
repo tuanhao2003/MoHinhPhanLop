@@ -125,6 +125,32 @@ public class courseResultManageGUI extends javax.swing.JPanel {
                 }
             }
         });
+        
+        this.studentList.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent m){
+                int sid = studentGradeList.get(studentList.rowAtPoint(m.getPoint())).getstudentID();
+                int eid = crmBLL.getByCourseAndStudentID(sid).getenrollmentID();
+                if( studentList.columnAtPoint(m.getPoint())!=3 && studentList.columnAtPoint(m.getPoint())!=4){
+                    studentInforContainer.removeAll();
+                    studentInforContainer.add(new JLabel("Student's first name: "+studentList.getValueAt(studentList.rowAtPoint(m.getPoint()), 0)));
+                    studentInforContainer.add(new JLabel("Student's last name: "+studentList.getValueAt(studentList.rowAtPoint(m.getPoint()), 1)));
+                    studentInforContainer.add(new JLabel("Enrollment date: "+studentList.getValueAt(studentList.rowAtPoint(m.getPoint()), 2)));
+                    studentInforContainer.add(new JLabel("Grade in this course: "+studentList.getValueAt(studentList.rowAtPoint(m.getPoint()), 3)));
+                    studentInforContainer.add(new JLabel("Student's other courses:"));
+                    JPanel panel = new JPanel();
+                    panel.setLayout(new FlowLayout());
+                    panel.setSize(600, 50);
+                    crmBLL.getAllCourseOfStudent(sid).forEach(courseName -> {
+                        panel.add(new JLabel(courseName));
+                    });
+                    studentInforContainer.add(panel);
+                    reload(studentInforContainer);
+                    viewStudentInfor.setLocationRelativeTo(null);
+                    viewStudentInfor.setVisible(true);
+                }
+            }
+        });
     }
     public void receiveData(int cid){
         this.crmBLL.setCourseID(cid);
@@ -201,6 +227,7 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         lastNameInp = new javax.swing.JTextField();
         viewStudentInfor = new javax.swing.JDialog();
+        studentInforContainer = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         backBtn = new javax.swing.JButton();
@@ -218,7 +245,6 @@ public class courseResultManageGUI extends javax.swing.JPanel {
         addStudentDialog.setTitle("Student Assignment");
         addStudentDialog.setBackground(new java.awt.Color(255, 255, 255));
         addStudentDialog.setMinimumSize(new java.awt.Dimension(600, 400));
-        addStudentDialog.setPreferredSize(new java.awt.Dimension(600, 400));
         addStudentDialog.setResizable(false);
         addStudentDialog.getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
@@ -335,7 +361,12 @@ public class courseResultManageGUI extends javax.swing.JPanel {
 
         newStudentForm.add(jPanel10);
 
+        viewStudentInfor.setMinimumSize(new java.awt.Dimension(600, 400));
         viewStudentInfor.setPreferredSize(new java.awt.Dimension(600, 400));
+        viewStudentInfor.getContentPane().setLayout(new java.awt.GridLayout());
+
+        studentInforContainer.setLayout(new javax.swing.BoxLayout(studentInforContainer, javax.swing.BoxLayout.Y_AXIS));
+        viewStudentInfor.getContentPane().add(studentInforContainer);
 
         setPreferredSize(new java.awt.Dimension(800, 600));
         setLayout(new java.awt.GridLayout(1, 0));
@@ -426,6 +457,7 @@ public class courseResultManageGUI extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField lastNameInp;
     private javax.swing.JPanel newStudentForm;
+    private javax.swing.JPanel studentInforContainer;
     private javax.swing.JTable studentList;
     private javax.swing.JDialog viewStudentInfor;
     // End of variables declaration//GEN-END:variables

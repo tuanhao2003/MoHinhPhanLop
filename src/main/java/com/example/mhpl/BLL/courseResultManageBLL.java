@@ -1,5 +1,6 @@
 package com.example.mhpl.BLL;
 
+import com.example.mhpl.DAO.courseDAO;
 import com.example.mhpl.DAO.personDAO;
 import com.example.mhpl.DAO.studentGradeDAO;
 import com.example.mhpl.DAO.personDTO;
@@ -12,12 +13,14 @@ public class courseResultManageBLL {
     private studentGradeDAO studentGradeDAO;
     private studentDTO studentDTO; 
     private personDAO personDAO;
+    private courseDAO courseDAO;
     private int courseID;
 
     public courseResultManageBLL() {
         this.studentGradeDAO = new studentGradeDAO();
         this.studentDTO = new studentDTO();
         this.personDAO = new personDAO();
+        this.courseDAO = new courseDAO();
         this.courseID = 0;
     }
     
@@ -109,5 +112,19 @@ public class courseResultManageBLL {
     
     public void deleteCourseResult(int eid){
         this.studentGradeDAO.deleteStudentGrade(eid);
+    }
+    
+    public ArrayList<String> getAllCourseOfStudent(int sid){
+        ArrayList<Integer> listGradeID = new ArrayList<Integer>();
+        this.studentGradeDAO.getAllStudentGrade().forEach(grade -> {
+            if(grade.getstudentID() == sid){
+                listGradeID.add(grade.getcourseID());
+            }
+        });
+        ArrayList<String> courseNameList = new ArrayList<String>();
+        for(int i : listGradeID){
+            courseNameList.add(this.courseDAO.getCourseByCourseID(i).gettitle());
+        }
+        return courseNameList;
     }
 }
