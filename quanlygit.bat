@@ -1,3 +1,4 @@
+:start
 chcp 65001
 color a
 title Quản Lý Git
@@ -7,18 +8,31 @@ echo off
 cls
 
 :run
-echo ###########################################################################################################
-echo #                                                                                                         #
-echo # Chọn chế độ(init nhấn 0, pull nhấn 1, push nhấn 2, reset branch nhấn 3, fix setup stream error nhấn 4): #
-echo #                                                                                                         #
-echo ###########################################################################################################
-choice /c 01234 > nul
+echo #############################################
+echo #                                           #
+echo #  Chọn chế độ:                             #
+echo #          - init nhấn 0                    #
+echo #          - pull nhấn 1                    #
+echo #          - push nhấn 2                    #
+echo #          - reset branch nhấn 3            #
+echo #          - fix setup stream error nhấn 4  #
+echo #          - Tự gõ lệnh nhấn t              #
+echo #                                           #
+echo #############################################
+choice /c t01234 > nul
 set "mode=%errorlevel%"
-if "%mode%"=="1" goto init
-if "%mode%"=="2" goto pull
-if "%mode%"=="3" goto push
-if "%mode%"=="4" goto reset
-if "%mode%"=="5" goto setup
+if "%mode%"=="1" goto handtype
+if "%mode%"=="2" goto init
+if "%mode%"=="3" goto pull
+if "%mode%"=="4" goto push
+if "%mode%"=="5" goto reset
+if "%mode%"=="6" goto setup
+
+
+:handtype
+set /p "commandTyped=Lệnh: "
+%commandTyped%
+goto continue
 
 :init
 cls
@@ -30,7 +44,7 @@ git.exe
 set /p originUrl=Nhập git url:
 git.exe remote add origin "%originUrl%"
 echo Đã kết nối với github %originUrl%
-goto stop
+goto continue
 
 
 :pull
@@ -42,7 +56,7 @@ set pullLog=
 for /f "delims=" %%i in ('git.exe pull 2^>^&1') do (set pullLog=%%i)
 if "x%pullLog:Already=%"=="x%pullLog%" if "x%pullLog:changed=%"=="x%pullLog%" goto pullErrHandle
 echo Đã cập nhật về thiết bị
-goto stop
+goto continue
 
 :push
 cls
@@ -57,7 +71,7 @@ set pushLog=
 for /f "delims=" %%i in ('git.exe push 2^>^&1') do (set pushLog=%%i)
 if "x%pushLog:->=%"=="x%pushLog%" if "x%pushLog:up-to-date=%"=="x%pushLog%" goto pushErrHandle
 echo Đã cập nhật lên Github
-goto stop
+goto continue
 
 
 :reset
@@ -71,7 +85,7 @@ set /p branch=Nhập branch name:
 git.exe reset "--hard" %commitId%
 git.exe push -f origin %branch%
 echo Đã reset về commit %id%, nhớ nhắc mọi người clone code mới
-goto stop
+goto continue
 
 :setup
 cls
@@ -79,8 +93,9 @@ echo ############
 echo # fix mode #
 echo ############
 echo Hãy nhập tên nhánh mặc định(thông thường là main):
-set /p branchDefault=Tên nhánh:
+set /p branchDefault=Tên nhánh: 
 git.exe branch --set-upstream-to=origin/main "%branchDefault%"
+goto continue
 
 :err
 echo #######################
@@ -89,7 +104,7 @@ echo #######################
 echo (Y/N):
 choice /c yn > nul
 set "mode=%errorlevel%"
-if "%mode%"=="1" goto run
+if "%mode%"=="1" goto start
 if "%mode%"=="2" goto stop
 echo Nhập đúng định dạng
 goto err
@@ -107,7 +122,7 @@ set pullLog=
 for /f "delims=" %%i in ('git.exe pull 2^>^&1') do (set pullLog=%%i)
 if "x%pullLog:Already=%"=="x%pullLog%" if "x%pullLog:changed=%"=="x%pullLog%" goto err
 echo Đã cập nhật về thiết bị
-goto stop
+goto continue
 
 :pushErrHandle
 echo ############
@@ -122,8 +137,19 @@ set pushLog=
 for /f "delims=" %%i in ('git.exe push 2^>^&1') do (set pushLog=%%i)
 if "x%pushLog:->=%"=="x%pushLog%" if "x%pushLog:up-to-date=%"=="x%pushLog%" goto err
 echo Đã cập nhật lên Github
-goto stop
+goto continue
+
+:continue
+echo #############
+echo # Tiếp tục? #
+echo #############
+echo (Y/N):
+choice /c yn > nul
+set "mode=%errorlevel%"
+if "%mode%"=="1" goto start
+if "%mode%"=="2" goto stop
+echo Nhập đúng định dạng
+goto continue
 
 :stop
-pause
 exit
