@@ -88,10 +88,8 @@ echo #######################
 set /p select=(Y/N):
 if "%select%"=="n" goto stop
 if "%select%"=="N" goto stop
-if "%select%"=="y" if "%mode%"=="1" goto pullErrHandle 
-if "%select%"=="y" if "%mode%"=="2" goto pushErrHandle
-if "%select%"=="Y" if "%mode%"=="1" goto pullErrHandle 
-if "%select%"=="Y" if "%mode%"=="2" goto pushErrHandle
+if "%select%"=="Y" goto run
+if "%select%"=="Y" goto run
 echo Nhập đúng định dạng
 goto err
 
