@@ -12,7 +12,7 @@ echo #                                                                          
 echo # Chọn chế độ(init nhấn 0, pull nhấn 1, push nhấn 2, reset branch nhấn 3, fix setup stream error nhấn 4): #
 echo #                                                                                                         #
 echo ###########################################################################################################
-choice /c 0123 > nul
+choice /c 01234 > nul
 set "mode=%errorlevel%"
 if "%mode%"=="1" goto init
 if "%mode%"=="2" goto pull
@@ -85,11 +85,11 @@ git.exe branch --set-upstream-to=origin/main main
 echo #######################
 echo # Lỗi, thử cách khác? #
 echo #######################
-set /p select=(Y/N):
-if "%select%"=="n" goto stop
-if "%select%"=="N" goto stop
-if "%select%"=="Y" goto run
-if "%select%"=="Y" goto run
+echo (Y/N):
+choice /c yn > nul
+set "mode=%errorlevel%"
+if "%mode%"=="1" goto run
+if "%mode%"=="2" goto stop
 echo Nhập đúng định dạng
 goto err
 
