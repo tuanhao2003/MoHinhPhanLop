@@ -29,7 +29,6 @@ git.exe init
 git.exe
 set /p originUrl=Nhập git url:
 git.exe remote add origin "%originUrl%"
-git.exe branch --set-upstream-to=origin/main main
 echo Đã kết nối với github %originUrl%
 goto stop
 
@@ -79,7 +78,9 @@ cls
 echo ############
 echo # fix mode #
 echo ############
-git.exe branch --set-upstream-to=origin/main main
+echo Hãy nhập tên nhánh mặc định(thông thường là main):
+set /p branchDefault=Tên nhánh:
+git.exe branch --set-upstream-to=origin/main "%branchDefault%"
 
 :err
 echo #######################
