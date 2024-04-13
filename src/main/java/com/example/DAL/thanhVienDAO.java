@@ -25,14 +25,15 @@ public class thanhVienDAO {
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();
+
             List<thanhVien> members = new ArrayList<thanhVien>();
             Query query = this.sess.createQuery("from thanhVien");
             List datas = query.list();
-            
             for(Iterator iterator = datas.iterator();iterator.hasNext();){
                 thanhVien mem = (thanhVien) iterator.next();
                 members.add(mem);
             }
+            
             this.trans.commit();
             return members;
         } catch (HibernateException he) {
@@ -47,19 +48,14 @@ public class thanhVienDAO {
     }
 
     public thanhVien member(int matv){
+        thanhVien mem = new thanhVien();
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();
-            thanhVien mem = new thanhVien();
-            Query query = this.sess.createQuery("from thanhVien mem where mem.matv= :matv");
-            query.setParameter("matv", matv);
-            List datas = query.list();
-            
-            for(Iterator iterator = datas.iterator();iterator.hasNext();){
-                mem = (thanhVien) iterator.next();
-            }
+
+            mem = this.sess.get(thanhVien.class, matv);
+
             this.trans.commit();
-            return mem;
         } catch (HibernateException he) {
             if(trans != null){
                 trans.rollback();
@@ -68,6 +64,68 @@ public class thanhVienDAO {
         } finally{
             this.sess.close();
         }
-        return null;
+        return mem;
+    }
+
+    public boolean addMember(thanhVien mem){
+        List<thanhVien> members = listMember();
+        try {
+            this.sess = this.sf.openSession();
+            this.trans = this.sess.beginTransaction();
+
+            if(!members.contains(mem)){
+                sess.save(mem);
+                this.trans.commit();
+                return true;
+            }
+        } catch (HibernateException he) {
+            if(trans != null){
+                trans.rollback();
+            }
+            he.printStackTrace();
+        } finally{
+            this.sess.close();
+        }
+        return false;
+    }
+
+    public boolean delMember(thanhVien mem){
+        try {
+            this.sess = this.sf.openSession();
+            this.trans = this.sess.beginTransaction();
+            
+            sess.delete(mem);
+            
+            this.trans.commit();
+            return true;
+        } catch (HibernateException he) {
+            if(trans != null){
+                trans.rollback();
+            }
+            he.printStackTrace();
+        } finally{
+            this.sess.close();
+        }
+        return false;
+    }
+
+    public boolean updateMember(thanhVien mem){
+        try {
+            this.sess = this.sf.openSession();
+            this.trans = this.sess.beginTransaction();
+            
+            sess.update(mem);
+            
+            this.trans.commit();
+            return true;
+        } catch (HibernateException he) {
+            if(trans != null){
+                trans.rollback();
+            }
+            he.printStackTrace();
+        } finally{
+            this.sess.close();
+        }
+        return false;
     }
 }

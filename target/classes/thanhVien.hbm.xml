@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
@@ -9,13 +10,13 @@
         </meta>
 
         <id name="matv" type="int" column="MaTV">
-            <generator class="native" />
+           
         </id>
 
         <property name="hoten" column="HoTen" type="string" />
         <property name="khoa" column="Khoa" type="string" />
         <property name="nganh" column="Nganh" type="string" />
-        <property name="sdt" column="SDT" type="int" />
+        <property name="sdt" column="SDT" type="string" />
 
     </class>
 </hibernate-mapping>

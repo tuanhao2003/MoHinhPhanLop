@@ -5,17 +5,17 @@ public class thanhVien {
     private String hoten;
     private String khoa;
     private String nganh;
-    private int sdt;
+    private String sdt;
 
     public thanhVien() {
         this.matv = 0;
         this.hoten = null;
         this.khoa = null;
         this.nganh = null;
-        this.sdt = 0;
+        this.sdt = null;
     }
 
-    public thanhVien(int matv, String hoten, String khoa, String nganh, int sdt) {
+    public thanhVien(int matv, String hoten, String khoa, String nganh, String sdt) {
         this.matv = matv;
         this.hoten = hoten;
         this.khoa = khoa;
@@ -35,7 +35,7 @@ public class thanhVien {
     public void setNganh(String nganh){
         this.nganh = nganh;
     }
-    public void setSdt(int sdt){
+    public void setSdt(String sdt){
         this.sdt = sdt;
     }
 
@@ -52,7 +52,7 @@ public class thanhVien {
     public String getNganh(){
         return this.nganh;
     }
-    public int getSdt(){
+    public String getSdt(){
         return this.sdt;
     }
 }

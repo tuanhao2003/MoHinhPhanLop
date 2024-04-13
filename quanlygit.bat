@@ -15,18 +15,20 @@ echo #          - init nhấn 0                    #
 echo #          - pull nhấn 1                    #
 echo #          - push nhấn 2                    #
 echo #          - reset branch nhấn 3            #
-echo #          - fix setup stream error nhấn 4  #
+echo #          - clone nhấn 4                   #
+echo #          - fix setup stream error nhấn 5  #
 echo #          - Tự gõ lệnh nhấn t              #
 echo #                                           #
 echo #############################################
-choice /c t01234 > nul
+choice /c t012345 > nul
 set "mode=%errorlevel%"
 if "%mode%"=="1" goto handtype
 if "%mode%"=="2" goto init
 if "%mode%"=="3" goto pull
 if "%mode%"=="4" goto push
 if "%mode%"=="5" goto reset
-if "%mode%"=="6" goto setup
+if "%mode%"=="6" goto clone
+if "%mode%"=="7" goto setup
 
 
 :handtype
@@ -56,6 +58,22 @@ set pullLog=
 for /f "delims=" %%i in ('git.exe pull 2^>^&1') do (set pullLog=%%i)
 if "x%pullLog:Already=%"=="x%pullLog%" if "x%pullLog:changed=%"=="x%pullLog%" goto pullErrHandle
 echo Đã cập nhật về thiết bị
+goto continue
+
+:clone
+cls
+echo ##############
+echo # clone mode #
+echo ##############
+set /p "linkClone=Nhập url github cần clone:"
+set startGet=
+set folderName=
+set cloneLog=
+for /f "delims=" %%i in ('git.exe clone %linkClone% 2^>^&1') do (set cloneLog==%%i)
+for /f "tokens=1 delims='" %%s in ("%cloneLog%") do (set startGet=%%s)
+for /f "tokens=2 delims='" %%e in ("%cloneLog:~%startGet%,-1%") do (set folderName=%%e)
+echo Đã lấy code về thiết bị
+move /Y "quanlygit.bat" "%folderName%"
 goto continue
 
 :push
@@ -116,7 +134,7 @@ echo ##############################
 set /p msgpull=Nhập commit:
 if not defined msgpull goto pullErrHandle
 git.exe add .
-git.exe commit -m %msgpull%
+git.exe commit -m "%msgpull%"
 git.exe pull
 set pullLog=
 for /f "delims=" %%i in ('git.exe pull 2^>^&1') do (set pullLog=%%i)
