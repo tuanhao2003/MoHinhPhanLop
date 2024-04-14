@@ -1,10 +1,23 @@
 package com.example.DAL;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="thanhvien")
 public class thanhVien {
+    @Id
+    @Column(name="MaTV")
     private int matv;
+    @Column(name="HoTen")
     private String hoten;
+    @Column(name="Khoa")
     private String khoa;
+    @Column(name="Nganh")
     private String nganh;
+    @Column(name="SDT")
     private String sdt;
 
     public thanhVien() {
