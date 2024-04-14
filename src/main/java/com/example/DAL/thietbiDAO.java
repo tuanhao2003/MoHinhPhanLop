@@ -59,7 +59,7 @@ public class thietbiDAO {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-}
+        }
     }
     public thietBi getThietbiById(int idTB) {
         String sql = "SELECT * FROM thietbi WHERE MaTB = ?";
