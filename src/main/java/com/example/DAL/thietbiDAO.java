@@ -49,7 +49,7 @@ public class thietbiDAO {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-}
+        }
     }
     public void deleteThietbi(int idTB) {
         String sql = "DELETE FROM thietbi WHERE MaTB = ?";
