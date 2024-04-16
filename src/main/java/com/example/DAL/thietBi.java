@@ -7,46 +7,45 @@ import javax.persistence.*;
 public class thietBi {
     @Id
     @Column
-    private int MaTB;
+    private int matb;
     @Column
-    private String TenTB;
+    private String tentb;
     @Column
-    private String MoTaTB;
-
+    private String motatb;
 
     public thietBi() {
-        this.MaTB = 0;
-        this.TenTB = "";
-        this.MoTaTB = "";
+        this.matb = 0;
+        this.tentb = null;
+        this.motatb = null;
     }
 
-    public thietBi(int MaTB, String TenTB, String MoTa) {
-        this.MaTB = MaTB;
-        this.TenTB = TenTB;
-        this.MoTaTB = MoTa;
+    public thietBi(int matb, String tentb, String motatb) {
+        this.matb = matb;
+        this.tentb = tentb;
+        this.motatb = motatb;
     }
 
-    public void setMaTB(int MaTB) {
-        this.MaTB = MaTB;
+    public int getMatb() {
+        return matb;
     }
 
-    public void setTenTB(String TenTB) {
-        this.TenTB = TenTB;
+    public String getTentb() {
+        return tentb;
     }
 
-    public void setMoTaTB(String MoTaTB) {
-        this.MoTaTB = MoTaTB;
+    public String getMotatb() {
+        return motatb;
     }
 
-    public int getMaTB() {
-        return this.MaTB;
+    public void setMatb(int matb) {
+        this.matb = matb;
     }
 
-    public String getTenTB() {
-        return this.TenTB;
+    public void setTentb(String tentb) {
+        this.tentb = tentb;
     }
 
-    public String getMoTaTB() {
-        return MoTaTB;
+    public void setMotatb(String motatb) {
+        this.motatb = motatb;
     }
 }

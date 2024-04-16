@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.example.DAL.xuLy" table="xuly">
+
+        <meta attribute="class-description">
+            This class contains the usage information detail.
+        </meta>
+
+        
+        <id name="matt" type="int" column="MaTT">
+           
+        </id>
+        
+        <property name="matv" column="MaTV" type="int" />
+        <property name="matb" column="MaTB" type="int" />
+        <property name="tgvao" column="TGVao" type="datetime" />
+        <property name="tgmuon" column="TGMuon" type="datetime" />
+        <property name="tgtra" column="TGTra" type="datetime" />
+
+    </class>
+</hibernate-mapping>

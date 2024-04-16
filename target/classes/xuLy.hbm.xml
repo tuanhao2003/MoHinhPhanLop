@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.example.DAL.xuLy" table="xuly">
+
+        <meta attribute="class-description">
+            This class contains the punishment detail.
+        </meta>
+
+        
+        <id name="maxl" type="int" column="MaXL">
+           
+        </id>
+        
+        <property name="matv" column="MaTV" type="int" />
+        <property name="hinhthucxl" column="HinhThucXL" type="string" />
+        <property name="sotien" column="SoTien" type="int" />
+        <property name="ngayxl" column="NgayXL" type="datetime" />
+        <property name="trangthaixl" column="TrangThaiXL" type="int" />
+
+    </class>
+</hibernate-mapping>

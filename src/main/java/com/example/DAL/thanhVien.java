@@ -7,15 +7,15 @@ import javax.persistence.*;
 @Table(name="thanhvien")
 public class thanhVien {
     @Id
-    @Column(name = "MaTv")
+    @Column
     private int matv;
-    @Column(name = "HoTen")
+    @Column
     private String hoten;
-    @Column(name = "Khoa")
+    @Column
     private String khoa;
-    @Column(name = "Nganh")
+    @Column
     private String nganh;
-    @Column(name = "SDT")
+    @Column
     private String sdt;
 
     public thanhVien() {

@@ -1,0 +1,7 @@
+{
+    "editor.minimap.autohide": false,
+    "editor.inlineSuggest.showToolbar": "onHover",
+    "editor.quickSuggestionsDelay": 10,
+    "editor.inlineSuggest.suppressSuggestions": false,
+    "editor.hover.delay": 1500
+}

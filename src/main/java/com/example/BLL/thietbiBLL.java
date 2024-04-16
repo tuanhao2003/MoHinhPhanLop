@@ -6,6 +6,7 @@ import com.example.DAL.thietBiDAO;
 import java.io.FileInputStream;
 import java.util.*;
 
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -39,7 +40,7 @@ public class thietBiBLL {
         try {
             FileInputStream F = new FileInputStream(filePath);
             Workbook WB = WorkbookFactory.create(F);
-            Sheet S = WB.getSheetAt(0);
+            Sheet S = WB.getSheetAt(1);
 
             for (Row R : S) {
                 if(R != S.getRow(0)){
@@ -49,6 +50,9 @@ public class thietBiBLL {
                     String description = R.getCell(2).getStringCellValue();
 
                     this.thietBiDAO.addDevice(new thietBi(ID, name, description));
+                }
+                if(R.getCell(0)==null || R.getCell(0).getCellType() == CellType.BLANK){
+                    break;
                 }
             }
             WB.close();
@@ -75,7 +79,7 @@ public class thietBiBLL {
         List<thietBi> allMem = new ArrayList<thietBi>();
         allMem = this.thietBiDAO.listDevices();
         for(thietBi i : allMem){
-            String[] listChar = Integer.toString(i.getMaTB()).split(null);
+            String[] listChar = Integer.toString(i.getMatb()).split(null);
             int memCourse = Integer.parseInt(listChar[2]+listChar[3]);
             if(memCourse == requiredCode){
                 delList.add(i);
@@ -94,8 +98,8 @@ public class thietBiBLL {
 
     public boolean updateDevice(int ID, String name, String description) {
         if(this.thietBiDAO.device(ID) != null){
-            this.thietBiDAO.device(ID).setTenTB(name);
-            this.thietBiDAO.device(ID).setMoTaTB(description);
+            this.thietBiDAO.device(ID).setTentb(name);
+            this.thietBiDAO.device(ID).setMotatb(description);
             this.thietBiDAO.updateDevice(this.thietBiDAO.device(ID));
             return true;
         }else{

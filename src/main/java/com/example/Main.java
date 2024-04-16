@@ -17,9 +17,9 @@ public class Main {
         //     System.out.println(a.getSdt());
         // }
         for(thietBi a : i.getDevices()){
-            System.out.println(a.getMaTB());
-            System.out.println(a.getTenTB());
-            System.out.println(a.getMoTaTB());
+            System.out.println(a.getMatb());
+            System.out.println(a.getTentb());
+            System.out.println(a.getMotatb());
         }
     }
 
