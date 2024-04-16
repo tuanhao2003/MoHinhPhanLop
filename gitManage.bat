@@ -100,7 +100,7 @@ echo ##############
 set /p commitId=Nhập commit id:
 if not defined commitId goto reset
 set /p branch=Nhập branch name:
-git.exe reset "--hard" %commitId%
+git.exe reset --hard %commitId%
 git.exe push -f origin %branch%
 echo Đã reset về commit %id%, nhớ nhắc mọi người clone code mới
 goto continue

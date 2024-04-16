@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="com.example.DAL.thietBi" table="thietbi">
+
+        <meta attribute="class-description">
+            This class contains the devices detail.
+        </meta>
+
+        <id name="MaTB" type="int" column="MaTB">
+           
+        </id>
+
+        <property name="TenTB" column="TenTB" type="string" />
+        <property name="MoTaTB" column="MoTaTB" type="string" />
+
+    </class>
+</hibernate-mapping>

@@ -1,78 +1,131 @@
 package com.example.DAL;
 
-import java.sql.*;
-import java.util.ArrayList;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.query.*;
 
-public class thietbiDAO {
-    //private final MyDatabaseManager sql;
-    private MyDatabaseManager sql = new MyDatabaseManager();
-    private Connection conn;
-    public thietbiDAO() {
-        this.conn = this.sql.connect();
+import java.util.*;
+
+@SuppressWarnings("rawtypes")
+public class thietBiDAO {
+    private SessionFactory sf;
+    private Session sess;
+    private Transaction trans;
+    
+    public thietBiDAO() {
+        this.sf = new Configuration().configure().buildSessionFactory();
+        this.sess = null;
+        this.trans = null;
     }
 
-    public ArrayList<thietBi> getThietbis() {
-        ArrayList<thietBi> thietbis = new ArrayList<>();
-        String sql = "SELECT * FROM thietbi";
+    public List<thietBi> listDevices(){
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-            while (rs.next()) {
-                thietBi thietbi = new thietBi(rs.getInt("MaTB"), rs.getString("TenTB"), rs.getString("MoTa"));
-                thietbis.add(thietbi);
+            this.sess = this.sf.openSession();
+            this.trans = this.sess.beginTransaction();
+
+            List<thietBi> devices = new ArrayList<thietBi>();
+            Query query = this.sess.createQuery("from thietBi");
+            List datas = query.list();
+            for(Iterator iterator = datas.iterator();iterator.hasNext();){
+                thietBi devi = (thietBi) iterator.next();
+                devices.add(devi);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return thietbis;
-    }
-
-    public void addThietbi(thietBi thietbi) {
-        String sql = "INSERT INTO thietbi(MaTB, TenTB, MoTa) VALUES(?, ?, ?)";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, thietbi.getMaTB());
-            pstmt.setString(2, thietbi.getTenTB());
-            pstmt.setString(3, thietbi.getMoTaTB());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    public void updateThietbi(thietBi thietbi) {
-        String sql = "UPDATE thietbi SET MaTB = ?, TenTB = ?, MoTa = ?";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, thietbi.getTenTB());
-            pstmt.setString(2, thietbi.getMoTaTB());
-            pstmt.setInt(3, thietbi.getMaTB());
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    public void deleteThietbi(int idTB) {
-        String sql = "DELETE FROM thietbi WHERE MaTB = ?";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, idTB);
-            pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-    public thietBi getThietbiById(int idTB) {
-        String sql = "SELECT * FROM thietbi WHERE MaTB = ?";
-        try {
-            PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, idTB);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                thietBi thietbi = new thietBi(rs.getInt("MaTB"), rs.getString("TenTB"), rs.getString("MoTa"));
-                return thietbi;
+            
+            this.trans.commit();
+            return devices;
+        } catch (HibernateException he) {
+            if(trans != null){
+                trans.rollback();
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            he.printStackTrace();
+        } finally{
+            this.sess.close();
         }
         return null;
     }
+
+    public thietBi device(int matb){
+        thietBi devi = new thietBi();
+        try {
+            this.sess = this.sf.openSession();
+            this.trans = this.sess.beginTransaction();
+
+            devi = this.sess.get(thietBi.class, matb);
+
+            this.trans.commit();
+        } catch (HibernateException he) {
+            if(trans != null){
+                trans.rollback();
+            }
+            he.printStackTrace();
+        } finally{
+            this.sess.close();
+        }
+        return devi;
+    }
+
+    public boolean addDevice(thietBi devi){
+        List<thietBi> devices = listDevices();
+        try {
+            this.sess = this.sf.openSession();
+            this.trans = this.sess.beginTransaction();
+
+            if(!devices.contains(devi)){
+                sess.save(devi);
+                this.trans.commit();
+                return true;
+            }
+        } catch (HibernateException he) {
+            if(trans != null){
+                trans.rollback();
+            }
+            he.printStackTrace();
+        } finally{
+            this.sess.close();
+        }
+        return false;
+    }
+
+    public boolean delDevice(thietBi devi){
+        try {
+            this.sess = this.sf.openSession();
+            this.trans = this.sess.beginTransaction();
+            
+            sess.delete(devi);
+            
+            this.trans.commit();
+            return true;
+        } catch (HibernateException he) {
+            if(trans != null){
+                trans.rollback();
+            }
+            he.printStackTrace();
+        } finally{
+            this.sess.close();
+        }
+        return false;
+    }
+
+    public boolean updateDevice(thietBi devi){
+        try {
+            this.sess = this.sf.openSession();
+            this.trans = this.sess.beginTransaction();
+            
+            sess.update(devi);
+            
+            this.trans.commit();
+            return true;
+        } catch (HibernateException he) {
+            if(trans != null){
+                trans.rollback();
+            }
+            he.printStackTrace();
+        } finally{
+            this.sess.close();
+        }
+        return false;
+    }
+}

@@ -8,7 +8,7 @@ echo off
 cls
 
 :run
-set "confile=config.conf"
+set "confile=dbInfor.conf"
 set xamppPath=
 set un=
 set pw=
@@ -19,7 +19,7 @@ for /f "tokens=1,* delims==" %%a in (%confile%) do (
     if "%%a"=="pw" set pw=%%b
     if "%%a"=="dbname" set dbname=%%b
 )
-set "cli=%xamppPath%mysql\bin\mysql.exe"
+set "cli=%xamppPath: =%mysql\bin\mysql.exe"
 echo ##################################################################
 echo           Xampp: %xamppPath%
 echo           Username: %un%

@@ -1,23 +1,21 @@
 package com.example.DAL;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name="thanhvien")
 public class thanhVien {
     @Id
-    @Column(name="MaTV")
+    @Column(name = "MaTv")
     private int matv;
-    @Column(name="HoTen")
+    @Column(name = "HoTen")
     private String hoten;
-    @Column(name="Khoa")
+    @Column(name = "Khoa")
     private String khoa;
-    @Column(name="Nganh")
+    @Column(name = "Nganh")
     private String nganh;
-    @Column(name="SDT")
+    @Column(name = "SDT")
     private String sdt;
 
     public thanhVien() {
@@ -59,7 +57,7 @@ public class thanhVien {
     public String getHoten(){
         return this.hoten;
     }
-    public String getkhoa(){
+    public String getKhoa(){
         return this.khoa;
     }
     public String getNganh(){

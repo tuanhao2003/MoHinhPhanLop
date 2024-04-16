@@ -1,8 +1,16 @@
 package com.example.DAL;
 
+import javax.persistence.*;
+
+@Entity
+@Table(name = "thietbi")
 public class thietBi {
+    @Id
+    @Column
     private int MaTB;
+    @Column
     private String TenTB;
+    @Column
     private String MoTaTB;
 
 
@@ -10,7 +18,6 @@ public class thietBi {
         this.MaTB = 0;
         this.TenTB = "";
         this.MoTaTB = "";
-
     }
 
     public thietBi(int MaTB, String TenTB, String MoTa) {
@@ -19,16 +26,16 @@ public class thietBi {
         this.MoTaTB = MoTa;
     }
 
-    public void setMaTB(int idTB) {
-        this.MaTB = idTB;
+    public void setMaTB(int MaTB) {
+        this.MaTB = MaTB;
     }
 
-    public void setTenTB(String nameTB) {
-        this.TenTB = nameTB;
+    public void setTenTB(String TenTB) {
+        this.TenTB = TenTB;
     }
 
-    public void setMoTaTB(String detailTB) {
-        this.MoTaTB = detailTB;
+    public void setMoTaTB(String MoTaTB) {
+        this.MoTaTB = MoTaTB;
     }
 
     public int getMaTB() {
@@ -42,6 +49,4 @@ public class thietBi {
     public String getMoTaTB() {
         return MoTaTB;
     }
-
-
 }
