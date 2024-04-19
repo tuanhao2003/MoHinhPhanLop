@@ -2,8 +2,8 @@
 
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping>
-    <class name="com.example.DAL.xuLy" table="xuly">
+<hibernate-mapping package="com.example.DAL">
+    <class name="xuLy" table="xuly">
 
         <meta attribute="class-description">
             This class contains the punishment detail.
@@ -11,13 +11,14 @@
 
         
         <id name="maxl" type="int" column="MaXL">
-           
+            <generator class="identity"/>
         </id>
-        
-        <property name="matv" column="MaTV" type="int" />
+        <many-to-one name="thanhvien" class="thanhVien" fetch="join">
+            <column name="MaTV" not-null="true"/>
+        </many-to-one>
         <property name="hinhthucxl" column="HinhThucXL" type="string" />
         <property name="sotien" column="SoTien" type="int" />
-        <property name="ngayxl" column="NgayXL" type="datetime" />
+        <property name="ngayxl" column="NgayXL" type="timestamp" />
         <property name="trangthaixl" column="TrangThaiXL" type="int" />
 
     </class>

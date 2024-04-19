@@ -1,37 +1,45 @@
 package com.example.DAL;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
 
-@Entity
+@Entity(name = "xuLy")
 @Table(name = "xuly")
 public class xuLy {
     @Id
-    @Column
+    @Column(name = "MaXL")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int maxl;
-    @Column
-    private int matv;
-    @Column
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "MaTV", nullable = false, foreignKey = @ForeignKey(name = "fk_thanhVien_xuLy"))
+    private thanhVien thanhvien;
+
+    @Column(name = "HinhThucXL")
     private String hinhthucxl;
-    @Column
+
+    @Column(name = "SoTien")
     private int sotien;
-    @Column
-    private Date ngayxl;
-    @Column
+
+    @Column(name = "NgayXL")
+    private Timestamp ngayxl;
+
+    @Column(name = "TrangThaiXL")
     private int trangthaixl;
+
 
     public xuLy() {
         this.maxl = 0;
-        this.matv = 0;
+        this.thanhvien = null;
         this.hinhthucxl = null;
         this.sotien = 0;
         this.ngayxl = null;
         this.trangthaixl = 0;
     }
 
-    public xuLy(int maxl, int matv, String hinhthucxl, int sotien, Date ngayxl, int trangthaixl) {
+    public xuLy(int maxl, thanhVien thanhvien, String hinhthucxl, int sotien, Timestamp ngayxl, int trangthaixl) {
         this.maxl = maxl;
-        this.matv = matv;
+        this.thanhvien = thanhvien;
         this.hinhthucxl = hinhthucxl;
         this.sotien = sotien;
         this.ngayxl = ngayxl;
@@ -42,10 +50,6 @@ public class xuLy {
         return maxl;
     }
 
-    public int getMatv() {
-        return matv;
-    }
-
     public String getHinhthucxl() {
         return hinhthucxl;
     }
@@ -54,20 +58,17 @@ public class xuLy {
         return sotien;
     }
 
-    public Date getNgayxl() {
+    public Timestamp getNgayxl() {
         return ngayxl;
     }
 
     public int getTrangthaixl() {
         return trangthaixl;
     }
+    
 
     public void setMaxl(int maxl) {
         this.maxl = maxl;
-    }
-
-    public void setMatv(int matv) {
-        this.matv = matv;
     }
 
     public void setHinhthucxl(String hinhthucxl) {
@@ -78,11 +79,19 @@ public class xuLy {
         this.sotien = sotien;
     }
 
-    public void setNgayxl(Date ngayxl) {
+    public void setNgayxl(Timestamp ngayxl) {
         this.ngayxl = ngayxl;
     }
 
     public void setTrangthaixl(int trangthaixl) {
         this.trangthaixl = trangthaixl;
+    }
+
+    public thanhVien getThanhvien() {
+        return thanhvien;
+    }
+
+    public void setThanhvien(thanhVien thanhvien) {
+        this.thanhvien = thanhvien;
     }
 }

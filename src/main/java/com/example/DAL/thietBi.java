@@ -2,15 +2,17 @@ package com.example.DAL;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "thietBi")
 @Table(name = "thietbi")
 public class thietBi {
     @Id
-    @Column
+    @Column(name = "MaTB")
     private int matb;
-    @Column
+
+    @Column(name = "TenTB")
     private String tentb;
-    @Column
+
+    @Column(name = "MoTaTB")
     private String motatb;
 
     public thietBi() {

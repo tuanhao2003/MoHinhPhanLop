@@ -2,8 +2,8 @@
 
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
-<hibernate-mapping>
-    <class name="com.example.DAL.thanhVien" table="thanhvien">
+<hibernate-mapping package="com.example.DAL">
+    <class name="thanhVien" table="thanhvien">
 
         <meta attribute="class-description">
             This class contains the members detail.
@@ -17,6 +17,7 @@
         <property name="khoa" column="Khoa" type="string" />
         <property name="nganh" column="Nganh" type="string" />
         <property name="sdt" column="SDT" type="string" />
-
+        <property name="password" column="Password" type="string" />
+        <property name="email" column="Email" type="string" />
     </class>
 </hibernate-mapping>

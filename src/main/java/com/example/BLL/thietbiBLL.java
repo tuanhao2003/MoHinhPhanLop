@@ -20,15 +20,15 @@ public class thietBiBLL {
     }
 
     public thietBi getDevice(int ID){
-        thietBi mem = null;
-        mem = this.thietBiDAO.device(ID);
-        return mem;
+        thietBi devi = null;
+        devi = this.thietBiDAO.device(ID);
+        return devi;
     }
 
     public List<thietBi> getDevices(){
-        List<thietBi> memList = null;
-        memList = this.thietBiDAO.listDevices();
-        return memList;
+        List<thietBi> deviList = null;
+        deviList = this.thietBiDAO.listDevices();
+        return deviList;
     }
 
     public boolean addDevice(int ID, String name, String description) {
@@ -80,8 +80,8 @@ public class thietBiBLL {
         allMem = this.thietBiDAO.listDevices();
         for(thietBi i : allMem){
             String[] listChar = Integer.toString(i.getMatb()).split(null);
-            int memCourse = Integer.parseInt(listChar[2]+listChar[3]);
-            if(memCourse == requiredCode){
+            int deviCourse = Integer.parseInt(listChar[2]+listChar[3]);
+            if(deviCourse == requiredCode){
                 delList.add(i);
             }
         }

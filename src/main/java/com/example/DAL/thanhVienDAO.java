@@ -21,7 +21,7 @@ public class thanhVienDAO {
         this.trans = null;
     }
 
-    public List<thanhVien> listMember(){
+    public List<thanhVien> listMembers(){
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();
@@ -68,7 +68,7 @@ public class thanhVienDAO {
     }
 
     public boolean addMember(thanhVien mem){
-        List<thanhVien> members = listMember();
+        List<thanhVien> members = listMembers();
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();

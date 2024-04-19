@@ -21,7 +21,7 @@ public class xuLyDAO {
         this.trans = null;
     }
 
-    public List<xuLy> listPunishment(){
+    public List<xuLy> listPunishments(){
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();
@@ -68,7 +68,7 @@ public class xuLyDAO {
     }
 
     public boolean addPunishment(xuLy punish){
-        List<xuLy> punishments = listPunishment();
+        List<xuLy> punishments = listPunishments();
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();

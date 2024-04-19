@@ -24,5 +24,7 @@
         <!-- Entity mapping -->
         <mapping resource="thanhVien.hbm.xml" />
         <mapping resource="thietBi.hbm.xml" />
+        <mapping resource="xuLy.hbm.xml" />
+        <mapping resource="thongTinSd.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

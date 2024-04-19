@@ -15,7 +15,6 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
 public class thanhVienBLL {
     private thanhVienDAO thanhVienDAO;
     // private xuLyDAO xuLyDAO;
-
     public thanhVienBLL() {
         this.thanhVienDAO = new thanhVienDAO();
     }
@@ -28,7 +27,7 @@ public class thanhVienBLL {
 
     public List<thanhVien> getMembers(){
         List<thanhVien> memList = null;
-        memList = this.thanhVienDAO.listMember();
+        memList = this.thanhVienDAO.listMembers();
         return memList;
     }
 
@@ -51,13 +50,10 @@ public class thanhVienBLL {
                     String major = R.getCell(2).getStringCellValue();
                     String subMajor = R.getCell(3).getStringCellValue();
                     String phone = R.getCell(4).getStringCellValue();
-                    
-                    System.out.println(ID);
-                    System.out.println(fullName);
-                    System.out.println(major);
-                    System.out.println(subMajor);
-                    System.out.println(phone);
-                    this.thanhVienDAO.addMember(new thanhVien(ID, fullName, major, subMajor, phone));
+                    thanhVien newMem = new thanhVien(ID, fullName, major, subMajor, phone);
+                    newMem.setPassword(R.getCell(5).getStringCellValue());
+                    newMem.setEmail(R.getCell(6).getStringCellValue());
+                    this.thanhVienDAO.addMember(newMem);
                 }
             }
             WB.close();
@@ -82,7 +78,7 @@ public class thanhVienBLL {
     public boolean deleteMembers(int courseNum){
         List<thanhVien> delList = new ArrayList<thanhVien>(); 
         List<thanhVien> allMem = new ArrayList<thanhVien>();
-        allMem = this.thanhVienDAO.listMember();
+        allMem = this.thanhVienDAO.listMembers();
         for(thanhVien i : allMem){
             String[] listChar = Integer.toString(i.getMatv()).split(null);
             int memCourse = Integer.parseInt(listChar[2]+listChar[3]);
@@ -104,7 +100,7 @@ public class thanhVienBLL {
     public boolean updateMember(int ID, String fullname, String major, String subMajor, String phone) {
         if(this.thanhVienDAO.member(ID) != null){
             this.thanhVienDAO.member(ID).setHoten(fullname);
-            this.thanhVienDAO.member(ID).setkhoa(major);
+            this.thanhVienDAO.member(ID).setKhoa(major);
             this.thanhVienDAO.member(ID).setNganh(subMajor);
             this.thanhVienDAO.member(ID).setSdt(phone);
             this.thanhVienDAO.updateMember(this.thanhVienDAO.member(ID));
