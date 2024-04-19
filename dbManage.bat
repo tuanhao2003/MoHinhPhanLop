@@ -8,7 +8,7 @@ echo off
 cls
 
 :run
-set "confile=dbInfor.conf"
+set "confile=./composition/dbInfor.conf"
 set xamppPath=
 set un=
 set pw=
