@@ -11,6 +11,7 @@ public class thietBiGUI extends javax.swing.JPanel {
 
     private thietBiBLL thietBiBLL;
     private ArrayList<thietBi> listThietBi;
+    private int selectingID = 0;
 
     public thietBiGUI() {
         this.thietBiBLL = new thietBiBLL();
@@ -19,11 +20,26 @@ public class thietBiGUI extends javax.swing.JPanel {
         eventHandler();
     }
 
+    @SuppressWarnings("empty-statement")
     private void eventHandler() {
         this.listThietBi = thietBiBLL.getDevices();
         this.deviceTable.getTableHeader().setReorderingAllowed(false);
         renderTable();
-// button import    
+        
+        //table click
+        this.deviceTable.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClick(MouseEvent e){
+                if (e.getPoint().y > 0){
+                    selectingID = Integer.parseInt(deviceTable.getValueAt(deviceTable.rowAtPoint(e.getPoint()), 0).toString());
+                    deviceIdBox.setText(Integer.toString(selectingID));
+                    deviceNameBox.setText(thietBiBLL.getDevice(selectingID).getTentb());
+                    deviceDescriptionBox.setText(thietBiBLL.getDevice(selectingID).getMotatb());
+                }
+            }
+        });
+        
+        // button import    
         this.importDeviceBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -33,7 +49,56 @@ public class thietBiGUI extends javax.swing.JPanel {
                 renderTable();
             }
         });
-    }
+        
+        //button add
+        this.addDeviceBtn.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if (deviceIdBox.getText() != null && deviceNameBox.getText() != null && deviceDescriptionBox.getText() != null) {
+                    try{
+                        int deviceId = Integer.parseInt(deviceIdBox.getText());
+                        String deviceName = deviceNameBox.getText();
+                        String deviceDes = deviceDescriptionBox.getText();
+                    } catch (IdFormat idFormat){
+                        System.out.println("ID must be numeric");   
+                    }
+                } else{
+                    System.out.println("Please full fill device's information!");
+                }
+                listThietBi = thietBiBLL.getDevices();
+                renderTable();
+            }
+        });
+        
+        //button update
+        this.updateDeviceBtn.addActionListener(new ActionListener(){
+           @Override
+           public void actionPerformed(ActionEvent e){
+               if (deviceIdBox.getText() != null && deviceNameBox.getText() != null && deviceDescriptionBox.getText() != null) {
+                   if (!deviceIdBox.getText().equals(Integer.toString(selectingID))
+                           && !deviceNameBox.getText().equals(thietBiBLL.getDevice(selectingID).getTentb())
+                           && !deviceDescriptionBox.getText().equals(thietBiBLL.getDevice(selectingID).getMotatb())){
+                           thietBiBLL.updateDevice(Integer.parseInt(deviceIdBox.getText()), deviceNameBox.getText(), deviceDescriptionBox.getText());
+                           listThietBi = thietBiBLL.getDevices();
+                           renderTable();
+                   }
+               }        
+           }
+        });
+        
+        //button delete
+        this.delDeviceBtn.addActionListener(new ActionListener(){
+           @Override
+           public void actionPerfomed(ActionEvent e){
+               if (selectingID > 0 && thietBiBLL.getDevice(selectingID) != null){
+                   thietBiBLL.deleteDevice(selectingID);
+                   renderTable();
+               }else{
+                   System.out.println("Cannot find device");
+               }
+           }
+        });
+    }  
 
  // load list to JTable func
     private void renderTable() {
@@ -72,7 +137,7 @@ public class thietBiGUI extends javax.swing.JPanel {
         deviceNameBox = new javax.swing.JTextField();
         jPanel8 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        deviceDesriptionBox = new javax.swing.JTextField();
+        deviceDescriptionBox = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         addDeviceBtn = new javax.swing.JButton();
         updateDeviceBtn = new javax.swing.JButton();
@@ -148,9 +213,9 @@ public class thietBiGUI extends javax.swing.JPanel {
         jLabel3.setPreferredSize(new java.awt.Dimension(90, 50));
         jPanel8.add(jLabel3, new java.awt.GridBagConstraints());
 
-        deviceDesriptionBox.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
-        deviceDesriptionBox.setPreferredSize(new java.awt.Dimension(715, 40));
-        jPanel8.add(deviceDesriptionBox, new java.awt.GridBagConstraints());
+        deviceDescriptionBox.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
+        deviceDescriptionBox.setPreferredSize(new java.awt.Dimension(715, 40));
+        jPanel8.add(deviceDescriptionBox, new java.awt.GridBagConstraints());
 
         jPanel2.add(jPanel8);
 
@@ -216,7 +281,7 @@ public class thietBiGUI extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addDeviceBtn;
     private javax.swing.JButton delDeviceBtn;
-    private javax.swing.JTextField deviceDesriptionBox;
+    private javax.swing.JTextField deviceDescriptionBox;
     private javax.swing.JTextField deviceIdBox;
     private javax.swing.JTextField deviceNameBox;
     private javax.swing.JTable deviceTable;

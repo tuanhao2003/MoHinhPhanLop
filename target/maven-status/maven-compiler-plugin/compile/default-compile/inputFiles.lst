@@ -1,7 +1,7 @@
 D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\BLL\xuLyBLL.java
 D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\DAL\thongTinSdDAO.java
 D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\GUI\Xulivipham.java
-D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\BLL\thietbiBLL.java
+D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\BLL\thietBiBLL.java
 D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\GUI\thietBiGUI.java
 D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\DAL\thietBi.java
 D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\BLL\thanhVienBLL.java
@@ -15,4 +15,4 @@ D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\GUI\mainGUI
 D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\DAL\thongTinSd.java
 D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\GUI\thanhVienGUI.java
 D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\DAL\xuLy.java
-D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\DAL\thietbiDAO.java
+D:\Git Clone\QuanLyThanhVien\MoHinhPhanLop\src\main\java\com\example\DAL\thietBiDAO.java
