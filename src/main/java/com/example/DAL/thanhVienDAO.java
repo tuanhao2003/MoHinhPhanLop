@@ -21,12 +21,12 @@ public class thanhVienDAO {
         this.trans = null;
     }
 
-    public List<thanhVien> listMembers(){
+    public ArrayList<thanhVien> listMembers(){
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();
 
-            List<thanhVien> members = new ArrayList<thanhVien>();
+            ArrayList<thanhVien> members = new ArrayList<thanhVien>();
             Query query = this.sess.createQuery("from thanhVien");
             List datas = query.list();
             for(Iterator iterator = datas.iterator();iterator.hasNext();){

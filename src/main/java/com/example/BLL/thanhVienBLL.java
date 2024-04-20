@@ -25,14 +25,21 @@ public class thanhVienBLL {
         return mem;
     }
 
-    public List<thanhVien> getMembers(){
-        List<thanhVien> memList = null;
+    public ArrayList<thanhVien> getMembers(){
+        ArrayList<thanhVien> memList = null;
         memList = this.thanhVienDAO.listMembers();
         return memList;
     }
 
     public boolean addMember(int ID, String fullname, String major, String subMajor, String phone) {
             boolean success = this.thanhVienDAO.addMember(new thanhVien(ID, fullname, major, subMajor, phone));
+            return success;
+    }
+    public boolean addMember(int ID, String fullname, String major, String subMajor, String phone, String email, String password) {
+            thanhVien newMem = new thanhVien(ID, fullname, major, subMajor, phone);
+            newMem.setEmail(email);
+            newMem.setPassword(password);
+            boolean success = this.thanhVienDAO.addMember(newMem);
             return success;
     }
 
@@ -51,7 +58,7 @@ public class thanhVienBLL {
                     String subMajor = R.getCell(3).getStringCellValue();
                     String phone = R.getCell(4).getStringCellValue();
                     thanhVien newMem = new thanhVien(ID, fullName, major, subMajor, phone);
-                    newMem.setPassword(R.getCell(5).getStringCellValue());
+                    newMem.setPassword(Double.toString(R.getCell(5).getNumericCellValue()));
                     newMem.setEmail(R.getCell(6).getStringCellValue());
                     this.thanhVienDAO.addMember(newMem);
                 }
@@ -103,6 +110,21 @@ public class thanhVienBLL {
             this.thanhVienDAO.member(ID).setKhoa(major);
             this.thanhVienDAO.member(ID).setNganh(subMajor);
             this.thanhVienDAO.member(ID).setSdt(phone);
+            this.thanhVienDAO.updateMember(this.thanhVienDAO.member(ID));
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    public boolean updateMember(int ID, String fullname, String major, String subMajor, String phone, String email, String password) {
+        if(this.thanhVienDAO.member(ID) != null){
+            this.thanhVienDAO.member(ID).setHoten(fullname);
+            this.thanhVienDAO.member(ID).setKhoa(major);
+            this.thanhVienDAO.member(ID).setNganh(subMajor);
+            this.thanhVienDAO.member(ID).setSdt(phone);
+            this.thanhVienDAO.member(ID).setEmail(email);
+            this.thanhVienDAO.member(ID).setPassword(password);
             this.thanhVienDAO.updateMember(this.thanhVienDAO.member(ID));
             return true;
         }else{

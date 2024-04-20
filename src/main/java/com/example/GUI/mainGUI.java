@@ -10,10 +10,10 @@ public class mainGUI extends javax.swing.JFrame {
 
     public mainGUI() {
         initComponents();
-        addComponent("Members", new ThanhVien());
-        addComponent("Devices", new ThietBi());
+        addComponent("Members", new thanhVienGUI());
+        addComponent("Devices", new thietBiGUI());
         addComponent("Punishments", new Xulivipham());
-        addComponent("Statistics", new ThietBi());
+        addComponent("Statistics", new ThongKe());
         eventHandler();
     }
 
@@ -23,8 +23,8 @@ public class mainGUI extends javax.swing.JFrame {
         JButton btn = new JButton(buttonName);
         btn.setPreferredSize(new Dimension(300, 60));
         btn.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
-        btn.setBackground(new Color(80, 130, 100));
-        btn.setForeground(Color.white);
+        btn.setBackground(new Color(222,184,135));
+        btn.setForeground(Color.DARK_GRAY);
         btn.setFont(new Font(this.mainFont, Font.BOLD, 15));
         btn.setFocusPainted(false);
         btn.setContentAreaFilled(false);
@@ -43,11 +43,7 @@ public class mainGUI extends javax.swing.JFrame {
                 mainDisplay.add(panelName);
                 mainDisplay.repaint();
                 mainDisplay.revalidate();
-                if (!buttonName.equals("Punishments")) {
-                    title.setText(buttonName + " Management");
-                } else {
-                    title.setText(buttonName);
-                }
+                title.setText(buttonName);
             }
         });
         this.toolsPanel.add(btn);
@@ -69,6 +65,7 @@ public class mainGUI extends javax.swing.JFrame {
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         logoContainer = new javax.swing.JPanel();
         title = new javax.swing.JLabel();
@@ -77,16 +74,16 @@ public class mainGUI extends javax.swing.JFrame {
         mainDisplay = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Quản lý cửa hàng bán điện thoại");
+        setTitle("Members management");
+        setAlwaysOnTop(true);
         setBackground(new java.awt.Color(255, 255, 255));
         setMinimumSize(new java.awt.Dimension(1000, 600));
-        setPreferredSize(new java.awt.Dimension(1000, 600));
-        setResizable(false);
+        setPreferredSize(new java.awt.Dimension(1150, 650));
 
         logoContainer.setBackground(new java.awt.Color(219, 169, 121));
         logoContainer.setMaximumSize(new java.awt.Dimension(300, 100));
         logoContainer.setMinimumSize(new java.awt.Dimension(200, 100));
-        logoContainer.setPreferredSize(new java.awt.Dimension(250, 100));
+        logoContainer.setPreferredSize(new java.awt.Dimension(200, 100));
         logoContainer.setLayout(new java.awt.CardLayout());
 
         title.setFont(new java.awt.Font("Sitka Text", 1, 20)); // NOI18N
@@ -99,7 +96,7 @@ public class mainGUI extends javax.swing.JFrame {
         scrollBar.setBackground(new java.awt.Color(200, 200, 200));
         scrollBar.setBorder(null);
         scrollBar.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollBar.setPreferredSize(new java.awt.Dimension(250, 500));
+        scrollBar.setPreferredSize(new java.awt.Dimension(200, 550));
         JScrollBar scb = new JScrollBar(JScrollBar.VERTICAL);
         scb.setPreferredSize(new Dimension(0,0));
         scrollBar.setVerticalScrollBar(scb);
@@ -110,11 +107,11 @@ public class mainGUI extends javax.swing.JFrame {
         toolsPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
         scrollBar.setViewportView(toolsPanel);
 
-        mainDisplay.setBackground(new java.awt.Color(255, 255, 255));
-        mainDisplay.setMaximumSize(new java.awt.Dimension(750, 600));
-        mainDisplay.setMinimumSize(new java.awt.Dimension(750, 10));
-        mainDisplay.setPreferredSize(new java.awt.Dimension(900, 600));
-        mainDisplay.setLayout(new java.awt.GridLayout());
+        mainDisplay.setAlignmentX(0.0F);
+        mainDisplay.setAlignmentY(0.0F);
+        mainDisplay.setMaximumSize(new java.awt.Dimension(900, 600));
+        mainDisplay.setMinimumSize(new java.awt.Dimension(900, 600));
+        mainDisplay.setPreferredSize(new java.awt.Dimension(950, 650));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -126,7 +123,7 @@ public class mainGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(scrollBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(mainDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(mainDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -135,7 +132,7 @@ public class mainGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, 0)
-                        .addComponent(mainDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(mainDisplay, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(logoContainer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
