@@ -28,7 +28,7 @@ public class thietBiGUI extends javax.swing.JPanel {
         
         //table click
         this.deviceTable.addMouseListener(new MouseAdapter(){
-            @Override
+            //@Override
             public void mouseClick(MouseEvent e){
                 if (e.getPoint().y > 0){
                     selectingID = Integer.parseInt(deviceTable.getValueAt(deviceTable.rowAtPoint(e.getPoint()), 0).toString());
@@ -59,7 +59,7 @@ public class thietBiGUI extends javax.swing.JPanel {
                         int deviceId = Integer.parseInt(deviceIdBox.getText());
                         String deviceName = deviceNameBox.getText();
                         String deviceDes = deviceDescriptionBox.getText();
-                    } catch (IdFormat idFormat){
+                    } catch (NumberFormatException numberFormatException){
                         System.out.println("ID must be numeric");   
                     }
                 } else{
@@ -88,7 +88,7 @@ public class thietBiGUI extends javax.swing.JPanel {
         
         //button delete
         this.delDeviceBtn.addActionListener(new ActionListener(){
-           @Override
+           //@Override
            public void actionPerfomed(ActionEvent e){
                if (selectingID > 0 && thietBiBLL.getDevice(selectingID) != null){
                    thietBiBLL.deleteDevice(selectingID);
@@ -97,6 +97,11 @@ public class thietBiGUI extends javax.swing.JPanel {
                    System.out.println("Cannot find device");
                }
            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+            }
         });
     }  
 
