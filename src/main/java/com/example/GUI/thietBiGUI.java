@@ -1,13 +1,55 @@
 package com.example.GUI;
 
+import com.example.BLL.thietBiBLL;
+import com.example.DAL.thietBi;
+import java.awt.event.*;
+import java.util.*;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+
 public class thietBiGUI extends javax.swing.JPanel {
+
+    private thietBiBLL thietBiBLL;
+    private ArrayList<thietBi> listThietBi;
+
     public thietBiGUI() {
+        this.thietBiBLL = new thietBiBLL();
+        this.listThietBi = new ArrayList<thietBi>();
         initComponents();
         eventHandler();
     }
-    
-    private void eventHandler(){
-        this.memberTable.getTableHeader().setReorderingAllowed(false);
+
+    private void eventHandler() {
+        this.listThietBi = thietBiBLL.getDevices();
+        this.deviceTable.getTableHeader().setReorderingAllowed(false);
+        renderTable();
+// button import    
+        this.importMemBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                pickFile.showOpenDialog(jScrollPane1);
+                thietBiBLL.addDevicesViaExcel(pickFile.getSelectedFile().getAbsolutePath());
+                listThietBi = thietBiBLL.getDevices();
+                renderTable();
+            }
+        });
+    }
+
+ // load list to JTable func
+    private void renderTable() {
+        DefaultTableModel model = (DefaultTableModel) this.deviceTable.getModel();
+        model.setRowCount(0);
+
+        for (int i = 0; i < thietBiBLL.getDevices().size(); i++) {
+            Object[] data = {Integer.toString(this.thietBiBLL.getDevices().get(i).getMatb()), this.thietBiBLL.getDevices().get(i).getTentb(), thietBiBLL.getDevices().get(i).getMotatb()};
+            model.addRow(data);
+            this.deviceTable.updateUI();
+        }
+    }
+// Reload component func (for update UI)
+    private void reload(JPanel item) {
+        item.repaint();
+        item.revalidate();
     }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -15,7 +57,7 @@ public class thietBiGUI extends javax.swing.JPanel {
 
         pickFile = new javax.swing.JFileChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
-        memberTable = new javax.swing.JTable(){
+        deviceTable = new javax.swing.JTable(){
             public boolean editCellAt(int row, int column, java.util.EventObject e) {
                 return false;
             }
@@ -25,23 +67,12 @@ public class thietBiGUI extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        memIdBox = new javax.swing.JTextField();
+        deviceIdBox = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
-        memMajorBox = new javax.swing.JTextField();
+        deviceNameBox = new javax.swing.JTextField();
         jPanel8 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
-        memNameBox = new javax.swing.JTextField();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel9 = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        memSubMajorBox = new javax.swing.JTextField();
-        jLabel6 = new javax.swing.JLabel();
-        memPhoneBox = new javax.swing.JTextField();
-        jPanel10 = new javax.swing.JPanel();
-        jLabel7 = new javax.swing.JLabel();
-        memEmailBox = new javax.swing.JTextField();
-        memPasswordBox = new javax.swing.JLabel();
-        memMajorBox3 = new javax.swing.JTextField();
+        deviceDesriptionBox = new javax.swing.JTextField();
         jPanel4 = new javax.swing.JPanel();
         addMemBtn = new javax.swing.JButton();
         updateMemBtn = new javax.swing.JButton();
@@ -55,14 +86,14 @@ public class thietBiGUI extends javax.swing.JPanel {
         jScrollPane1.setMinimumSize(new java.awt.Dimension(900, 300));
         jScrollPane1.setPreferredSize(new java.awt.Dimension(900, 400));
 
-        memberTable.setModel(new javax.swing.table.DefaultTableModel(
+        deviceTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {{}},
             new String [] {
-                "ID", "Name", "Major", "Submajor", "Phone", "Email"
+                "ID", "Device Name", "Descriptions"
             }
         ));
-        memberTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-        jScrollPane1.setViewportView(memberTable);
+        deviceTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        jScrollPane1.setViewportView(deviceTable);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -91,19 +122,19 @@ public class thietBiGUI extends javax.swing.JPanel {
         jLabel2.setPreferredSize(new java.awt.Dimension(90, 50));
         jPanel6.add(jLabel2, new java.awt.GridBagConstraints());
 
-        memIdBox.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
-        memIdBox.setPreferredSize(new java.awt.Dimension(125, 40));
-        jPanel6.add(memIdBox, new java.awt.GridBagConstraints());
+        deviceIdBox.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
+        deviceIdBox.setPreferredSize(new java.awt.Dimension(125, 40));
+        jPanel6.add(deviceIdBox, new java.awt.GridBagConstraints());
 
         jLabel1.setFont(new java.awt.Font("Sitka Text", 0, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Major:");
+        jLabel1.setText("Name:");
         jLabel1.setPreferredSize(new java.awt.Dimension(90, 50));
         jPanel6.add(jLabel1, new java.awt.GridBagConstraints());
 
-        memMajorBox.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
-        memMajorBox.setPreferredSize(new java.awt.Dimension(125, 40));
-        jPanel6.add(memMajorBox, new java.awt.GridBagConstraints());
+        deviceNameBox.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
+        deviceNameBox.setPreferredSize(new java.awt.Dimension(500, 40));
+        jPanel6.add(deviceNameBox, new java.awt.GridBagConstraints());
 
         jPanel2.add(jPanel6);
 
@@ -112,75 +143,18 @@ public class thietBiGUI extends javax.swing.JPanel {
 
         jLabel3.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel3.setText("Fullname:");
+        jLabel3.setText("Description:");
         jLabel3.setMinimumSize(new java.awt.Dimension(50, 50));
         jLabel3.setPreferredSize(new java.awt.Dimension(90, 50));
         jPanel8.add(jLabel3, new java.awt.GridBagConstraints());
 
-        memNameBox.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
-        memNameBox.setPreferredSize(new java.awt.Dimension(340, 40));
-        jPanel8.add(memNameBox, new java.awt.GridBagConstraints());
+        deviceDesriptionBox.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
+        deviceDesriptionBox.setPreferredSize(new java.awt.Dimension(715, 40));
+        jPanel8.add(deviceDesriptionBox, new java.awt.GridBagConstraints());
 
         jPanel2.add(jPanel8);
 
         jPanel5.add(jPanel2);
-
-        jPanel3.setPreferredSize(new java.awt.Dimension(450, 150));
-        jPanel3.setLayout(new java.awt.GridLayout(2, 0));
-
-        jPanel9.setPreferredSize(new java.awt.Dimension(450, 50));
-        jPanel9.setLayout(new java.awt.GridBagLayout());
-
-        jLabel5.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Sub Marjor:");
-        jLabel5.setMinimumSize(new java.awt.Dimension(50, 50));
-        jLabel5.setPreferredSize(new java.awt.Dimension(90, 50));
-        jPanel9.add(jLabel5, new java.awt.GridBagConstraints());
-
-        memSubMajorBox.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
-        memSubMajorBox.setPreferredSize(new java.awt.Dimension(125, 40));
-        jPanel9.add(memSubMajorBox, new java.awt.GridBagConstraints());
-
-        jLabel6.setFont(new java.awt.Font("Sitka Text", 0, 18)); // NOI18N
-        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Phone:");
-        jLabel6.setPreferredSize(new java.awt.Dimension(90, 50));
-        jPanel9.add(jLabel6, new java.awt.GridBagConstraints());
-
-        memPhoneBox.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
-        memPhoneBox.setPreferredSize(new java.awt.Dimension(125, 40));
-        jPanel9.add(memPhoneBox, new java.awt.GridBagConstraints());
-
-        jPanel3.add(jPanel9);
-
-        jPanel10.setPreferredSize(new java.awt.Dimension(450, 50));
-        jPanel10.setLayout(new java.awt.GridBagLayout());
-
-        jLabel7.setFont(new java.awt.Font("Sitka Text", 0, 18)); // NOI18N
-        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Email:");
-        jLabel7.setMinimumSize(new java.awt.Dimension(50, 50));
-        jLabel7.setPreferredSize(new java.awt.Dimension(90, 50));
-        jPanel10.add(jLabel7, new java.awt.GridBagConstraints());
-
-        memEmailBox.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
-        memEmailBox.setPreferredSize(new java.awt.Dimension(125, 40));
-        jPanel10.add(memEmailBox, new java.awt.GridBagConstraints());
-
-        memPasswordBox.setFont(new java.awt.Font("Sitka Text", 0, 18)); // NOI18N
-        memPasswordBox.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        memPasswordBox.setText("Password:");
-        memPasswordBox.setPreferredSize(new java.awt.Dimension(90, 50));
-        jPanel10.add(memPasswordBox, new java.awt.GridBagConstraints());
-
-        memMajorBox3.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
-        memMajorBox3.setPreferredSize(new java.awt.Dimension(125, 40));
-        jPanel10.add(memMajorBox3, new java.awt.GridBagConstraints());
-
-        jPanel3.add(jPanel10);
-
-        jPanel5.add(jPanel3);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -238,35 +212,25 @@ public class thietBiGUI extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         add(jPanel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMemBtn;
     private javax.swing.JButton delMemBtn;
+    private javax.swing.JTextField deviceDesriptionBox;
+    private javax.swing.JTextField deviceIdBox;
+    private javax.swing.JTextField deviceNameBox;
+    private javax.swing.JTable deviceTable;
     private javax.swing.JButton importMemBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel8;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField memEmailBox;
-    private javax.swing.JTextField memIdBox;
-    private javax.swing.JTextField memMajorBox;
-    private javax.swing.JTextField memMajorBox3;
-    private javax.swing.JTextField memNameBox;
-    private javax.swing.JLabel memPasswordBox;
-    private javax.swing.JTextField memPhoneBox;
-    private javax.swing.JTextField memSubMajorBox;
-    private javax.swing.JTable memberTable;
     private javax.swing.JFileChooser pickFile;
     private javax.swing.JButton updateMemBtn;
     // End of variables declaration//GEN-END:variables

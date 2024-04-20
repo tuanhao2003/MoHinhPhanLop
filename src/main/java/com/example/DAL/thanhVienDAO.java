@@ -113,8 +113,15 @@ public class thanhVienDAO {
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();
+            thanhVien getFromSession = this.sess.get(thanhVien.class, mem.getMatv());
+            getFromSession.setHoten(mem.getHoten());
+            getFromSession.setKhoa(mem.getKhoa());
+            getFromSession.setNganh(mem.getNganh());
+            getFromSession.setSdt(mem.getSdt());
+            getFromSession.setEmail(mem.getEmail());
+            getFromSession.setPassword(mem.getPassword());
             
-            sess.update(mem);
+            sess.update(getFromSession);
             
             this.trans.commit();
             return true;

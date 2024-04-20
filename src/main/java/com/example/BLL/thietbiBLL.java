@@ -25,8 +25,8 @@ public class thietBiBLL {
         return devi;
     }
 
-    public List<thietBi> getDevices(){
-        List<thietBi> deviList = null;
+    public ArrayList<thietBi> getDevices(){
+        ArrayList<thietBi> deviList = null;
         deviList = this.thietBiDAO.listDevices();
         return deviList;
     }

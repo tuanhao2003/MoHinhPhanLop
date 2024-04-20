@@ -55,7 +55,6 @@ public class mainGUI extends javax.swing.JFrame {
     }
 
     private void eventHandler() {
-
         this.title.setText("Wellcome");
     }
 

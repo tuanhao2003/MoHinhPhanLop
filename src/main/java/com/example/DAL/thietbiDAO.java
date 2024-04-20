@@ -21,12 +21,12 @@ public class thietBiDAO {
         this.trans = null;
     }
 
-    public List<thietBi> listDevices(){
+    public ArrayList<thietBi> listDevices(){
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();
 
-            List<thietBi> devices = new ArrayList<thietBi>();
+            ArrayList<thietBi> devices = new ArrayList<thietBi>();
             Query query = this.sess.createQuery("from thietBi");
             List datas = query.list();
             for(Iterator iterator = datas.iterator();iterator.hasNext();){
@@ -113,6 +113,9 @@ public class thietBiDAO {
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();
+            thietBi getFromSession = this.sess.get(thietBi.class, devi.getMatb());
+            getFromSession.setTentb(devi.getTentb());
+            getFromSession.setMotatb(devi.getMotatb());
             
             sess.update(devi);
             

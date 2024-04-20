@@ -96,6 +96,8 @@ public class thanhVienGUI extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent e) {
                 if(selectingID > 0 && thanhVienBLL.getMember(selectingID) != null){
                     thanhVienBLL.deleteMember(selectingID);
+                    listThanhVien = thanhVienBLL.getMembers();
+                    renderTable();
                 }else{
                     System.out.println("Error while finding member");
                 }
