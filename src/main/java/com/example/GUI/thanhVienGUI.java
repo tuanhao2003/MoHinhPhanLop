@@ -2,6 +2,7 @@ package com.example.GUI;
 
 import com.example.BLL.thanhVienBLL;
 import com.example.DAL.thanhVien;
+import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
@@ -25,11 +26,11 @@ public class thanhVienGUI extends javax.swing.JPanel {
         this.listThanhVien = this.thanhVienBLL.getMembers();
         this.memberTable.getTableHeader().setReorderingAllowed(false);
         renderTable();
-//table click
+
         this.memberTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getPoint().y > 0) {
+                if (memberTable.rowAtPoint(e.getPoint()) > 0) {
                     selectingID = Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString());
                     memIdBox.setText(Integer.toString(selectingID));
                     memNameBox.setText(thanhVienBLL.getMember(selectingID).getHoten());
@@ -38,8 +39,47 @@ public class thanhVienGUI extends javax.swing.JPanel {
                     memPhoneBox.setText(thanhVienBLL.getMember(selectingID).getSdt());
                     memEmailBox.setText(thanhVienBLL.getMember(selectingID).getEmail());
                     memPasswordBox.setText(thanhVienBLL.getMember(selectingID).getPassword());
-
                 }
+            }
+        });
+
+        this.memberTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                ArrayList<Integer> borrowList = new ArrayList<Integer>();
+                if (memberTable.rowAtPoint(e.getPoint()) > 0 && memberTable.columnAtPoint(e.getPoint()) == 7) {
+                    thanhVienBLL.getDevicesForLen().forEach(devi -> {
+                        JPanel panel = new JPanel();
+                        JCheckBox cb = new JCheckBox();
+                        cb.addActionListener(new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent cbe) {
+                                if (cb.isSelected()) {
+                                    borrowList.add(devi.getMatb());
+                                } else {
+                                    borrowList.remove(devi.getMatb());
+                                }
+                            }
+                        });
+                        panel.setSize(500, 50);
+                        panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
+                        panel.add(cb);
+                        panel.add(new JLabel(Integer.toString(devi.getMatb()) + " "));
+                        panel.add(new JLabel(devi.getTentb() + " "));
+                        panel.add(new JLabel(devi.getMotatb()));
+                        deviceLenContainer.add(panel);
+                    });
+                    reload(deviceLenContainer);
+                }
+                
+                dialogLenBtn.addActionListener(new ActionListener(){
+                    @Override
+                    public void actionPerformed(ActionEvent e){
+                        for(int i : borrowList){
+                            
+                        }
+                    }
+                });
             }
         });
 
@@ -56,15 +96,17 @@ public class thanhVienGUI extends javax.swing.JPanel {
                         String phone = memPhoneBox.getText();
                         String email = memEmailBox.getText();
                         String pass = jlabelpass.getText();
-                        thanhVienBLL.addMember(id, fullname, major, submajor, phone, email, pass);
+                        boolean success = thanhVienBLL.addMember(id, fullname, major, submajor, phone, email, pass);
+                        if (success) {
+                            listThanhVien = thanhVienBLL.getMembers();
+                            renderTable();
+                        }
                     } catch (NumberFormatException numberFormatException) {
-                        System.out.println("id must be integer");
+                        JOptionPane.showMessageDialog(null, "id must be integer");
                     }
                 } else {
-                    System.out.println("please full fill ther boxes");
+                    JOptionPane.showMessageDialog(null, "please full fill ther boxes");
                 }
-                listThanhVien = thanhVienBLL.getMembers();
-                renderTable();
             }
         });
 
@@ -72,34 +114,38 @@ public class thanhVienGUI extends javax.swing.JPanel {
         this.updateMemBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (memIdBox.getText() != null && memNameBox.getText() != null && memMajorBox.getText() != null && memSubMajorBox.getText() != null && memPhoneBox.getText() != null && memEmailBox.getText() != null && jlabelpass.getText() != null) {
-                    if (!memIdBox.getText().equals(Integer.toString(selectingID))
-                        && !memNameBox.getText().equals(thanhVienBLL.getMember(selectingID).getHoten())
-                        && !memMajorBox.getText().equals(thanhVienBLL.getMember(selectingID).getKhoa())
-                        && !memSubMajorBox.getText().equals(thanhVienBLL.getMember(selectingID).getNganh())
-                        && !memPhoneBox.getText().equals(thanhVienBLL.getMember(selectingID).getSdt())
-                        && !memEmailBox.getText().equals(thanhVienBLL.getMember(selectingID).getEmail())
-                        && !memPasswordBox.getText().equals(thanhVienBLL.getMember(selectingID).getPassword())) {
-                        thanhVienBLL.updateMember(Integer.parseInt(memIdBox.getText()), memNameBox.getText(), memMajorBox.getText(), memSubMajorBox.getText(), memPhoneBox.getText(), memEmailBox.getText(), memPasswordBox.getText());
-                        listThanhVien = thanhVienBLL.getMembers();
-                        renderTable();
+                if (memIdBox.getText() != null && memMajorBox.getText() != null && memSubMajorBox.getText() != null && memPhoneBox.getText() != null && memEmailBox.getText() != null && jlabelpass.getText() != null) {
+                    if (thanhVienBLL.getMember(Integer.parseInt(memIdBox.getText())) != null
+                            && !memNameBox.getText().equals(thanhVienBLL.getMember(selectingID).getHoten())
+                            && !memMajorBox.getText().equals(thanhVienBLL.getMember(selectingID).getKhoa())
+                            && !memSubMajorBox.getText().equals(thanhVienBLL.getMember(selectingID).getNganh())
+                            && !memPhoneBox.getText().equals(thanhVienBLL.getMember(selectingID).getSdt())
+                            && !memEmailBox.getText().equals(thanhVienBLL.getMember(selectingID).getEmail())
+                            && !memPasswordBox.getText().equals(thanhVienBLL.getMember(selectingID).getPassword())) {
+                        boolean success = thanhVienBLL.updateMember(Integer.parseInt(memIdBox.getText()), memNameBox.getText(), memMajorBox.getText(), memSubMajorBox.getText(), memPhoneBox.getText(), memEmailBox.getText(), memPasswordBox.getText());
+                        if (success) {
+                            listThanhVien = thanhVienBLL.getMembers();
+                            renderTable();
+                        }
                     }
                 } else {
-                    System.out.println("every thing are up to date");
+                    JOptionPane.showMessageDialog(null, "every thing are up to date");
                 }
             }
         });
-        
+
 // button delete
         this.delMemBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(selectingID > 0 && thanhVienBLL.getMember(selectingID) != null){
-                    thanhVienBLL.deleteMember(selectingID);
-                    listThanhVien = thanhVienBLL.getMembers();
-                    renderTable();
-                }else{
-                    System.out.println("Error while finding member");
+                if (selectingID > 0 && thanhVienBLL.getMember(selectingID) != null) {
+                    boolean success = thanhVienBLL.deleteMember(selectingID);
+                    if (success) {
+                        listThanhVien = thanhVienBLL.getMembers();
+                        renderTable();
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Error while finding member");
                 }
             }
         });
@@ -109,9 +155,11 @@ public class thanhVienGUI extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 pickFile.showOpenDialog(jScrollPane1);
-                thanhVienBLL.addMembersViaExcel(pickFile.getSelectedFile().getAbsolutePath());
-                listThanhVien = thanhVienBLL.getMembers();
-                renderTable();
+                boolean success = thanhVienBLL.addMembersViaExcel(pickFile.getSelectedFile().getAbsolutePath());
+                if (success) {
+                    listThanhVien = thanhVienBLL.getMembers();
+                    renderTable();
+                }
             }
         });
 
@@ -121,8 +169,14 @@ public class thanhVienGUI extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) this.memberTable.getModel();
         model.setRowCount(0);
 
-        for (int i = 0; i < thanhVienBLL.getMembers().size(); i++) {
-            Object[] data = {Integer.toString(this.thanhVienBLL.getMembers().get(i).getMatv()), this.thanhVienBLL.getMembers().get(i).getHoten(), thanhVienBLL.getMembers().get(i).getKhoa(), thanhVienBLL.getMembers().get(i).getNganh(), thanhVienBLL.getMembers().get(i).getSdt(), thanhVienBLL.getMembers().get(i).getEmail()};
+        for (int i = 0; i < this.listThanhVien.size(); i++) {
+            String memid = Integer.toString(this.listThanhVien.get(i).getMatv());
+            String memName = this.listThanhVien.get(i).getHoten();
+            String memMajor = this.listThanhVien.get(i).getKhoa();
+            String memSubmajor = this.listThanhVien.get(i).getNganh();
+            String memPhone = this.listThanhVien.get(i).getSdt();
+            String memMail = this.listThanhVien.get(i).getEmail();
+            Object[] data = {memid, memName, memMajor, memSubmajor, memPhone, memMail};
             model.addRow(data);
             this.memberTable.updateUI();
         }
@@ -137,6 +191,12 @@ public class thanhVienGUI extends javax.swing.JPanel {
         java.awt.GridBagConstraints gridBagConstraints;
 
         pickFile = new javax.swing.JFileChooser();
+        chooseDevice = new javax.swing.JDialog();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        deviceLenContainer = new javax.swing.JPanel();
+        jPanel7 = new javax.swing.JPanel();
+        dialogClearBtn = new javax.swing.JButton();
+        dialogLenBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         memberTable = new javax.swing.JTable(){
             public boolean editCellAt(int row, int column, java.util.EventObject e) {
@@ -173,6 +233,48 @@ public class thanhVienGUI extends javax.swing.JPanel {
 
         pickFile.setToolTipText("");
 
+        chooseDevice.setTitle("Choose Device");
+        chooseDevice.setPreferredSize(new java.awt.Dimension(550, 550));
+        chooseDevice.getContentPane().setLayout(new java.awt.GridBagLayout());
+
+        jScrollPane3.setMinimumSize(new java.awt.Dimension(500, 300));
+        jScrollPane3.setPreferredSize(new java.awt.Dimension(500, 400));
+        jScrollPane3.setViewportView(deviceLenContainer);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        chooseDevice.getContentPane().add(jScrollPane3, gridBagConstraints);
+
+        jPanel7.setPreferredSize(new java.awt.Dimension(500, 100));
+        jPanel7.setLayout(new java.awt.GridLayout());
+
+        dialogClearBtn.setBackground(new java.awt.Color(222, 184, 135));
+        dialogClearBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        dialogClearBtn.setForeground(new java.awt.Color(51, 51, 51));
+        dialogClearBtn.setText("Clear");
+        dialogClearBtn.setAlignmentY(0.0F);
+        dialogClearBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        dialogClearBtn.setMaximumSize(new java.awt.Dimension(200, 400));
+        dialogClearBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        jPanel7.add(dialogClearBtn);
+
+        dialogLenBtn.setBackground(new java.awt.Color(222, 184, 135));
+        dialogLenBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        dialogLenBtn.setForeground(new java.awt.Color(51, 51, 51));
+        dialogLenBtn.setText("Len");
+        dialogLenBtn.setAlignmentY(0.0F);
+        dialogLenBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        dialogLenBtn.setMaximumSize(new java.awt.Dimension(200, 400));
+        dialogLenBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        jPanel7.add(dialogLenBtn);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        chooseDevice.getContentPane().add(jPanel7, gridBagConstraints);
+
         setMinimumSize(new java.awt.Dimension(0, 0));
         setPreferredSize(new java.awt.Dimension(900, 600));
         setLayout(new java.awt.GridBagLayout());
@@ -183,7 +285,7 @@ public class thanhVienGUI extends javax.swing.JPanel {
         memberTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {{}},
             new String [] {
-                "ID", "Name", "Major", "Submajor", "Phone", "Email"
+                "ID", "Name", "Major", "Submajor", "Phone", "Email", "Check in", "Len Device"
             }
         ));
         memberTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -365,7 +467,11 @@ public class thanhVienGUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMemBtn;
+    private javax.swing.JDialog chooseDevice;
     private javax.swing.JButton delMemBtn;
+    private javax.swing.JPanel deviceLenContainer;
+    private javax.swing.JButton dialogClearBtn;
+    private javax.swing.JButton dialogLenBtn;
     private javax.swing.JButton importMemBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -380,9 +486,11 @@ public class thanhVienGUI extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel jlabelpass;
     private javax.swing.JTextField memEmailBox;
     private javax.swing.JTextField memIdBox;

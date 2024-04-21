@@ -211,7 +211,7 @@
                         </Constraint>
                       </Constraints>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="deviceDesriptionBox">
+                    <Component class="javax.swing.JTextField" name="deviceDescriptionBox">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Sitka Text" size="14" style="0"/>
@@ -248,7 +248,7 @@
             <Property name="horizontalGap" type="int" value="50"/>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JButton" name="addMemBtn">
+            <Component class="javax.swing.JButton" name="addDeviceBtn">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="87" green="b8" red="de" type="rgb"/>
@@ -270,7 +270,7 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="updateMemBtn">
+            <Component class="javax.swing.JButton" name="updateDeviceBtn">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="87" green="b8" red="de" type="rgb"/>
@@ -289,7 +289,7 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="delMemBtn">
+            <Component class="javax.swing.JButton" name="delDeviceBtn">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="87" green="b8" red="de" type="rgb"/>
@@ -308,7 +308,7 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="importMemBtn">
+            <Component class="javax.swing.JButton" name="importDeviceBtn">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="87" green="b8" red="de" type="rgb"/>

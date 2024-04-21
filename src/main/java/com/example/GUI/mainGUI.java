@@ -12,8 +12,8 @@ public class mainGUI extends javax.swing.JFrame {
         initComponents();
         addComponent("Members", new thanhVienGUI());
         addComponent("Devices", new thietBiGUI());
-        addComponent("Punishments", new Xulivipham());
-        addComponent("Statistics", new ThongKe());
+        addComponent("Punishments", new xuLyGUI());
+        addComponent("Statistics", new thongKeGUI());
         eventHandler();
     }
 

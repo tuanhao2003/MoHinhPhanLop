@@ -11,10 +11,12 @@ import java.sql.Timestamp;
 public class xuLyBLL {
     private xuLyDAO xuLyDAO;
     private thanhVienDAO thanhVienDAO;
+    private thanhVienBLL thanhVienBLL;
 
     public xuLyBLL() {
         this.xuLyDAO = new xuLyDAO();
         this.thanhVienDAO = new thanhVienDAO();
+        thanhVienBLL = new thanhVienBLL();
     }
 
     public xuLy getPunishment(int ID){
@@ -23,8 +25,8 @@ public class xuLyBLL {
         return punish;
     }
 
-    public List<xuLy> getPunishments(){
-        List<xuLy> punishList = null;
+    public ArrayList<xuLy> getPunishments(){
+        ArrayList<xuLy> punishList = null;
         punishList = this.xuLyDAO.listPunishments();
         return punishList;
     }
@@ -57,5 +59,16 @@ public class xuLyBLL {
         }else{
             return false;
         }
+    }
+    
+    public ArrayList<thanhVien> findOffender(String name){
+        ArrayList<thanhVien> listOffenders = new ArrayList<thanhVien>();
+        thanhVienBLL.getMembers().forEach(mem -> {
+            if(mem.getHoten().equals(name)){
+                listOffenders.add(mem);
+            }
+        });
+        
+        return listOffenders;
     }
 }

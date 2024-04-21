@@ -51,7 +51,7 @@
         <Component class="javax.swing.JTable" name="memberTable">
           <Properties>
             <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-              <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {{}},&#xa;    new String [] {&#xa;        &quot;ID&quot;, &quot;Name&quot;, &quot;Major&quot;, &quot;Submajor&quot;, &quot;Phone&quot;, &quot;Email&quot;&#xa;    }&#xa;)" type="code"/>
+              <Connection code="new javax.swing.table.DefaultTableModel(&#xa;    new Object [][] {{}},&#xa;    new String [] {&#xa;        &quot;ID&quot;, &quot;Name&quot;, &quot;Major&quot;, &quot;Submajor&quot;, &quot;Phone&quot;, &quot;Email&quot;, &quot;Check in&quot;, &quot;Len Device&quot;&#xa;    }&#xa;)" type="code"/>
             </Property>
             <Property name="autoResizeMode" type="int" value="4"/>
           </Properties>

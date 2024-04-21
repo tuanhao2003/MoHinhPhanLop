@@ -21,12 +21,12 @@ public class thongTinSdDAO {
         this.trans = null;
     }
 
-    public List<thongTinSd> listUsageInfors(){
+    public ArrayList<thongTinSd> listUsageInfors(){
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();
 
-            List<thongTinSd> usageInfors = new ArrayList<thongTinSd>();
+            ArrayList<thongTinSd> usageInfors = new ArrayList<thongTinSd>();
             Query query = this.sess.createQuery("from thongTinSd");
             List datas = query.list();
             for(Iterator iterator = datas.iterator();iterator.hasNext();){

@@ -43,17 +43,19 @@ public class thietBiBLL {
             Sheet S = WB.getSheetAt(1);
 
             for (Row R : S) {
+                
                 if(R != S.getRow(0)){
-
-                    int ID = (int) R.getCell(0).getNumericCellValue();
-                    String name = R.getCell(1).getStringCellValue();
-                    String description = R.getCell(2).getStringCellValue();
-
-                    this.thietBiDAO.addDevice(new thietBi(ID, name, description));
+                    if(R.getCell(0)==null || R.getCell(0).getCellType() == CellType.BLANK){
+                        break;
+                    }else{
+                        int ID = (int) R.getCell(0).getNumericCellValue();
+                        String name = R.getCell(1).getStringCellValue();
+                        String description = R.getCell(2).getStringCellValue();
+                        
+                        this.thietBiDAO.addDevice(new thietBi(ID, name, description));
+                    }
                 }
-                if(R.getCell(0)==null || R.getCell(0).getCellType() == CellType.BLANK){
-                    break;
-                }
+                
             }
             WB.close();
             F.close();

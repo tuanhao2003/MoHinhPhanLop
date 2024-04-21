@@ -21,12 +21,12 @@ public class xuLyDAO {
         this.trans = null;
     }
 
-    public List<xuLy> listPunishments(){
+    public ArrayList<xuLy> listPunishments(){
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();
 
-            List<xuLy> punishments = new ArrayList<xuLy>();
+            ArrayList<xuLy> punishments = new ArrayList<xuLy>();
             Query query = this.sess.createQuery("from xuLy");
             List datas = query.list();
             for(Iterator iterator = datas.iterator();iterator.hasNext();){

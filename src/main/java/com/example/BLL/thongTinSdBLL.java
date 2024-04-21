@@ -27,16 +27,16 @@ public class thongTinSdBLL {
         return punish;
     }
 
-    public List<thongTinSd> getUsageInfors(){
-        List<thongTinSd> punishList = null;
+    public ArrayList<thongTinSd> getUsageInfors(){
+        ArrayList<thongTinSd> punishList = null;
         punishList = this.thongTinSdDAO.listUsageInfors();
         return punishList;
     }
 
-    public boolean addUsageInfor(int matt, int matv, int matb, Timestamp tgvao, Timestamp tgmuon, Timestamp tgtra) {
+    public boolean addUsageInfor(int matv, int matb, Timestamp tgvao, Timestamp tgmuon, Timestamp tgtra) {
         thanhVien thanhvien = this.thanhVienDAO.member(matv);
         thietBi thietbi = this.thietBiDAO.device(matb);
-        boolean success = this.thongTinSdDAO.addUsageInfor(new thongTinSd(matt, thanhvien, thietbi, tgvao, tgmuon, tgtra));
+        boolean success = this.thongTinSdDAO.addUsageInfor(new thongTinSd(0, thanhvien, thietbi, tgvao, tgmuon, tgtra));
         return success;
     }
 
