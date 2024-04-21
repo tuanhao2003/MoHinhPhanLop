@@ -9,6 +9,7 @@ import com.example.DAL.thongTinSdDAO;
 
 import java.util.*;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 public class thongTinSdBLL {
     private thongTinSdDAO thongTinSdDAO;
@@ -62,5 +63,19 @@ public class thongTinSdBLL {
         }else{
             return false;
         }
+    }
+    
+    public thongTinSd getToDayCheckIn(int matv){
+        Timestamp today = Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atStartOfDay());
+        ArrayList<thongTinSd> allInfor = getUsageInfors();
+        Collections.reverse(allInfor);
+        for(thongTinSd i : allInfor){
+            if(i.getThanhvien().getMatv() == matv){
+                if(i.getTgvao().compareTo(today) > 0){
+                    return i;
+                }
+            }
+        }
+        return null;
     }
 }

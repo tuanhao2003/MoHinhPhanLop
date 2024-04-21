@@ -109,11 +109,17 @@ public class xuLyDAO {
         return false;
     }
 
-    public boolean updatePunishment(xuLy punish){
+    public boolean updatePunishment(xuLy xuly){
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();
-            
+            xuLy punish = (xuLy) this.sess.get(xuLy.class, xuly.getMaxl());
+            punish.setHinhthucxl(xuly.getHinhthucxl());
+            punish.setNgayxl(xuly.getNgayxl());
+            punish.setSotien(xuly.getSotien());
+            punish.setThanhvien(xuly.getThanhvien());
+            punish.setTrangthaixl(xuly.getTrangthaixl());
+
             sess.update(punish);
             
             this.trans.commit();

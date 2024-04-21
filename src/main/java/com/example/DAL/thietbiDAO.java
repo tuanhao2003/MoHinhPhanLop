@@ -113,11 +113,11 @@ public class thietBiDAO {
         try {
             this.sess = this.sf.openSession();
             this.trans = this.sess.beginTransaction();
-            thietBi getFromSession = this.sess.get(thietBi.class, devi.getMatb());
+            thietBi getFromSession = (thietBi) this.sess.get(thietBi.class, devi.getMatb());
             getFromSession.setTentb(devi.getTentb());
             getFromSession.setMotatb(devi.getMotatb());
             
-            sess.update(devi);
+            sess.update(getFromSession);
             
             this.trans.commit();
             return true;

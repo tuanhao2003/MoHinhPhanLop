@@ -22,7 +22,6 @@ public class thanhVienGUI extends javax.swing.JPanel {
     }
 
     private void eventHandler() {
-
         this.listThanhVien = this.thanhVienBLL.getMembers();
         this.memberTable.getTableHeader().setReorderingAllowed(false);
         renderTable();
@@ -30,7 +29,7 @@ public class thanhVienGUI extends javax.swing.JPanel {
         this.memberTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (memberTable.rowAtPoint(e.getPoint()) > 0) {
+                if (memberTable.rowAtPoint(e.getPoint()) >= 0) {
                     selectingID = Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString());
                     memIdBox.setText(Integer.toString(selectingID));
                     memNameBox.setText(thanhVienBLL.getMember(selectingID).getHoten());
@@ -39,47 +38,135 @@ public class thanhVienGUI extends javax.swing.JPanel {
                     memPhoneBox.setText(thanhVienBLL.getMember(selectingID).getSdt());
                     memEmailBox.setText(thanhVienBLL.getMember(selectingID).getEmail());
                     memPasswordBox.setText(thanhVienBLL.getMember(selectingID).getPassword());
-                }
-            }
-        });
-
-        this.memberTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                ArrayList<Integer> borrowList = new ArrayList<Integer>();
-                if (memberTable.rowAtPoint(e.getPoint()) > 0 && memberTable.columnAtPoint(e.getPoint()) == 7) {
-                    thanhVienBLL.getDevicesForLen().forEach(devi -> {
-                        JPanel panel = new JPanel();
-                        JCheckBox cb = new JCheckBox();
-                        cb.addActionListener(new ActionListener() {
+                    
+                    if (memberTable.columnAtPoint(e.getPoint()) == 6) {
+                        boolean success = thanhVienBLL.checkIn(Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString()));
+                        if (success) {
+                            JOptionPane.showMessageDialog(jScrollPane1, "check in success");
+                        }else{
+                            JOptionPane.showMessageDialog(jScrollPane1, "member got banned");
+                        }
+                    }
+                    
+                    if (memberTable.columnAtPoint(e.getPoint()) == 7) {
+                        chooseDevice.setVisible(true);
+                        chooseDevice.setLocationRelativeTo(null);
+                        deviceLenContainer.removeAll();
+                        ArrayList<Integer> borrowList = new ArrayList<Integer>();
+                        if (!thanhVienBLL.checkOffender(Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString()))) {
+                            thanhVienBLL.getDevicesForLen().forEach(devi -> {
+                                JPanel panel = new JPanel();
+                                JCheckBox cb = new JCheckBox();
+                                cb.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent cbe) {
+                                        if (cb.isSelected()) {
+                                            borrowList.add(devi.getMatb());
+                                        } else {
+                                            borrowList.remove(devi.getMatb());
+                                        }
+                                    }
+                                });
+                                panel.setSize(500, 50);
+                                panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
+                                panel.add(cb);
+                                panel.add(new JLabel(Integer.toString(devi.getMatb()) + " "));
+                                panel.add(new JLabel(devi.getTentb() + " "));
+                                panel.add(new JLabel(devi.getMotatb()));
+                                deviceLenContainer.add(panel);
+                            });
+                            reload(deviceLenContainer);
+                            
+                            dialogLenBtn.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    for (int i : borrowList) {
+                                        thanhVienBLL.lenDevice(selectingID, i);
+                                    }
+                                    chooseDevice.dispose();
+                                }
+                            });
+                            
+                            dialogClearBtn.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent e) {
+                                    borrowList.clear();
+                                    deviceLenContainer.removeAll();
+                                    thanhVienBLL.getDevicesForLen().forEach(devi -> {
+                                    JPanel panel = new JPanel();
+                                    JCheckBox cb = new JCheckBox();
+                                    cb.addActionListener(new ActionListener() {
+                                        @Override
+                                        public void actionPerformed(ActionEvent cbe) {
+                                            if (cb.isSelected()) {
+                                                borrowList.add(devi.getMatb());
+                                            } else {
+                                                borrowList.remove(devi.getMatb());
+                                            }
+                                        }
+                                    });
+                                    panel.setSize(500, 50);
+                                    panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
+                                    panel.add(cb);
+                                    panel.add(new JLabel(Integer.toString(devi.getMatb()) + " "));
+                                    panel.add(new JLabel(devi.getTentb() + " "));
+                                    panel.add(new JLabel(devi.getMotatb()));
+                                    deviceLenContainer.add(panel);
+                                });
+                                reload(deviceLenContainer);
+                                }
+                            });
+                        }else{
+                            JOptionPane.showMessageDialog(jScrollPane1, "member got banned");
+                        }
+                    }
+                    
+                    if (memberTable.columnAtPoint(e.getPoint()) == 8) {
+                        borrowingDevices.setVisible(true);
+                        borrowingDevices.setLocationRelativeTo(null);
+                        borrowingContainer.removeAll();
+                        ArrayList<Integer> backIntend = new ArrayList<Integer>();
+                        thanhVienBLL.getDevicesBorrowing(Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString())).forEach(devi -> {
+                            JPanel panel = new JPanel();
+                            JCheckBox cb = new JCheckBox();
+                            cb.addActionListener(new ActionListener() {
+                                @Override
+                                public void actionPerformed(ActionEvent cbe) {
+                                    if (cb.isSelected()) {
+                                        backIntend.add(devi.getMatb());
+                                    } else {
+                                        backIntend.remove(devi.getMatb());
+                                    }
+                                }
+                            });
+                            panel.setSize(500, 50);
+                            panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
+                            panel.add(cb);
+                            panel.add(new JLabel(Integer.toString(devi.getMatb()) + " "));
+                            panel.add(new JLabel(devi.getTentb() + " "));
+                            panel.add(new JLabel(devi.getMotatb()));
+                            borrowingContainer.add(panel);
+                        });
+                        reload(borrowingContainer);
+                        
+                        backSelected.addActionListener(new ActionListener() {
                             @Override
-                            public void actionPerformed(ActionEvent cbe) {
-                                if (cb.isSelected()) {
-                                    borrowList.add(devi.getMatb());
-                                } else {
-                                    borrowList.remove(devi.getMatb());
+                            public void actionPerformed(ActionEvent e) {
+                                for (int i : backIntend) {
+                                    thanhVienBLL.backDevice(selectingID, i);
                                 }
                             }
                         });
-                        panel.setSize(500, 50);
-                        panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
-                        panel.add(cb);
-                        panel.add(new JLabel(Integer.toString(devi.getMatb()) + " "));
-                        panel.add(new JLabel(devi.getTentb() + " "));
-                        panel.add(new JLabel(devi.getMotatb()));
-                        deviceLenContainer.add(panel);
-                    });
-                    reload(deviceLenContainer);
-                }
-                
-                dialogLenBtn.addActionListener(new ActionListener(){
-                    @Override
-                    public void actionPerformed(ActionEvent e){
-                        for(int i : borrowList){
-                            
-                        }
                     }
-                });
+                }
+            }
+        });
+        
+        this.delMultiMemBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String inp = JOptionPane.showInputDialog(jScrollPane1, "Input the course:");
+                thanhVienBLL.deleteMembers(Integer.parseInt(inp));
             }
         });
 
@@ -102,10 +189,10 @@ public class thanhVienGUI extends javax.swing.JPanel {
                             renderTable();
                         }
                     } catch (NumberFormatException numberFormatException) {
-                        JOptionPane.showMessageDialog(null, "id must be integer");
+                        JOptionPane.showMessageDialog(jScrollPane1, "id must be integer");
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "please full fill ther boxes");
+                    JOptionPane.showMessageDialog(jScrollPane1, "please full fill ther boxes");
                 }
             }
         });
@@ -114,14 +201,8 @@ public class thanhVienGUI extends javax.swing.JPanel {
         this.updateMemBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (memIdBox.getText() != null && memMajorBox.getText() != null && memSubMajorBox.getText() != null && memPhoneBox.getText() != null && memEmailBox.getText() != null && jlabelpass.getText() != null) {
-                    if (thanhVienBLL.getMember(Integer.parseInt(memIdBox.getText())) != null
-                            && !memNameBox.getText().equals(thanhVienBLL.getMember(selectingID).getHoten())
-                            && !memMajorBox.getText().equals(thanhVienBLL.getMember(selectingID).getKhoa())
-                            && !memSubMajorBox.getText().equals(thanhVienBLL.getMember(selectingID).getNganh())
-                            && !memPhoneBox.getText().equals(thanhVienBLL.getMember(selectingID).getSdt())
-                            && !memEmailBox.getText().equals(thanhVienBLL.getMember(selectingID).getEmail())
-                            && !memPasswordBox.getText().equals(thanhVienBLL.getMember(selectingID).getPassword())) {
+                if (memIdBox.getText() != null) {
+                    if (thanhVienBLL.getMember(Integer.parseInt(memIdBox.getText())) != null) {
                         boolean success = thanhVienBLL.updateMember(Integer.parseInt(memIdBox.getText()), memNameBox.getText(), memMajorBox.getText(), memSubMajorBox.getText(), memPhoneBox.getText(), memEmailBox.getText(), memPasswordBox.getText());
                         if (success) {
                             listThanhVien = thanhVienBLL.getMembers();
@@ -129,7 +210,7 @@ public class thanhVienGUI extends javax.swing.JPanel {
                         }
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "every thing are up to date");
+                    JOptionPane.showMessageDialog(jScrollPane1, "every thing are up to date");
                 }
             }
         });
@@ -145,7 +226,7 @@ public class thanhVienGUI extends javax.swing.JPanel {
                         renderTable();
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null, "Error while finding member");
+                    JOptionPane.showMessageDialog(jScrollPane1, "Error while finding member");
                 }
             }
         });
@@ -192,11 +273,19 @@ public class thanhVienGUI extends javax.swing.JPanel {
 
         pickFile = new javax.swing.JFileChooser();
         chooseDevice = new javax.swing.JDialog();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        chooseSkeleton = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
         deviceLenContainer = new javax.swing.JPanel();
-        jPanel7 = new javax.swing.JPanel();
+        jPanel11 = new javax.swing.JPanel();
         dialogClearBtn = new javax.swing.JButton();
         dialogLenBtn = new javax.swing.JButton();
+        borrowingDevices = new javax.swing.JDialog();
+        borrowingSkeleton = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        borrowingContainer = new javax.swing.JPanel();
+        jPanel12 = new javax.swing.JPanel();
+        backAll = new javax.swing.JButton();
+        backSelected = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         memberTable = new javax.swing.JTable(){
             public boolean editCellAt(int row, int column, java.util.EventObject e) {
@@ -230,26 +319,35 @@ public class thanhVienGUI extends javax.swing.JPanel {
         updateMemBtn = new javax.swing.JButton();
         delMemBtn = new javax.swing.JButton();
         importMemBtn = new javax.swing.JButton();
+        delMultiMemBtn = new javax.swing.JButton();
 
         pickFile.setToolTipText("");
 
         chooseDevice.setTitle("Choose Device");
-        chooseDevice.setPreferredSize(new java.awt.Dimension(550, 550));
-        chooseDevice.getContentPane().setLayout(new java.awt.GridBagLayout());
+        chooseDevice.setAlwaysOnTop(true);
+        chooseDevice.setLocationByPlatform(true);
+        chooseDevice.setMinimumSize(new java.awt.Dimension(600, 400));
+        chooseDevice.getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
-        jScrollPane3.setMinimumSize(new java.awt.Dimension(500, 300));
-        jScrollPane3.setPreferredSize(new java.awt.Dimension(500, 400));
-        jScrollPane3.setViewportView(deviceLenContainer);
+        chooseSkeleton.setPreferredSize(new java.awt.Dimension(550, 550));
+        chooseSkeleton.setLayout(new java.awt.GridBagLayout());
+
+        jScrollPane4.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane4.setMinimumSize(new java.awt.Dimension(500, 300));
+        jScrollPane4.setPreferredSize(new java.awt.Dimension(500, 400));
+
+        deviceLenContainer.setLayout(new javax.swing.BoxLayout(deviceLenContainer, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane4.setViewportView(deviceLenContainer);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        chooseDevice.getContentPane().add(jScrollPane3, gridBagConstraints);
+        chooseSkeleton.add(jScrollPane4, gridBagConstraints);
 
-        jPanel7.setPreferredSize(new java.awt.Dimension(500, 100));
-        jPanel7.setLayout(new java.awt.GridLayout());
+        jPanel11.setPreferredSize(new java.awt.Dimension(500, 100));
+        jPanel11.setLayout(new java.awt.GridLayout(1, 0));
 
         dialogClearBtn.setBackground(new java.awt.Color(222, 184, 135));
         dialogClearBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
@@ -259,7 +357,7 @@ public class thanhVienGUI extends javax.swing.JPanel {
         dialogClearBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         dialogClearBtn.setMaximumSize(new java.awt.Dimension(200, 400));
         dialogClearBtn.setPreferredSize(new java.awt.Dimension(150, 40));
-        jPanel7.add(dialogClearBtn);
+        jPanel11.add(dialogClearBtn);
 
         dialogLenBtn.setBackground(new java.awt.Color(222, 184, 135));
         dialogLenBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
@@ -269,11 +367,65 @@ public class thanhVienGUI extends javax.swing.JPanel {
         dialogLenBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         dialogLenBtn.setMaximumSize(new java.awt.Dimension(200, 400));
         dialogLenBtn.setPreferredSize(new java.awt.Dimension(150, 40));
-        jPanel7.add(dialogLenBtn);
+        jPanel11.add(dialogLenBtn);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 1;
-        chooseDevice.getContentPane().add(jPanel7, gridBagConstraints);
+        chooseSkeleton.add(jPanel11, gridBagConstraints);
+
+        chooseDevice.getContentPane().add(chooseSkeleton);
+
+        borrowingDevices.setTitle("Give Back Device");
+        borrowingDevices.setAlwaysOnTop(true);
+        borrowingDevices.setLocationByPlatform(true);
+        borrowingDevices.setMinimumSize(new java.awt.Dimension(600, 400));
+        borrowingDevices.getContentPane().setLayout(new java.awt.GridLayout(1, 0));
+
+        borrowingSkeleton.setPreferredSize(new java.awt.Dimension(550, 550));
+        borrowingSkeleton.setLayout(new java.awt.GridBagLayout());
+
+        jScrollPane5.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPane5.setMinimumSize(new java.awt.Dimension(500, 300));
+        jScrollPane5.setPreferredSize(new java.awt.Dimension(500, 400));
+
+        borrowingContainer.setLayout(new javax.swing.BoxLayout(borrowingContainer, javax.swing.BoxLayout.Y_AXIS));
+        jScrollPane5.setViewportView(borrowingContainer);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        borrowingSkeleton.add(jScrollPane5, gridBagConstraints);
+
+        jPanel12.setPreferredSize(new java.awt.Dimension(500, 100));
+        jPanel12.setLayout(new java.awt.GridLayout(1, 0));
+
+        backAll.setBackground(new java.awt.Color(222, 184, 135));
+        backAll.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        backAll.setForeground(new java.awt.Color(51, 51, 51));
+        backAll.setText("Back all");
+        backAll.setAlignmentY(0.0F);
+        backAll.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        backAll.setMaximumSize(new java.awt.Dimension(200, 400));
+        backAll.setPreferredSize(new java.awt.Dimension(150, 40));
+        jPanel12.add(backAll);
+
+        backSelected.setBackground(new java.awt.Color(222, 184, 135));
+        backSelected.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        backSelected.setForeground(new java.awt.Color(51, 51, 51));
+        backSelected.setText("Give back");
+        backSelected.setAlignmentY(0.0F);
+        backSelected.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        backSelected.setMaximumSize(new java.awt.Dimension(200, 400));
+        backSelected.setPreferredSize(new java.awt.Dimension(150, 40));
+        jPanel12.add(backSelected);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 1;
+        borrowingSkeleton.add(jPanel12, gridBagConstraints);
+
+        borrowingDevices.getContentPane().add(borrowingSkeleton);
 
         setMinimumSize(new java.awt.Dimension(0, 0));
         setPreferredSize(new java.awt.Dimension(900, 600));
@@ -285,10 +437,9 @@ public class thanhVienGUI extends javax.swing.JPanel {
         memberTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {{}},
             new String [] {
-                "ID", "Name", "Major", "Submajor", "Phone", "Email", "Check in", "Len Device"
+                "ID", "Name", "Major", "Submajor", "Phone", "Email", "Check in", "Len Device", "Give back"
             }
         ));
-        memberTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
         jScrollPane1.setViewportView(memberTable);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -423,17 +574,17 @@ public class thanhVienGUI extends javax.swing.JPanel {
         addMemBtn.setText("ADD");
         addMemBtn.setAlignmentY(0.0F);
         addMemBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addMemBtn.setMaximumSize(new java.awt.Dimension(200, 400));
-        addMemBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        addMemBtn.setMaximumSize(new java.awt.Dimension(100, 400));
+        addMemBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(addMemBtn);
 
         updateMemBtn.setBackground(new java.awt.Color(222, 184, 135));
-        updateMemBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        updateMemBtn.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
         updateMemBtn.setForeground(new java.awt.Color(51, 51, 51));
         updateMemBtn.setText("UPDATE");
         updateMemBtn.setAlignmentY(0.0F);
         updateMemBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        updateMemBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        updateMemBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(updateMemBtn);
 
         delMemBtn.setBackground(new java.awt.Color(222, 184, 135));
@@ -442,7 +593,7 @@ public class thanhVienGUI extends javax.swing.JPanel {
         delMemBtn.setText("DELETE");
         delMemBtn.setAlignmentY(0.0F);
         delMemBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        delMemBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        delMemBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(delMemBtn);
 
         importMemBtn.setBackground(new java.awt.Color(222, 184, 135));
@@ -451,8 +602,18 @@ public class thanhVienGUI extends javax.swing.JPanel {
         importMemBtn.setText("IMPORT");
         importMemBtn.setAlignmentY(0.0F);
         importMemBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        importMemBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        importMemBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(importMemBtn);
+
+        delMultiMemBtn.setBackground(new java.awt.Color(222, 184, 135));
+        delMultiMemBtn.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
+        delMultiMemBtn.setForeground(new java.awt.Color(51, 51, 51));
+        delMultiMemBtn.setText("DELS");
+        delMultiMemBtn.setActionCommand("DELS");
+        delMultiMemBtn.setAlignmentY(0.0F);
+        delMultiMemBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        delMultiMemBtn.setPreferredSize(new java.awt.Dimension(100, 40));
+        jPanel4.add(delMultiMemBtn);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -467,8 +628,15 @@ public class thanhVienGUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMemBtn;
+    private javax.swing.JButton backAll;
+    private javax.swing.JButton backSelected;
+    private javax.swing.JPanel borrowingContainer;
+    private javax.swing.JDialog borrowingDevices;
+    private javax.swing.JPanel borrowingSkeleton;
     private javax.swing.JDialog chooseDevice;
+    private javax.swing.JPanel chooseSkeleton;
     private javax.swing.JButton delMemBtn;
+    private javax.swing.JButton delMultiMemBtn;
     private javax.swing.JPanel deviceLenContainer;
     private javax.swing.JButton dialogClearBtn;
     private javax.swing.JButton dialogLenBtn;
@@ -481,16 +649,18 @@ public class thanhVienGUI extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JLabel jlabelpass;
     private javax.swing.JTextField memEmailBox;
     private javax.swing.JTextField memIdBox;

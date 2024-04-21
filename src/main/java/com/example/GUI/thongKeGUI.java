@@ -35,7 +35,7 @@ public class thongKeGUI extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Get the member list
-                ArrayList<thongTinSd> punishList = thongTinSdBLL.listUsageInfors();
+                ArrayList<thongTinSd> punishList = thongTinSdBLL.getUsageInfors();
 
                 // Create column names
                 String[] columnNames = {"Mã thành viên", "Mã thiết bị", "Thời gian vào", "Thời gian mượn", "Thời gian trả"};

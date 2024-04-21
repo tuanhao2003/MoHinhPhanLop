@@ -99,10 +99,11 @@ public class thietBiBLL {
     }
 
     public boolean updateDevice(int ID, String name, String description) {
-        if(this.thietBiDAO.device(ID) != null){
-            this.thietBiDAO.device(ID).setTentb(name);
-            this.thietBiDAO.device(ID).setMotatb(description);
-            this.thietBiDAO.updateDevice(this.thietBiDAO.device(ID));
+        thietBi clone = this.thietBiDAO.device(ID);
+        if(clone != null){
+            clone.setTentb(name);
+            clone.setMotatb(description);
+            this.thietBiDAO.updateDevice(clone);
             return true;
         }else{
             return false;
