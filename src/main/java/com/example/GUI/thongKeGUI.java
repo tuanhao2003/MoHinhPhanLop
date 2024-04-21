@@ -1,7 +1,11 @@
 package com.example.GUI;
 
+import com.example.BLL.thietBiBLL;
+import com.example.BLL.thongTinSdBLL;
 import com.example.BLL.xuLyBLL;
 import com.example.DAL.thanhVien;
+import com.example.DAL.thietBi;
+import com.example.DAL.thongTinSd;
 import com.example.DAL.xuLy;
 import java.awt.event.*;
 import java.sql.*;
@@ -11,7 +15,12 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 public class thongKeGUI extends javax.swing.JPanel {
-
+    
+    private thietBiBLL thietBiBLL;
+    private ArrayList<thietBi> listThietBi;
+    private thongTinSdBLL thongTinSdBLL;
+    private ArrayList<thongTinSd> listSudung;
+    
     public thongKeGUI() {
         initComponents();
         eventHandler();
@@ -21,14 +30,46 @@ public class thongKeGUI extends javax.swing.JPanel {
         this.statisticTypes.add(this.type1);
         this.statisticTypes.add(this.type2);
         this.statisticTypes.add(this.type3);
+
+        memberQuantityBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the member list
+                ArrayList<thongTinSd> punishList = thongTinSdBLL.getUsageInfors();
+
+                // Create column names
+                String[] columnNames = {"Mã thành viên", "Mã thiết bị", "Thời gian vào", "Thời gian mượn", "Thời gian trả"};
+
+                // Create 2D array for table data
+                String[][] data = new String[punishList.size()][7];
+
+                // Fill the data array with member data
+                for (int i = 0; i < punishList.size(); i++) {
+                    thanhVien member = punishList.get(i);
+                    data[i][0] = String.valueOf(member.getMatv());
+                    data[i][1] = member.getmaTB();
+                    data[i][2] = member.getTGvao();
+                    data[i][3] = member.getTGmuon();
+                    data[i][4] = member.getTGtra();
+                }
+
+                // Create a table with the data
+                JTable table = new JTable(data, columnNames);
+
+                // Set the table to the statisticContainer
+                statisticContainer.setViewportView(table);
+            }
+        });
     }
 
 /*  
-    tạo 3 table tương ứng vs 3 loại thống kê(cop từ form khác sang sử tên) bỏ vào other component, 
+    tạo 3 table tương ứng vs 3 loại thống kê(copy từ form khác sang sửa tên) bỏ vào other component,
     xử lý sự kiện các nút bấm bên dưới để loadtable lên statisticContainer và load các nút kiểu thống kê
-    type1-type12-type3 là các kiểu thống kê trong loại thống kê đó(vd theo ngày, theo mã)
+    type1-type2-type3 là các kiểu thống kê trong loại thống kê đó(vd theo ngày, theo mã)
     dùng reload() để update sau khi nhấn
 */
+    
+    
     private void reload(JPanel item) {
         item.repaint();
         item.revalidate();

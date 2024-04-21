@@ -17,7 +17,7 @@
             <column name="MaTV" not-null="true"/>
         </many-to-one>
         <many-to-one name="thietbi" class="thietBi" fetch="join">
-            <column name="MaTB" not-null="true"/>
+            <column name="MaTB" not-null="false"/>
         </many-to-one>
         <property name="tgvao" column="TGVao" type="timestamp" />
         <property name="tgmuon" column="TGMuon" type="timestamp" />

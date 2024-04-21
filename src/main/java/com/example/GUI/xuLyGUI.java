@@ -31,7 +31,7 @@ public class xuLyGUI extends javax.swing.JPanel {
         this.punishmentTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (punishmentTable.rowAtPoint(e.getPoint()) > 0) {
+                if (punishmentTable.rowAtPoint(e.getPoint()) >= 0) {
                     selectingID = Integer.parseInt(punishmentTable.getValueAt(punishmentTable.rowAtPoint(e.getPoint()), 0).toString());
                     punishIdBox.setText(Integer.toString(selectingID));
                     punishTypeBox.setText(xuLyBLL.getPunishment(selectingID).getHinhthucxl());
@@ -45,18 +45,10 @@ public class xuLyGUI extends javax.swing.JPanel {
         this.addPunishBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (punishIdBox.getText() != null && punishTypeBox.getText() != null && punishMoneyBox.getText() != null && offenderNameBox.getText() != null && punishDateBox.getText() != null) {
+                if (punishIdBox.getText() != null) {
                     try {
                         int id = Integer.parseInt(punishIdBox.getText());
-                        ArrayList<thanhVien> findOffender = xuLyBLL.findOffender(offenderNameBox.getText());
-                        thanhVien offender = new thanhVien();
-                        if(findOffender.size() == 0){
-                            JOptionPane.showMessageDialog(null,"member not found");
-                        }else if(findOffender.size() == 1){
-                            offender = findOffender.get(0);
-                        }else{
-//                            dialog choose
-                        }
+                        thanhVien offender = xuLyBLL.getPunishment(Integer.parseInt(punishIdBox.getText())).getThanhvien();
                         String type = punishTypeBox.getText();
                         int money = Integer.parseInt(punishMoneyBox.getText());
                         Timestamp date = Timestamp.valueOf(punishDateBox.getText());
@@ -81,7 +73,7 @@ public class xuLyGUI extends javax.swing.JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(punishDateBox.getText().equals("") || punishDateBox.getText() == null){
-                    punishDateBox.setText(Instant.now().toString());
+                    punishDateBox.setText(Timestamp.from(Instant.now()).toString());
                 }
             }
         });
@@ -89,24 +81,16 @@ public class xuLyGUI extends javax.swing.JPanel {
         this.updatePunishBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(punishIdBox.getText() != null && offenderNameBox.getText() != null && punishTypeBox.getText() != null && punishDateBox.getText() != null && punishMoneyBox.getText() != null){
-                    if(
-                        xuLyBLL.getPunishment(Integer.parseInt(punishIdBox.getText()))!=null &&
-                        !offenderNameBox.getText().equals(xuLyBLL.getPunishment(selectingID).getThanhvien().getHoten()) &&
-                        !punishTypeBox.getText().equals(xuLyBLL.getPunishment(selectingID).getHinhthucxl())&&
-                        !punishDateBox.getText().equals(xuLyBLL.getPunishment(selectingID).getNgayxl().toString())&&
-                        !punishMoneyBox.getText().equals(Integer.toString(xuLyBLL.getPunishment(selectingID).getSotien()))){
-                            ArrayList<thanhVien> offendersFound = xuLyBLL.findOffender(offenderNameBox.getText());
-                            thanhVien offender = new thanhVien();
-                            if(offendersFound.size() == 0){
-                                JOptionPane.showMessageDialog(null,"member not found");
-                            }else if(offendersFound.size() ==1 ){
-                                offender = offendersFound.get(0);
-                            }else{
-//                                cho chon
-                            }
-                            xuLyBLL.updatePunishment(Integer.parseInt(punishIdBox.getText()), offender.getMatv(), punishTypeBox.getText(), Integer.parseInt(punishMoneyBox.getText()),Timestamp.valueOf(punishDateBox.getText()), Integer.parseInt(punishMoneyBox.getText()));
+                if (punishIdBox.getText() != null) {
+                    if (xuLyBLL.getPunishment(Integer.parseInt(punishIdBox.getText())) != null) {
+                        boolean success = xuLyBLL.updatePunishment(Integer.parseInt(punishIdBox.getText()), xuLyBLL.getPunishment(Integer.parseInt(punishIdBox.getText())).getThanhvien().getMatv(), punishTypeBox.getText(), Integer.parseInt(punishMoneyBox.getText()), Timestamp.valueOf(punishDateBox.getText()), 0);
+                        if (success) {
+                            listXuLy = xuLyBLL.getPunishments();
+                            renderTable();
                         }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(jScrollPane1, "every thing are up to date");
                 }
             }
         });
@@ -145,10 +129,6 @@ public class xuLyGUI extends javax.swing.JPanel {
         }
     }
 
-    private void reload(JPanel item) {
-        item.repaint();
-        item.revalidate();
-    }
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;

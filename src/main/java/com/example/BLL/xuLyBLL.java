@@ -1,7 +1,6 @@
 package com.example.BLL;
 
 import com.example.DAL.thanhVien;
-import com.example.DAL.thanhVienDAO;
 import com.example.DAL.xuLy;
 import com.example.DAL.xuLyDAO;
 
@@ -10,13 +9,9 @@ import java.sql.Timestamp;
 
 public class xuLyBLL {
     private xuLyDAO xuLyDAO;
-    private thanhVienDAO thanhVienDAO;
-    private thanhVienBLL thanhVienBLL;
 
     public xuLyBLL() {
         this.xuLyDAO = new xuLyDAO();
-        this.thanhVienDAO = new thanhVienDAO();
-        thanhVienBLL = new thanhVienBLL();
     }
 
     public xuLy getPunishment(int ID){
@@ -32,7 +27,7 @@ public class xuLyBLL {
     }
 
     public boolean addPunishment(int maxl, int matv, String hinhthucxl, int sotien, Timestamp ngayxl, int trangthaixl) {
-            thanhVien thanhvien = thanhVienDAO.member(matv);
+            thanhVien thanhvien = new thanhVienBLL().getMember(matv);
             boolean success = this.xuLyDAO.addPunishment(new xuLy(maxl, thanhvien, hinhthucxl, sotien, null, trangthaixl));
             return success;
     }
@@ -48,13 +43,14 @@ public class xuLyBLL {
     }
 
     public boolean updatePunishment(int maxl, int matv, String hinhthucxl, int sotien, Timestamp ngayxl, int trangthaixl) {
-        if(this.xuLyDAO.punishment(maxl) != null){
-            this.xuLyDAO.punishment(maxl).setHinhthucxl(hinhthucxl);
-            this.xuLyDAO.punishment(maxl).setThanhvien(thanhVienDAO.member(matv));
-            this.xuLyDAO.punishment(maxl).setSotien(sotien);
-            this.xuLyDAO.punishment(maxl).setNgayxl(ngayxl);
-            this.xuLyDAO.punishment(maxl).setTrangthaixl(trangthaixl);
-            this.xuLyDAO.updatePunishment(this.xuLyDAO.punishment(maxl));
+        xuLy clone = this.xuLyDAO.punishment(maxl);
+        if(clone != null){
+            clone.setHinhthucxl(hinhthucxl);
+            clone.setThanhvien(new thanhVienBLL().getMember(matv));
+            clone.setSotien(sotien);
+            clone.setNgayxl(ngayxl);
+            clone.setTrangthaixl(trangthaixl);
+            this.xuLyDAO.updatePunishment(clone);
             return true;
         }else{
             return false;
@@ -63,7 +59,7 @@ public class xuLyBLL {
     
     public ArrayList<thanhVien> findOffender(String name){
         ArrayList<thanhVien> listOffenders = new ArrayList<thanhVien>();
-        thanhVienBLL.getMembers().forEach(mem -> {
+        new thanhVienBLL().getMembers().forEach(mem -> {
             if(mem.getHoten().equals(name)){
                 listOffenders.add(mem);
             }
