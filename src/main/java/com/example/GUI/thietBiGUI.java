@@ -4,7 +4,6 @@ import com.example.BLL.thietBiBLL;
 import com.example.DAL.thietBi;
 import java.awt.event.*;
 import java.util.*;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
@@ -21,16 +20,17 @@ public class thietBiGUI extends javax.swing.JPanel {
         eventHandler();
     }
 
+    @SuppressWarnings("empty-statement")
     private void eventHandler() {
         this.listThietBi = thietBiBLL.getDevices();
         this.deviceTable.getTableHeader().setReorderingAllowed(false);
         renderTable();
-
+        
         //table click
-        this.deviceTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                if (deviceTable.rowAtPoint(e.getPoint()) > 0) {
+        this.deviceTable.addMouseListener(new MouseAdapter(){
+            //@Override
+            public void mouseClick(MouseEvent e){
+                if (e.getPoint().y > 0){
                     selectingID = Integer.parseInt(deviceTable.getValueAt(deviceTable.rowAtPoint(e.getPoint()), 0).toString());
                     deviceIdBox.setText(Integer.toString(selectingID));
                     deviceNameBox.setText(thietBiBLL.getDevice(selectingID).getTentb());
@@ -38,96 +38,95 @@ public class thietBiGUI extends javax.swing.JPanel {
                 }
             }
         });
-
+        
         // button import    
         this.importDeviceBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 pickFile.showOpenDialog(jScrollPane1);
-                boolean success = thietBiBLL.addDevicesViaExcel(pickFile.getSelectedFile().getAbsolutePath());
-                if(success){
-                    listThietBi = thietBiBLL.getDevices();
-                    renderTable();
-                }
+                thietBiBLL.addDevicesViaExcel(pickFile.getSelectedFile().getAbsolutePath());
+                listThietBi = thietBiBLL.getDevices();
+                renderTable();
             }
         });
-
+        
         //button add
-        this.addDeviceBtn.addActionListener(new ActionListener() {
+        this.addDeviceBtn.addActionListener(new ActionListener(){
             @Override
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(ActionEvent e){
                 if (deviceIdBox.getText() != null && deviceNameBox.getText() != null && deviceDescriptionBox.getText() != null) {
-                    try {
+                    try{
                         int deviceId = Integer.parseInt(deviceIdBox.getText());
                         String deviceName = deviceNameBox.getText();
                         String deviceDes = deviceDescriptionBox.getText();
-                        boolean success = thietBiBLL.addDevice(deviceId, deviceName, deviceDes);
-                        if(success){
-                            listThietBi = thietBiBLL.getDevices();
-                            renderTable();
-                        }else{
-                            JOptionPane.showMessageDialog(null,"Device already stored");
-                        }
-                    } catch (NumberFormatException numberFormatException) {
-                        JOptionPane.showMessageDialog(null,"ID must be numeric");
+                    } catch (NumberFormatException numberFormatException){
+                        System.out.println("ID must be numeric");   
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null,"Please full fill device's information!");
+                } else{
+                    System.out.println("Please full fill device's information!");
                 }
+                listThietBi = thietBiBLL.getDevices();
+                renderTable();
             }
         });
-
+        
         //button update
-        this.updateDeviceBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (deviceIdBox.getText() != null && deviceNameBox.getText() != null && deviceDescriptionBox.getText() != null) {
-                    if (!deviceIdBox.getText().equals(Integer.toString(selectingID))
-                            && !deviceNameBox.getText().equals(thietBiBLL.getDevice(selectingID).getTentb())
-                            && !deviceDescriptionBox.getText().equals(thietBiBLL.getDevice(selectingID).getMotatb())) {
-                        boolean success = thietBiBLL.updateDevice(Integer.parseInt(deviceIdBox.getText()), deviceNameBox.getText(), deviceDescriptionBox.getText());
-                        if(success){
-                            listThietBi = thietBiBLL.getDevices();
-                            renderTable();
-                        }
-                    }
-                }
-            }
+        this.updateDeviceBtn.addActionListener(new ActionListener(){
+           @Override
+           public void actionPerformed(ActionEvent e){
+               if (deviceIdBox.getText() != null && deviceNameBox.getText() != null && deviceDescriptionBox.getText() != null) {
+                   if (!deviceIdBox.getText().equals(Integer.toString(selectingID))
+                           && !deviceNameBox.getText().equals(thietBiBLL.getDevice(selectingID).getTentb())
+                           && !deviceDescriptionBox.getText().equals(thietBiBLL.getDevice(selectingID).getMotatb())){
+                           thietBiBLL.updateDevice(Integer.parseInt(deviceIdBox.getText()), deviceNameBox.getText(), deviceDescriptionBox.getText());
+                           listThietBi = thietBiBLL.getDevices();
+                           renderTable();
+                   }
+               }        
+           }
         });
-
+        
         //button delete
-        this.delDeviceBtn.addActionListener(new ActionListener() {
+        this.delDeviceBtn.addActionListener(new ActionListener(){
+           //@Override
+           public void actionPerfomed(ActionEvent e){
+               if (selectingID > 0 && thietBiBLL.getDevice(selectingID) != null){
+                   thietBiBLL.deleteDevice(selectingID);
+                   renderTable();
+               }else{
+                   System.out.println("Cannot find device");
+               }
+           }
+
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (selectingID > 0 && thietBiBLL.getDevice(selectingID) != null) {
-                    boolean success = thietBiBLL.deleteDevice(selectingID);
-                    if(success){
-                        listThietBi = thietBiBLL.getDevices();
-                        renderTable();
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null,"Cannot find device");
-                }
+                throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
             }
         });
-    }
+        
+        //button delete all
+        this.delAllDeviceBtn.addActionListener((ActionEvent e) -> {
+            if (selectingID > 0 && thietBiBLL.getDevice(selectingID) != null){
+                thietBiBLL.deleteDevices(selectingID);
+                renderTable();
+            }else{
+                System.out.println("Cannot find device");
+            }
+        });
+    }  
 
-    // load list to JTable func
+ // load list to JTable func
     private void renderTable() {
         DefaultTableModel model = (DefaultTableModel) this.deviceTable.getModel();
         model.setRowCount(0);
 
-        for (int i = 0; i < this.listThietBi.size(); i++) {
-            String deviId = Integer.toString(this.listThietBi.get(i).getMatb());
-            String deviName = this.listThietBi.get(i).getTentb();
-            String deviDescript = listThietBi.get(i).getMotatb();
-            Object[] data = {deviId, deviName, deviDescript};
+        for (int i = 0; i < thietBiBLL.getDevices().size(); i++) {
+            Object[] data = {Integer.toString(this.thietBiBLL.getDevices().get(i).getMatb()), this.thietBiBLL.getDevices().get(i).getTentb(), thietBiBLL.getDevices().get(i).getMotatb()};
             model.addRow(data);
             this.deviceTable.updateUI();
         }
     }
 // Reload component func (for update UI)
-
     private void reload(JPanel item) {
         item.repaint();
         item.revalidate();
@@ -159,6 +158,7 @@ public class thietBiGUI extends javax.swing.JPanel {
         updateDeviceBtn = new javax.swing.JButton();
         delDeviceBtn = new javax.swing.JButton();
         importDeviceBtn = new javax.swing.JButton();
+        delAllDeviceBtn = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(0, 0));
         setPreferredSize(new java.awt.Dimension(900, 600));
@@ -252,7 +252,7 @@ public class thietBiGUI extends javax.swing.JPanel {
         addDeviceBtn.setAlignmentY(0.0F);
         addDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addDeviceBtn.setMaximumSize(new java.awt.Dimension(200, 400));
-        addDeviceBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        addDeviceBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(addDeviceBtn);
 
         updateDeviceBtn.setBackground(new java.awt.Color(222, 184, 135));
@@ -261,7 +261,7 @@ public class thietBiGUI extends javax.swing.JPanel {
         updateDeviceBtn.setText("UPDATE");
         updateDeviceBtn.setAlignmentY(0.0F);
         updateDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        updateDeviceBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        updateDeviceBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(updateDeviceBtn);
 
         delDeviceBtn.setBackground(new java.awt.Color(222, 184, 135));
@@ -270,7 +270,7 @@ public class thietBiGUI extends javax.swing.JPanel {
         delDeviceBtn.setText("DELETE");
         delDeviceBtn.setAlignmentY(0.0F);
         delDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        delDeviceBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        delDeviceBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(delDeviceBtn);
 
         importDeviceBtn.setBackground(new java.awt.Color(222, 184, 135));
@@ -279,8 +279,17 @@ public class thietBiGUI extends javax.swing.JPanel {
         importDeviceBtn.setText("IMPORT");
         importDeviceBtn.setAlignmentY(0.0F);
         importDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        importDeviceBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        importDeviceBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(importDeviceBtn);
+
+        delAllDeviceBtn.setBackground(new java.awt.Color(222, 184, 135));
+        delAllDeviceBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        delAllDeviceBtn.setForeground(new java.awt.Color(51, 51, 51));
+        delAllDeviceBtn.setText("DELETE ALL");
+        delAllDeviceBtn.setAlignmentY(0.0F);
+        delAllDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        delAllDeviceBtn.setPreferredSize(new java.awt.Dimension(135, 40));
+        jPanel4.add(delAllDeviceBtn);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -296,6 +305,7 @@ public class thietBiGUI extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addDeviceBtn;
+    private javax.swing.JButton delAllDeviceBtn;
     private javax.swing.JButton delDeviceBtn;
     private javax.swing.JTextField deviceDescriptionBox;
     private javax.swing.JTextField deviceIdBox;
