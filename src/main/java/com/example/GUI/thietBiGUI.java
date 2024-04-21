@@ -103,6 +103,15 @@ public class thietBiGUI extends javax.swing.JPanel {
                 throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
             }
         });
+        
+        this.delAllDeviceBtn.addActionListener((ActionEvent e) -> {
+            if (selectingID > 0 && thietBiBLL.getDevice(selectingID) != null){
+                thietBiBLL.deleteDevices(selectingID);
+                renderTable();
+            }else{
+                System.out.println("Cannot find device");
+            }
+        });
     }  
 
  // load list to JTable func
@@ -148,6 +157,7 @@ public class thietBiGUI extends javax.swing.JPanel {
         updateDeviceBtn = new javax.swing.JButton();
         delDeviceBtn = new javax.swing.JButton();
         importDeviceBtn = new javax.swing.JButton();
+        delAllDeviceBtn = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(0, 0));
         setPreferredSize(new java.awt.Dimension(900, 600));
@@ -241,7 +251,7 @@ public class thietBiGUI extends javax.swing.JPanel {
         addDeviceBtn.setAlignmentY(0.0F);
         addDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addDeviceBtn.setMaximumSize(new java.awt.Dimension(200, 400));
-        addDeviceBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        addDeviceBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(addDeviceBtn);
 
         updateDeviceBtn.setBackground(new java.awt.Color(222, 184, 135));
@@ -250,7 +260,7 @@ public class thietBiGUI extends javax.swing.JPanel {
         updateDeviceBtn.setText("UPDATE");
         updateDeviceBtn.setAlignmentY(0.0F);
         updateDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        updateDeviceBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        updateDeviceBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(updateDeviceBtn);
 
         delDeviceBtn.setBackground(new java.awt.Color(222, 184, 135));
@@ -259,7 +269,7 @@ public class thietBiGUI extends javax.swing.JPanel {
         delDeviceBtn.setText("DELETE");
         delDeviceBtn.setAlignmentY(0.0F);
         delDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        delDeviceBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        delDeviceBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(delDeviceBtn);
 
         importDeviceBtn.setBackground(new java.awt.Color(222, 184, 135));
@@ -268,8 +278,17 @@ public class thietBiGUI extends javax.swing.JPanel {
         importDeviceBtn.setText("IMPORT");
         importDeviceBtn.setAlignmentY(0.0F);
         importDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        importDeviceBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        importDeviceBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(importDeviceBtn);
+
+        delAllDeviceBtn.setBackground(new java.awt.Color(222, 184, 135));
+        delAllDeviceBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        delAllDeviceBtn.setForeground(new java.awt.Color(51, 51, 51));
+        delAllDeviceBtn.setText("DELETE ALL");
+        delAllDeviceBtn.setAlignmentY(0.0F);
+        delAllDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        delAllDeviceBtn.setPreferredSize(new java.awt.Dimension(135, 40));
+        jPanel4.add(delAllDeviceBtn);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -285,6 +304,7 @@ public class thietBiGUI extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addDeviceBtn;
+    private javax.swing.JButton delAllDeviceBtn;
     private javax.swing.JButton delDeviceBtn;
     private javax.swing.JTextField deviceDescriptionBox;
     private javax.swing.JTextField deviceIdBox;
