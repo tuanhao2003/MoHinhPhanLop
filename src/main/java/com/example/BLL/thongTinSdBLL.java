@@ -1,9 +1,7 @@
 package com.example.BLL;
 
 import com.example.DAL.thanhVien;
-import com.example.DAL.thanhVienDAO;
 import com.example.DAL.thietBi;
-import com.example.DAL.thietBiDAO;
 import com.example.DAL.thongTinSd;
 import com.example.DAL.thongTinSdDAO;
 
@@ -13,13 +11,9 @@ import java.time.Instant;
 
 public class thongTinSdBLL {
     private thongTinSdDAO thongTinSdDAO;
-    private thanhVienDAO thanhVienDAO;
-    private thietBiDAO thietBiDAO;
 
     public thongTinSdBLL() {
         this.thongTinSdDAO = new thongTinSdDAO();
-        this.thanhVienDAO = new thanhVienDAO();
-        this.thietBiDAO = new thietBiDAO();
     }
 
     public thongTinSd getUsageInfor(int ID){
@@ -35,8 +29,8 @@ public class thongTinSdBLL {
     }
 
     public boolean addUsageInfor(int matv, int matb, Timestamp tgvao, Timestamp tgmuon, Timestamp tgtra) {
-        thanhVien thanhvien = this.thanhVienDAO.member(matv);
-        thietBi thietbi = this.thietBiDAO.device(matb);
+        thanhVien thanhvien = new thanhVienBLL().getMember(matv);
+        thietBi thietbi = new thietBiBLL().getDevice(matb);
         boolean success = this.thongTinSdDAO.addUsageInfor(new thongTinSd(0, thanhvien, thietbi, tgvao, tgmuon, tgtra));
         return success;
     }
@@ -52,13 +46,14 @@ public class thongTinSdBLL {
     }
 
     public boolean updateUsageInfor(int matt, int matv, int matb, Timestamp tgvao, Timestamp tgmuon, Timestamp tgtra) {
+        thongTinSd clone = this.thongTinSdDAO.usageInfor(matt);
         if(this.thongTinSdDAO.usageInfor(matt) != null){
-            this.thongTinSdDAO.usageInfor(matt).setThanhvien(thanhVienDAO.member(matv));
-            this.thongTinSdDAO.usageInfor(matt).setThietbi(thietBiDAO.device(matb));
-            this.thongTinSdDAO.usageInfor(matt).setTgvao(tgvao);
-            this.thongTinSdDAO.usageInfor(matt).setTgmuon(tgmuon);
-            this.thongTinSdDAO.usageInfor(matt).setTgtra(tgtra);
-            this.thongTinSdDAO.updateUsageInfor(this.thongTinSdDAO.usageInfor(matt));
+            clone.setThanhvien(new thanhVienBLL().getMember(matv));
+            clone.setThietbi(new thietBiBLL().getDevice(matb));
+            clone.setTgvao(tgvao);
+            clone.setTgmuon(tgmuon);
+            clone.setTgtra(tgtra);
+            this.thongTinSdDAO.updateUsageInfor(clone);
             return true;
         }else{
             return false;
@@ -67,15 +62,25 @@ public class thongTinSdBLL {
     
     public thongTinSd getToDayCheckIn(int matv){
         Timestamp today = Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atStartOfDay());
+        thongTinSd tmp = new thongTinSd();
+        tmp.setTgvao(today);
+        boolean hasCheckIn = false;
         ArrayList<thongTinSd> allInfor = getUsageInfors();
-        Collections.reverse(allInfor);
+        ArrayList<thongTinSd> checkInHistory = new ArrayList<thongTinSd>();
         for(thongTinSd i : allInfor){
             if(i.getThanhvien().getMatv() == matv){
-                if(i.getTgvao().compareTo(today) > 0){
-                    return i;
-                }
+                checkInHistory.add(i);
             }
         }
-        return null;
+        for(thongTinSd j : checkInHistory){
+            if(j.getTgvao().compareTo(tmp.getTgvao()) >= 0){
+                tmp = j;
+                hasCheckIn = true;
+            }
+        }
+        if(hasCheckIn == false){
+            return null;
+        }
+        return tmp;
     }
 }

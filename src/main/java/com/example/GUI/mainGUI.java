@@ -57,7 +57,10 @@ public class mainGUI extends javax.swing.JFrame {
     private void eventHandler() {
         this.title.setText("Wellcome");
     }
-
+    private void reload(JPanel item) {
+        item.repaint();
+        item.revalidate();
+    }
     public static void main(String[] args) {
         mainGUI display = new mainGUI();
         display.setVisible(true);

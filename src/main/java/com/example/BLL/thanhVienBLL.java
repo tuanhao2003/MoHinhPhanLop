@@ -43,11 +43,22 @@ public class thanhVienBLL {
     }
 
     public boolean addMember(int ID, String fullname, String major, String subMajor, String phone, String email, String password) {
-        thanhVien newMem = new thanhVien(ID, fullname, major, subMajor, phone);
-        newMem.setEmail(email);
-        newMem.setPassword(password);
-        boolean success = this.thanhVienDAO.addMember(newMem);
-        return success;
+        boolean checkAvailable = false;
+        for(thanhVien mem : getMembers()){
+            if(mem.getMatv() == ID){
+                checkAvailable = true;
+                break;
+            }
+        }
+        if(checkAvailable == false){
+            thanhVien newMem = new thanhVien(ID, fullname, major, subMajor, phone);
+            newMem.setEmail(email);
+            newMem.setPassword(password);
+            this.thanhVienDAO.addMember(newMem);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public boolean addMembersViaExcel(String filePath) {
@@ -62,14 +73,23 @@ public class thanhVienBLL {
                         break;
                     } else {
                         int ID = (int) R.getCell(0).getNumericCellValue();
-                        String fullName = R.getCell(1).getStringCellValue();
-                        String major = R.getCell(2).getStringCellValue();
-                        String subMajor = R.getCell(3).getStringCellValue();
-                        String phone = R.getCell(4).getStringCellValue();
-                        thanhVien newMem = new thanhVien(ID, fullName, major, subMajor, phone);
-                        newMem.setPassword(Double.toString(R.getCell(5).getNumericCellValue()));
-                        newMem.setEmail(R.getCell(6).getStringCellValue());
-                        this.thanhVienDAO.addMember(newMem);
+                        boolean checkAvailable = false;
+                        for(thanhVien mem : getMembers()){
+                            if(mem.getMatv() == ID){
+                                checkAvailable = true;
+                                break;
+                            }
+                        }
+                        if(checkAvailable == false){
+                            String fullName = R.getCell(1).getStringCellValue();
+                            String major = R.getCell(2).getStringCellValue();
+                            String subMajor = R.getCell(3).getStringCellValue();
+                            String phone = R.getCell(4).getStringCellValue();
+                            thanhVien newMem = new thanhVien(ID, fullName, major, subMajor, phone);
+                            newMem.setPassword(Double.toString(R.getCell(5).getNumericCellValue()));
+                            newMem.setEmail(R.getCell(6).getStringCellValue());
+                            this.thanhVienDAO.addMember(newMem);
+                        }
                     }
                 }
             }
@@ -84,6 +104,18 @@ public class thanhVienBLL {
 
     public boolean deleteMember(int ID) {
         if (this.thanhVienDAO.member(ID) != null) {
+            for(xuLy xl : new xuLyBLL().getPunishments()){
+                if(xl.getThanhvien().getMatv() == ID){
+                    new xuLyBLL().deletePunishment(xl.getMaxl());
+                }
+            }
+            
+            for(thongTinSd ttsd : new thongTinSdBLL().getUsageInfors()){
+                if(ttsd.getThanhvien().getMatv() == ID){
+                    new thongTinSdBLL().deleteUsageInfor(ttsd.getMatt());
+                }
+            }
+            
             this.thanhVienDAO.delMember(this.thanhVienDAO.member(ID));
             return true;
         } else {
@@ -93,10 +125,8 @@ public class thanhVienBLL {
 
     public boolean deleteMembers(int courseNum) {
         List<thanhVien> delList = new ArrayList<thanhVien>();
-        List<thanhVien> allMem = new ArrayList<thanhVien>();
-        allMem = this.thanhVienDAO.listMembers();
-        for (thanhVien i : allMem) {
-            String[] listChar = Integer.toString(i.getMatv()).split(null);
+        for (thanhVien i : getMembers()) {
+            String[] listChar = Integer.toString(i.getMatv()).split("");
             int memCourse = Integer.parseInt(listChar[2] + listChar[3]);
             if (memCourse == courseNum) {
                 delList.add(i);
@@ -105,7 +135,7 @@ public class thanhVienBLL {
 
         if (delList.size() != 0) {
             for (thanhVien i : delList) {
-                this.thanhVienDAO.delMember(i);
+                deleteMember(i.getMatv());
             }
             return true;
         } else {
@@ -143,29 +173,56 @@ public class thanhVienBLL {
         }
     }
 
-    public boolean checkOffender(int matv){
+    public int checkOffender(int matv){
+        ArrayList<xuLy> offenedHistory = new ArrayList<xuLy>();
         for (xuLy i : new xuLyBLL().getPunishments()) {
             if (i.getThanhvien().getMatv() == matv) {
-                return false;
+                offenedHistory.add(i);
             }
         }
-        return true;
-    }
-    public boolean checkIn(int matv) {
-        if(checkOffender(matv)== false){
-            new thongTinSdBLL().addUsageInfor(matv, 0, Timestamp.from(Instant.now()), null, null);
-            return true;
+        if(!offenedHistory.isEmpty()){
+            int maxLevel = 0;
+            for(xuLy j : offenedHistory){
+                if(j.getTrangthaixl() > maxLevel){
+                    maxLevel = j.getTrangthaixl();
+                }
+                switch (maxLevel) {
+                    case 0:
+                        return -1;
+                    case 1:
+                        return 0;
+                    case 2:
+                        return 1;
+                    default:
+                        return -1;
+                }
+            }
         }
-        return false;
+        return -1;
+    }
+    
+    public int checkIn(int matv){
+        if(checkOffender(matv) == -1 ||checkOffender(matv) == 0){
+            new thongTinSdBLL().addUsageInfor(matv, 0, Timestamp.from(Instant.now()), null, null);
+        }
+        return checkOffender(matv);
     }
     
     public ArrayList<thietBi> getDevicesBorrowing(int matv){
         ArrayList<thietBi> borrowing = new ArrayList<thietBi>();
+        ArrayList<Integer> lenDevicesId = new ArrayList<Integer>();
         new thongTinSdBLL().getUsageInfors().forEach(infor -> {
             if (infor.getTgtra() == null) {
                 if (infor.getThietbi() != null && infor.getThanhvien().getMatv() == matv) {
-                    borrowing.add(infor.getThietbi());
+                    if(!lenDevicesId.contains(infor.getThietbi().getMatb())){
+                        lenDevicesId.add(infor.getThietbi().getMatb());
+                    }
                 }
+            }
+        });
+        new thietBiBLL().getDevices().forEach(devi -> {
+            if (lenDevicesId.contains(devi.getMatb())) {
+                borrowing.add(devi);
             }
         });
         return borrowing;
@@ -174,11 +231,12 @@ public class thanhVienBLL {
     public ArrayList<thietBi> getDevicesForLen() {
         ArrayList<thietBi> lenableDevices = new ArrayList<thietBi>();
         ArrayList<Integer> lenDevicesId = new ArrayList<Integer>();
-        Timestamp now = Timestamp.from(Instant.now());
         new thongTinSdBLL().getUsageInfors().forEach(infor -> {
-            if (infor.getTgtra() != null || infor.getTgtra().compareTo(now) < 0) {
+            if (infor.getTgtra() == null) {
                 if (infor.getThietbi() != null) {
-                    lenDevicesId.add(infor.getThietbi().getMatb());
+                    if(!lenDevicesId.contains(infor.getThietbi().getMatb())){
+                        lenDevicesId.add(infor.getThietbi().getMatb());
+                    }
                 }
             }
         });
@@ -208,13 +266,18 @@ public class thanhVienBLL {
             if (infor.getTgtra() == null) {
                 if (infor.getThietbi() != null && infor.getThanhvien().getMatv() == matv) {
                     if(infor.getThietbi().getMatb() == matb){
-                        new thongTinSdBLL().updateUsageInfor(0, matv, matb, infor.getTgvao(), infor.getTgmuon(), Timestamp.from(Instant.now()));
+                        new thongTinSdBLL().updateUsageInfor(infor.getMatt(), matv, matb, infor.getTgvao(), infor.getTgmuon(), Timestamp.from(Instant.now()));
                     }
                 }
             }
         });
-        
         return false;
     }
-    
+    public boolean isCheckInToday(int matv){
+        if(new thongTinSdBLL().getToDayCheckIn(matv) != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

@@ -3,5 +3,6 @@
     "editor.inlineSuggest.showToolbar": "onHover",
     "editor.quickSuggestionsDelay": 10,
     "editor.inlineSuggest.suppressSuggestions": false,
-    "editor.hover.delay": 1500
+    "editor.hover.delay": 1500,
+    "java.debug.settings.onBuildFailureProceed": true
 }

@@ -40,59 +40,31 @@ public class thanhVienGUI extends javax.swing.JPanel {
                     memPasswordBox.setText(thanhVienBLL.getMember(selectingID).getPassword());
                     
                     if (memberTable.columnAtPoint(e.getPoint()) == 6) {
-                        boolean success = thanhVienBLL.checkIn(Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString()));
-                        if (success) {
-                            JOptionPane.showMessageDialog(jScrollPane1, "check in success");
-                        }else{
-                            JOptionPane.showMessageDialog(jScrollPane1, "member got banned");
+                        int status = thanhVienBLL.checkIn(Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString()));
+                        if (status == -1) {
+                            JOptionPane.showMessageDialog(jScrollPane1, "Check in success");
+                        }else if(status == 0){
+                            JOptionPane.showMessageDialog(jScrollPane1, "Caution: offender alert");
+                        }else if(status == 1){
+                            JOptionPane.showMessageDialog(jScrollPane1, "Check in fail: member got banned!");
                         }
                     }
-                    
+               
                     if (memberTable.columnAtPoint(e.getPoint()) == 7) {
-                        chooseDevice.setVisible(true);
-                        chooseDevice.setLocationRelativeTo(null);
-                        deviceLenContainer.removeAll();
-                        ArrayList<Integer> borrowList = new ArrayList<Integer>();
-                        if (!thanhVienBLL.checkOffender(Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString()))) {
-                            thanhVienBLL.getDevicesForLen().forEach(devi -> {
-                                JPanel panel = new JPanel();
-                                JCheckBox cb = new JCheckBox();
-                                cb.addActionListener(new ActionListener() {
-                                    @Override
-                                    public void actionPerformed(ActionEvent cbe) {
-                                        if (cb.isSelected()) {
-                                            borrowList.add(devi.getMatb());
-                                        } else {
-                                            borrowList.remove(devi.getMatb());
-                                        }
-                                    }
-                                });
-                                panel.setSize(500, 50);
-                                panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
-                                panel.add(cb);
-                                panel.add(new JLabel(Integer.toString(devi.getMatb()) + " "));
-                                panel.add(new JLabel(devi.getTentb() + " "));
-                                panel.add(new JLabel(devi.getMotatb()));
-                                deviceLenContainer.add(panel);
-                            });
-                            reload(deviceLenContainer);
-                            
-                            dialogLenBtn.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    for (int i : borrowList) {
-                                        thanhVienBLL.lenDevice(selectingID, i);
-                                    }
-                                    chooseDevice.dispose();
-                                }
-                            });
-                            
-                            dialogClearBtn.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent e) {
-                                    borrowList.clear();
-                                    deviceLenContainer.removeAll();
-                                    thanhVienBLL.getDevicesForLen().forEach(devi -> {
+                        if(thanhVienBLL.checkOffender(Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString())) == -1
+                        || thanhVienBLL.checkOffender(Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString()))== 0){
+                            if(thanhVienBLL.checkOffender(Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString())) == 0){
+                                JOptionPane.showMessageDialog(jScrollPane1, "Caution: offender alert");
+                            }
+                            if(thanhVienBLL.isCheckInToday(Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString())) == false){
+                                JOptionPane.showMessageDialog(jScrollPane1, "Please check in before borrow!");
+                            }else{
+                                chooseDevice.setVisible(true);
+                                chooseDevice.setLocationRelativeTo(null);
+                                deviceLenContainer.removeAll();
+                                ArrayList<Integer> borrowList = new ArrayList<Integer>();
+                                
+                                thanhVienBLL.getDevicesForLen().forEach(devi -> {
                                     JPanel panel = new JPanel();
                                     JCheckBox cb = new JCheckBox();
                                     cb.addActionListener(new ActionListener() {
@@ -114,59 +86,89 @@ public class thanhVienGUI extends javax.swing.JPanel {
                                     deviceLenContainer.add(panel);
                                 });
                                 reload(deviceLenContainer);
-                                }
-                            });
-                        }else{
-                            JOptionPane.showMessageDialog(jScrollPane1, "member got banned");
+
+                                dialogLenBtn.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        for (int i : borrowList) {
+                                            thanhVienBLL.lenDevice(selectingID, i);
+                                        }
+                                        chooseDevice.dispose();
+                                    }
+                                });
+
+                                dialogClearBtn.addActionListener(new ActionListener() {
+                                    @Override
+                                    public void actionPerformed(ActionEvent e) {
+                                        borrowList.clear();
+                                        deviceLenContainer.removeAll();
+                                        thanhVienBLL.getDevicesForLen().forEach(devi -> {
+                                        JPanel panel = new JPanel();
+                                        JCheckBox cb = new JCheckBox();
+                                        cb.addActionListener(new ActionListener() {
+                                            @Override
+                                            public void actionPerformed(ActionEvent cbe) {
+                                                if (cb.isSelected()) {
+                                                    borrowList.add(devi.getMatb());
+                                                } else {
+                                                    borrowList.remove(devi.getMatb());
+                                                }
+                                            }
+                                        });
+                                        panel.setSize(500, 50);
+                                        panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
+                                        panel.add(cb);
+                                        panel.add(new JLabel(Integer.toString(devi.getMatb()) + " "));
+                                        panel.add(new JLabel(devi.getTentb() + " "));
+                                        panel.add(new JLabel(devi.getMotatb()));
+                                        deviceLenContainer.add(panel);
+                                    });
+                                    reload(deviceLenContainer);
+                                    }
+                                });
+                            }
                         }
                     }
-                    
-                    if (memberTable.columnAtPoint(e.getPoint()) == 8) {
-                        borrowingDevices.setVisible(true);
-                        borrowingDevices.setLocationRelativeTo(null);
-                        borrowingContainer.removeAll();
-                        ArrayList<Integer> backIntend = new ArrayList<Integer>();
-                        thanhVienBLL.getDevicesBorrowing(Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString())).forEach(devi -> {
-                            JPanel panel = new JPanel();
-                            JCheckBox cb = new JCheckBox();
-                            cb.addActionListener(new ActionListener() {
-                                @Override
-                                public void actionPerformed(ActionEvent cbe) {
-                                    if (cb.isSelected()) {
-                                        backIntend.add(devi.getMatb());
-                                    } else {
-                                        backIntend.remove(devi.getMatb());
-                                    }
-                                }
-                            });
-                            panel.setSize(500, 50);
-                            panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
-                            panel.add(cb);
-                            panel.add(new JLabel(Integer.toString(devi.getMatb()) + " "));
-                            panel.add(new JLabel(devi.getTentb() + " "));
-                            panel.add(new JLabel(devi.getMotatb()));
-                            borrowingContainer.add(panel);
-                        });
-                        reload(borrowingContainer);
-                        
-                        backSelected.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                for (int i : backIntend) {
-                                    thanhVienBLL.backDevice(selectingID, i);
-                                }
-                            }
-                        });
-                    }
+                   
+                   if (memberTable.columnAtPoint(e.getPoint()) == 8) {
+                       borrowingDevices.setVisible(true);
+                       borrowingDevices.setLocationRelativeTo(null);
+                       borrowingContainer.removeAll();
+                       ArrayList<Integer> backIntend = new ArrayList<Integer>();
+                       thanhVienBLL.getDevicesBorrowing(Integer.parseInt(memberTable.getValueAt(memberTable.rowAtPoint(e.getPoint()), 0).toString())).forEach(devi -> {
+                           JPanel panel = new JPanel();
+                           JCheckBox cb = new JCheckBox();
+                           cb.addActionListener(new ActionListener() {
+                               @Override
+                               public void actionPerformed(ActionEvent cbe) {
+                                   if (cb.isSelected()) {
+                                       backIntend.add(devi.getMatb());
+                                   } else {
+                                       backIntend.remove(devi.getMatb());
+                                   }
+                               }
+                           });
+                           panel.setSize(500, 50);
+                           panel.setLayout(new FlowLayout(FlowLayout.LEADING, 0, 5));
+                           panel.add(cb);
+                           panel.add(new JLabel(Integer.toString(devi.getMatb()) + " "));
+                           panel.add(new JLabel(devi.getTentb() + " "));
+                           panel.add(new JLabel(devi.getMotatb()));
+                           borrowingContainer.add(panel);
+                       });
+                       reload(borrowingContainer);
+
+                       backSelected.addActionListener(new ActionListener() {
+                           @Override
+                           public void actionPerformed(ActionEvent e) {
+                               for (int i : backIntend) {
+                                   thanhVienBLL.backDevice(selectingID, i);
+                               }
+                               chooseDevice.dispose();
+                           }
+                       });
+                   }
                 }
-            }
-        });
-        
-        this.delMultiMemBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String inp = JOptionPane.showInputDialog(jScrollPane1, "Input the course:");
-                thanhVienBLL.deleteMembers(Integer.parseInt(inp));
             }
         });
 
@@ -187,6 +189,8 @@ public class thanhVienGUI extends javax.swing.JPanel {
                         if (success) {
                             listThanhVien = thanhVienBLL.getMembers();
                             renderTable();
+                        }else{
+                            JOptionPane.showMessageDialog(jScrollPane1, "Member already stored in system");
                         }
                     } catch (NumberFormatException numberFormatException) {
                         JOptionPane.showMessageDialog(jScrollPane1, "id must be integer");
@@ -207,6 +211,8 @@ public class thanhVienGUI extends javax.swing.JPanel {
                         if (success) {
                             listThanhVien = thanhVienBLL.getMembers();
                             renderTable();
+                        }else{
+                            JOptionPane.showMessageDialog(jScrollPane1, "Some error when updating member informations");
                         }
                     }
                 } else {
@@ -243,7 +249,29 @@ public class thanhVienGUI extends javax.swing.JPanel {
                 }
             }
         });
-
+// button del all
+        this.delMultiBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String course = JOptionPane.showInputDialog(jScrollPane1, "Input the course to delete");
+                try {
+                    if(Integer.parseInt(course) > 99 || Integer.parseInt(course)<10){
+                        JOptionPane.showMessageDialog(jScrollPane1, "Invalid course");
+                    }else{
+                        boolean success = thanhVienBLL.deleteMembers(Integer.parseInt(course));
+                        if(success){
+                            listThanhVien = thanhVienBLL.getMembers();
+                            renderTable();
+                            JOptionPane.showMessageDialog(jScrollPane1, "Delete successfully");
+                        }else {
+                            JOptionPane.showMessageDialog(jScrollPane1, "Some error when deleting");
+                        }
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(jScrollPane1, "Course must be integer");
+                }
+            }
+        });
     }
 
     private void renderTable() {
@@ -319,7 +347,7 @@ public class thanhVienGUI extends javax.swing.JPanel {
         updateMemBtn = new javax.swing.JButton();
         delMemBtn = new javax.swing.JButton();
         importMemBtn = new javax.swing.JButton();
-        delMultiMemBtn = new javax.swing.JButton();
+        delMultiBtn = new javax.swing.JButton();
 
         pickFile.setToolTipText("");
 
@@ -440,6 +468,7 @@ public class thanhVienGUI extends javax.swing.JPanel {
                 "ID", "Name", "Major", "Submajor", "Phone", "Email", "Check in", "Len Device", "Give back"
             }
         ));
+        memberTable.setUpdateSelectionOnSort(false);
         jScrollPane1.setViewportView(memberTable);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -569,12 +598,12 @@ public class thanhVienGUI extends javax.swing.JPanel {
         jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 50, 5));
 
         addMemBtn.setBackground(new java.awt.Color(222, 184, 135));
-        addMemBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        addMemBtn.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
         addMemBtn.setForeground(new java.awt.Color(51, 51, 51));
         addMemBtn.setText("ADD");
         addMemBtn.setAlignmentY(0.0F);
         addMemBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        addMemBtn.setMaximumSize(new java.awt.Dimension(100, 400));
+        addMemBtn.setMaximumSize(new java.awt.Dimension(200, 400));
         addMemBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(addMemBtn);
 
@@ -588,7 +617,7 @@ public class thanhVienGUI extends javax.swing.JPanel {
         jPanel4.add(updateMemBtn);
 
         delMemBtn.setBackground(new java.awt.Color(222, 184, 135));
-        delMemBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        delMemBtn.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
         delMemBtn.setForeground(new java.awt.Color(51, 51, 51));
         delMemBtn.setText("DELETE");
         delMemBtn.setAlignmentY(0.0F);
@@ -597,7 +626,7 @@ public class thanhVienGUI extends javax.swing.JPanel {
         jPanel4.add(delMemBtn);
 
         importMemBtn.setBackground(new java.awt.Color(222, 184, 135));
-        importMemBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        importMemBtn.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
         importMemBtn.setForeground(new java.awt.Color(51, 51, 51));
         importMemBtn.setText("IMPORT");
         importMemBtn.setAlignmentY(0.0F);
@@ -605,15 +634,14 @@ public class thanhVienGUI extends javax.swing.JPanel {
         importMemBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(importMemBtn);
 
-        delMultiMemBtn.setBackground(new java.awt.Color(222, 184, 135));
-        delMultiMemBtn.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
-        delMultiMemBtn.setForeground(new java.awt.Color(51, 51, 51));
-        delMultiMemBtn.setText("DELS");
-        delMultiMemBtn.setActionCommand("DELS");
-        delMultiMemBtn.setAlignmentY(0.0F);
-        delMultiMemBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        delMultiMemBtn.setPreferredSize(new java.awt.Dimension(100, 40));
-        jPanel4.add(delMultiMemBtn);
+        delMultiBtn.setBackground(new java.awt.Color(222, 184, 135));
+        delMultiBtn.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
+        delMultiBtn.setForeground(new java.awt.Color(51, 51, 51));
+        delMultiBtn.setAlignmentY(0.0F);
+        delMultiBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        delMultiBtn.setLabel("DELS");
+        delMultiBtn.setPreferredSize(new java.awt.Dimension(100, 40));
+        jPanel4.add(delMultiBtn);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -636,7 +664,7 @@ public class thanhVienGUI extends javax.swing.JPanel {
     private javax.swing.JDialog chooseDevice;
     private javax.swing.JPanel chooseSkeleton;
     private javax.swing.JButton delMemBtn;
-    private javax.swing.JButton delMultiMemBtn;
+    private javax.swing.JButton delMultiBtn;
     private javax.swing.JPanel deviceLenContainer;
     private javax.swing.JButton dialogClearBtn;
     private javax.swing.JButton dialogLenBtn;
