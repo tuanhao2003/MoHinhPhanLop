@@ -4,7 +4,55 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9bda6777-36e2-4790-a5e7-2c6589dd1444" name="Changes" comment="" />
+    <list default="true" id="9bda6777-36e2-4790-a5e7-2c6589dd1444" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GUI/thietBiGUI.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/thietBiGUI.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GUI/thietBiGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/thietBiGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GUI/thongKeGUI.form" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/thongKeGUI.form" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/GUI/thongKeGUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/GUI/thongKeGUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/.netbeans_automatic_build" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/BLL/thanhVienBLL.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/BLL/thietbiBLL.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/BLL/thongTinSdBLL.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/BLL/xuLyBLL.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/DAL/MyDatabaseManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/DAL/thanhVien.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/DAL/thanhVienDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/DAL/thietBi.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/DAL/thietbiDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/DAL/thongTinSd.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/DAL/thongTinSdDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/DAL/xuLy.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/DAL/xuLyDAO.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/mainGUI$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/mainGUI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thanhVienGUI$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thanhVienGUI$2$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thanhVienGUI$2$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thanhVienGUI$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thanhVienGUI$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thanhVienGUI$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thanhVienGUI$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thanhVienGUI$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thanhVienGUI$7.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thanhVienGUI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thietBiGUI$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thietBiGUI$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thietBiGUI$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thietBiGUI$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thietBiGUI$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thietBiGUI$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thietBiGUI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/thongKeGUI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/xuLyGUI$1.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/xuLyGUI$2.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/xuLyGUI$3.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/xuLyGUI$4.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/xuLyGUI$5.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/xuLyGUI$6.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/GUI/xuLyGUI.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/.netbeans_automatic_build" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,14 +69,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Code/Java/1. Java Coding/QuanLyNhanSu&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "D:/Git Clone/QuanLyThanhVien/MoHinhPhanLop"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration default="true" type="JetRunConfigurationType">
       <module name="quanlythanhvien" />
