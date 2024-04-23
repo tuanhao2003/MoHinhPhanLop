@@ -110,6 +110,29 @@ public class thietBiGUI extends javax.swing.JPanel {
                 }
             }
         });
+        
+        this.delMultiBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String course = JOptionPane.showInputDialog(jScrollPane1, "Input the type code to delete");
+                try {
+                    if(Integer.parseInt(course) < 0){
+                        JOptionPane.showMessageDialog(jScrollPane1, "Invalid course");
+                    }else{
+                        boolean success = thietBiBLL.deleteDevices(Integer.parseInt(course));
+                        if(success){
+                            listThietBi = thietBiBLL.getDevices();
+                            renderTable();
+                            JOptionPane.showMessageDialog(jScrollPane1, "Delete successfully");
+                        }else {
+                            JOptionPane.showMessageDialog(jScrollPane1, "Some error when deleting");
+                        }
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(jScrollPane1, "Type must be integer");
+                }
+            }
+        });
     }
 
     // load list to JTable func
@@ -154,6 +177,7 @@ public class thietBiGUI extends javax.swing.JPanel {
         updateDeviceBtn = new javax.swing.JButton();
         delDeviceBtn = new javax.swing.JButton();
         importDeviceBtn = new javax.swing.JButton();
+        delMultiBtn = new javax.swing.JButton();
 
         setMinimumSize(new java.awt.Dimension(0, 0));
         setPreferredSize(new java.awt.Dimension(900, 600));
@@ -241,41 +265,50 @@ public class thietBiGUI extends javax.swing.JPanel {
         jPanel4.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 50, 5));
 
         addDeviceBtn.setBackground(new java.awt.Color(222, 184, 135));
-        addDeviceBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        addDeviceBtn.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
         addDeviceBtn.setForeground(new java.awt.Color(51, 51, 51));
         addDeviceBtn.setText("ADD");
         addDeviceBtn.setAlignmentY(0.0F);
         addDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         addDeviceBtn.setMaximumSize(new java.awt.Dimension(200, 400));
-        addDeviceBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        addDeviceBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(addDeviceBtn);
 
         updateDeviceBtn.setBackground(new java.awt.Color(222, 184, 135));
-        updateDeviceBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        updateDeviceBtn.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
         updateDeviceBtn.setForeground(new java.awt.Color(51, 51, 51));
         updateDeviceBtn.setText("UPDATE");
         updateDeviceBtn.setAlignmentY(0.0F);
         updateDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        updateDeviceBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        updateDeviceBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(updateDeviceBtn);
 
         delDeviceBtn.setBackground(new java.awt.Color(222, 184, 135));
-        delDeviceBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        delDeviceBtn.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
         delDeviceBtn.setForeground(new java.awt.Color(51, 51, 51));
         delDeviceBtn.setText("DELETE");
         delDeviceBtn.setAlignmentY(0.0F);
         delDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        delDeviceBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        delDeviceBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(delDeviceBtn);
 
         importDeviceBtn.setBackground(new java.awt.Color(222, 184, 135));
-        importDeviceBtn.setFont(new java.awt.Font("Sitka Text", 1, 17)); // NOI18N
+        importDeviceBtn.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
         importDeviceBtn.setForeground(new java.awt.Color(51, 51, 51));
         importDeviceBtn.setText("IMPORT");
         importDeviceBtn.setAlignmentY(0.0F);
         importDeviceBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        importDeviceBtn.setPreferredSize(new java.awt.Dimension(150, 40));
+        importDeviceBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         jPanel4.add(importDeviceBtn);
+
+        delMultiBtn.setBackground(new java.awt.Color(222, 184, 135));
+        delMultiBtn.setFont(new java.awt.Font("Sitka Text", 1, 14)); // NOI18N
+        delMultiBtn.setForeground(new java.awt.Color(51, 51, 51));
+        delMultiBtn.setText("DELS");
+        delMultiBtn.setAlignmentY(0.0F);
+        delMultiBtn.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        delMultiBtn.setPreferredSize(new java.awt.Dimension(100, 40));
+        jPanel4.add(delMultiBtn);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -292,6 +325,7 @@ public class thietBiGUI extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addDeviceBtn;
     private javax.swing.JButton delDeviceBtn;
+    private javax.swing.JButton delMultiBtn;
     private javax.swing.JTextField deviceDescriptionBox;
     private javax.swing.JTextField deviceIdBox;
     private javax.swing.JTextField deviceNameBox;

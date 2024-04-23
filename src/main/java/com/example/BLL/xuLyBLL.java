@@ -26,12 +26,15 @@ public class xuLyBLL {
         return punishList;
     }
 
-    public boolean addPunishment(int maxl, int matv, String hinhthucxl, int sotien, Timestamp ngayxl, int trangthaixl) {
-            thanhVien thanhvien = new thanhVienBLL().getMember(matv);
-            boolean success = this.xuLyDAO.addPunishment(new xuLy(maxl, thanhvien, hinhthucxl, sotien, null, trangthaixl));
-            return success;
+    public boolean addPunishment(int matv, String hinhthucxl, int sotien, Timestamp ngayxl, int trangthaixl) {
+        thanhVien thanhvien = new thanhVienBLL().getMember(matv);
+        boolean success = this.xuLyDAO.addPunishment(new xuLy(0, thanhvien, hinhthucxl, sotien, null, trangthaixl));
+        return success;
     }
-
+    
+    public ArrayList<thanhVien> getAllMembers(){
+        return new thanhVienBLL().getMembers();
+    }
 
     public boolean deletePunishment(int ID){
         if(this.xuLyDAO.punishment(ID) != null){

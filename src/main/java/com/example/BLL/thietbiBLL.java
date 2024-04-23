@@ -77,23 +77,21 @@ public class thietBiBLL {
     }
 
     public boolean deleteDevices(int requiredCode){
-        List<thietBi> delList = new ArrayList<thietBi>(); 
-        List<thietBi> allMem = new ArrayList<thietBi>();
-        allMem = this.thietBiDAO.listDevices();
-        for(thietBi i : allMem){
-            String[] listChar = Integer.toString(i.getMatb()).split(null);
-            int deviCourse = Integer.parseInt(listChar[2]+listChar[3]);
-            if(deviCourse == requiredCode){
+        List<thietBi> delList = new ArrayList<thietBi>();
+        for (thietBi i : getDevices()) {
+            String[] listChar = Integer.toString(i.getMatb()).split("");
+            int deviCourse = Integer.parseInt(listChar[0]);
+            if (deviCourse == requiredCode) {
                 delList.add(i);
             }
         }
 
-        if(delList.size() != 0){
-            for(thietBi i : delList){
-                this.thietBiDAO.delDevice(i);
+        if (delList.size() != 0) {
+            for (thietBi i : delList) {
+                deleteDevice(i.getMatb());
             }
             return true;
-        }else{
+        } else {
             return false;
         }
     }
