@@ -172,7 +172,6 @@ public class thanhVienGUI extends javax.swing.JPanel {
             }
         });
 
-// button add
         this.addMemBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -201,7 +200,6 @@ public class thanhVienGUI extends javax.swing.JPanel {
             }
         });
 
-//button update
         this.updateMemBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -214,6 +212,8 @@ public class thanhVienGUI extends javax.swing.JPanel {
                         }else{
                             JOptionPane.showMessageDialog(jScrollPane1, "Some error when updating member informations");
                         }
+                    }else{
+                        JOptionPane.showMessageDialog(jScrollPane1, "Member not found, please check the ID box");
                     }
                 } else {
                     JOptionPane.showMessageDialog(jScrollPane1, "every thing are up to date");
@@ -221,23 +221,23 @@ public class thanhVienGUI extends javax.swing.JPanel {
             }
         });
 
-// button delete
         this.delMemBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (selectingID > 0 && thanhVienBLL.getMember(selectingID) != null) {
-                    boolean success = thanhVienBLL.deleteMember(selectingID);
+                if (Integer.parseInt(memIdBox.getText()) > 0 && thanhVienBLL.getMember(Integer.parseInt(memIdBox.getText())) != null) {
+                    boolean success = thanhVienBLL.deleteMember(Integer.parseInt(memIdBox.getText()));
                     if (success) {
                         listThanhVien = thanhVienBLL.getMembers();
                         renderTable();
                     }
-                } else {
+                }else if(thanhVienBLL.getMember(selectingID) == null){
+                    JOptionPane.showMessageDialog(jScrollPane1, "Member not found");
+                }else {
                     JOptionPane.showMessageDialog(jScrollPane1, "Error while finding member");
                 }
             }
         });
 
-// button import    
         this.importMemBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -249,7 +249,6 @@ public class thanhVienGUI extends javax.swing.JPanel {
                 }
             }
         });
-// button del all
         this.delMultiBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

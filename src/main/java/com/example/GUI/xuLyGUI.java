@@ -3,6 +3,7 @@ package com.example.GUI;
 import com.example.BLL.xuLyBLL;
 import com.example.DAL.thanhVien;
 import com.example.DAL.xuLy;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.sql.*;
@@ -28,6 +29,7 @@ public class xuLyGUI extends javax.swing.JPanel {
     private void eventHandler() {
         this.listXuLy = this.xuLyBLL.getPunishments();
         this.punishmentTable.getTableHeader().setReorderingAllowed(false);
+        offenderNameBox.setDisabledTextColor(Color.BLACK);
         renderTable();
 
         this.punishmentTable.addMouseListener(new MouseAdapter() {
@@ -79,24 +81,30 @@ public class xuLyGUI extends javax.swing.JPanel {
         this.addPunishBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (punishStatusBox.getText() != null) {
-                    try {
-                        int status = Integer.parseInt(punishStatusBox.getText());
-                        String type = punishTypeBox.getText();
-                        int money = Integer.parseInt(punishMoneyBox.getText());
-                        Timestamp date = Timestamp.valueOf(punishDateBox.getText());
-                        boolean success = xuLyBLL.addPunishment(choosenMem.getMatv(), type, money, date, status);
-                        if(success){
-                            listXuLy = xuLyBLL.getPunishments();
-                            renderTable();
-                        }else{
-                            JOptionPane.showMessageDialog(null,"punishment already stored");
+                if(Integer.parseInt(punishStatusBox.getText()) > 2 || Integer.parseInt(punishStatusBox.getText()) < 0){
+                    JOptionPane.showMessageDialog(null,"Status must between 0 and 2");
+                }else{
+                    
+
+                    if (punishStatusBox.getText() != null) {
+                        try {
+                            int status = Integer.parseInt(punishStatusBox.getText());
+                            String type = punishTypeBox.getText();
+                            int money = Integer.parseInt(punishMoneyBox.getText());
+                            Timestamp date = Timestamp.valueOf(punishDateBox.getText());
+                            boolean success = xuLyBLL.addPunishment(choosenMem.getMatv(), type, money, date, status);
+                            if(success){
+                                listXuLy = xuLyBLL.getPunishments();
+                                renderTable();
+                            }else{
+                                JOptionPane.showMessageDialog(null,"punishment already stored");
+                            }
+                        } catch (NumberFormatException numberFormatException) {
+                            JOptionPane.showMessageDialog(null,"status must be numeric");
                         }
-                    } catch (NumberFormatException numberFormatException) {
-                        JOptionPane.showMessageDialog(null,"status must be numeric");
+                    } else {
+                        JOptionPane.showMessageDialog(null,"Please full fill punishment's information!");
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null,"Please full fill punishment's information!");
                 }
             }
         });
@@ -130,14 +138,14 @@ public class xuLyGUI extends javax.swing.JPanel {
         this.delPunishBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (selectingID > 0 && xuLyBLL.getPunishment(selectingID) != null) {
-                    boolean success = xuLyBLL.deletePunishment(selectingID);
+                if (Integer.parseInt(punishStatusBox.getText()) > 0 && xuLyBLL.getPunishment(Integer.parseInt(punishStatusBox.getText())) != null) {
+                    boolean success = xuLyBLL.deletePunishment(Integer.parseInt(punishStatusBox.getText()));
                     if(success){
                         listXuLy = xuLyBLL.getPunishments();
                         renderTable();
                     }
                 } else {
-                    JOptionPane.showMessageDialog(null,"Cannot find device");
+                    JOptionPane.showMessageDialog(null,"Cannot find punishment infor");
                 }
             }
         });
@@ -169,7 +177,6 @@ public class xuLyGUI extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        pickFile = new javax.swing.JFileChooser();
         chooseMember = new javax.swing.JDialog();
         chooseSkeleton = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -203,13 +210,11 @@ public class xuLyGUI extends javax.swing.JPanel {
         updatePunishBtn = new javax.swing.JButton();
         delPunishBtn = new javax.swing.JButton();
 
-        pickFile.setToolTipText("");
-
         chooseMember.setTitle("Choose Member");
         chooseMember.setAlwaysOnTop(true);
         chooseMember.setLocationByPlatform(true);
         chooseMember.setMinimumSize(new java.awt.Dimension(600, 400));
-        chooseMember.getContentPane().setLayout(new java.awt.GridLayout());
+        chooseMember.getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
         chooseSkeleton.setPreferredSize(new java.awt.Dimension(550, 550));
         chooseSkeleton.setLayout(new java.awt.GridBagLayout());
@@ -301,6 +306,7 @@ public class xuLyGUI extends javax.swing.JPanel {
         jPanel6.add(jLabel2, new java.awt.GridBagConstraints());
 
         offenderNameBox.setFont(new java.awt.Font("Sitka Text", 0, 14)); // NOI18N
+        offenderNameBox.setEnabled(false);
         offenderNameBox.setPreferredSize(new java.awt.Dimension(300, 40));
         jPanel6.add(offenderNameBox, new java.awt.GridBagConstraints());
 
@@ -413,7 +419,6 @@ public class xuLyGUI extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JLabel jlabelpass;
     private javax.swing.JTextField offenderNameBox;
-    private javax.swing.JFileChooser pickFile;
     private javax.swing.JTextField punishDateBox;
     private javax.swing.JTextField punishMoneyBox;
     private javax.swing.JTextField punishStatusBox;

@@ -26,7 +26,6 @@ public class thietBiGUI extends javax.swing.JPanel {
         this.deviceTable.getTableHeader().setReorderingAllowed(false);
         renderTable();
 
-        //table click
         this.deviceTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -39,7 +38,6 @@ public class thietBiGUI extends javax.swing.JPanel {
             }
         });
 
-        // button import    
         this.importDeviceBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -52,7 +50,6 @@ public class thietBiGUI extends javax.swing.JPanel {
             }
         });
 
-        //button add
         this.addDeviceBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -77,7 +74,6 @@ public class thietBiGUI extends javax.swing.JPanel {
             }
         });
 
-        //button update
         this.updateDeviceBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -88,6 +84,8 @@ public class thietBiGUI extends javax.swing.JPanel {
                             listThietBi = thietBiBLL.getDevices();
                             renderTable();
                         }
+                    }else{
+                        JOptionPane.showMessageDialog(null,"Device not found");
                     }
                 } else {
                     JOptionPane.showMessageDialog(jScrollPane1, "every thing are up to date");
@@ -95,12 +93,11 @@ public class thietBiGUI extends javax.swing.JPanel {
             }
         });
 
-        //button delete
         this.delDeviceBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (selectingID > 0 && thietBiBLL.getDevice(selectingID) != null) {
-                    boolean success = thietBiBLL.deleteDevice(selectingID);
+                if (Integer.parseInt(deviceIdBox.getText()) > 0 && thietBiBLL.getDevice(Integer.parseInt(deviceIdBox.getText())) != null) {
+                    boolean success = thietBiBLL.deleteDevice(Integer.parseInt(deviceIdBox.getText()));
                     if(success){
                         listThietBi = thietBiBLL.getDevices();
                         renderTable();
@@ -135,7 +132,6 @@ public class thietBiGUI extends javax.swing.JPanel {
         });
     }
 
-    // load list to JTable func
     private void renderTable() {
         DefaultTableModel model = (DefaultTableModel) this.deviceTable.getModel();
         model.setRowCount(0);

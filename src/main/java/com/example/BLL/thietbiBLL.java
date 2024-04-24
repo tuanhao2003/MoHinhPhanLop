@@ -32,8 +32,12 @@ public class thietBiBLL {
     }
 
     public boolean addDevice(int ID, String name, String description) {
-            boolean success = this.thietBiDAO.addDevice(new thietBi(ID, name, description));
-            return success;
+        if(getDevice(ID) == null){
+            this.thietBiDAO.addDevice(new thietBi(ID, name, description));
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public boolean addDevicesViaExcel(String filePath) {
@@ -97,7 +101,7 @@ public class thietBiBLL {
     }
 
     public boolean updateDevice(int ID, String name, String description) {
-        thietBi clone = this.thietBiDAO.device(ID);
+        thietBi clone = getDevice(ID);
         if(clone != null){
             clone.setTentb(name);
             clone.setMotatb(description);

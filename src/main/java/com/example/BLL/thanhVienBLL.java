@@ -38,19 +38,16 @@ public class thanhVienBLL {
     }
 
     public boolean addMember(int ID, String fullname, String major, String subMajor, String phone) {
-        boolean success = this.thanhVienDAO.addMember(new thanhVien(ID, fullname, major, subMajor, phone));
-        return success;
+        if(getMember(ID) == null){
+            this.thanhVienDAO.addMember(new thanhVien(ID, fullname, major, subMajor, phone));
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public boolean addMember(int ID, String fullname, String major, String subMajor, String phone, String email, String password) {
-        boolean checkAvailable = false;
-        for(thanhVien mem : getMembers()){
-            if(mem.getMatv() == ID){
-                checkAvailable = true;
-                break;
-            }
-        }
-        if(checkAvailable == false){
+        if(getMember(ID) == null){
             thanhVien newMem = new thanhVien(ID, fullname, major, subMajor, phone);
             newMem.setEmail(email);
             newMem.setPassword(password);
@@ -73,14 +70,7 @@ public class thanhVienBLL {
                         break;
                     } else {
                         int ID = (int) R.getCell(0).getNumericCellValue();
-                        boolean checkAvailable = false;
-                        for(thanhVien mem : getMembers()){
-                            if(mem.getMatv() == ID){
-                                checkAvailable = true;
-                                break;
-                            }
-                        }
-                        if(checkAvailable == false){
+                        if(getMember(ID) == null){
                             String fullName = R.getCell(1).getStringCellValue();
                             String major = R.getCell(2).getStringCellValue();
                             String subMajor = R.getCell(3).getStringCellValue();
@@ -186,16 +176,16 @@ public class thanhVienBLL {
                 if(j.getTrangthaixl() > maxLevel){
                     maxLevel = j.getTrangthaixl();
                 }
-                switch (maxLevel) {
-                    case 0:
-                        return -1;
-                    case 1:
-                        return 0;
-                    case 2:
-                        return 1;
-                    default:
-                        return -1;
-                }
+            }
+            switch (maxLevel) {
+                case 0:
+                    return -1;
+                case 1:
+                    return 0;
+                case 2:
+                    return 1;
+                default:
+                    return -1;
             }
         }
         return -1;

@@ -70,4 +70,16 @@ public class xuLyBLL {
         
         return listOffenders;
     }
+    
+    public xuLy getMostSeariousOffened(int matv){
+        xuLy tmp = new xuLy();
+        tmp.setTrangthaixl(0);
+        for(xuLy i : getPunishments()){
+            if(i.getTrangthaixl() > tmp.getTrangthaixl()){
+                tmp = i;
+            }
+        }
+        
+        return tmp;
+    }
 }
