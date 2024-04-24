@@ -3,6 +3,7 @@ package com.example.GUI;
 import com.example.BLL.thongKeBLL;
 import com.example.DAL.thanhVien;
 import com.example.DAL.thongTinSd;
+import com.example.DAL.xuLy;
 import java.util.*;
 import java.awt.event.*;
 import java.sql.Timestamp;
@@ -13,9 +14,13 @@ import javax.swing.table.DefaultTableModel;
 
 public class thongKeGUI extends javax.swing.JPanel {
     private thongKeBLL thongKeBLL;
+    private ArrayList<thongTinSd> listInfor = new ArrayList<thongTinSd>();
+    private ArrayList<xuLy> listPunish = new ArrayList<xuLy>();
 
     public thongKeGUI() {
         this.thongKeBLL = new thongKeBLL();
+        this.listInfor = thongKeBLL.getInforByTime(Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atStartOfDay()), Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().plusDays(1).atStartOfDay()));
+        this.listPunish = thongKeBLL.getProcessingPunishment();
         initComponents();
         eventHandler();
     }
@@ -25,47 +30,46 @@ public class thongKeGUI extends javax.swing.JPanel {
             @Override
             public void actionPerformed(ActionEvent e){
                 funcContainer.removeAll();
-                tableContainer.removeAll();
+                statisticContainer.removeAll();
                 funcContainer.add(memberStatistic);
-                tableContainer.add(memberTable);
+                statisticContainer.add(memberContainer);
                 reload(funcContainer);
                 reload(statisticContainer);
-                ArrayList<thongTinSd> list = new thongKeBLL().getInforByTime(Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atStartOfDay()), Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().plusDays(1).atStartOfDay()));
-                renderTable(1, list);
+                renderTable(1);
             }
         });
         this.devicesBtn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
                 funcContainer.removeAll();
-                tableContainer.removeAll();
+                statisticContainer.removeAll();
                 funcContainer.add(deviceStatistic);
-                tableContainer.add(deviceTable);
+                statisticContainer.add(deviceContainer);
                 reload(funcContainer);
                 reload(statisticContainer);
-                ArrayList<thongTinSd> list = new thongKeBLL().getInforByTime(Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atStartOfDay()), Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().plusDays(1).atStartOfDay()));
-                renderTable(2, list);
+                renderTable(2);
             }
         });
         this.punishmentsBtn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
                 funcContainer.removeAll();
-                tableContainer.removeAll();
+                statisticContainer.removeAll();
                 funcContainer.add(punishmentStatistic);
-                tableContainer.add(punishmentTable);
+                statisticContainer.add(punishContainer);
                 reload(funcContainer);
                 reload(statisticContainer);
+                renderTable(3);
             }
         });
     }
     
-    private void renderTable(int mode, ArrayList<thongTinSd> list) {
+    private void renderTable(int mode) {
         switch (mode) {
             case 1:
                 DefaultTableModel modelMember = (DefaultTableModel) this.memberTable.getModel();
                 modelMember.setRowCount(0);
-                for(thongTinSd i : list){
+                for(thongTinSd i : listInfor){
                     String memid = Integer.toString(i.getThanhvien().getMatv());
                     String memName = i.getThanhvien().getHoten();
                     String memMajor = i.getThanhvien().getKhoa();
@@ -81,7 +85,7 @@ public class thongKeGUI extends javax.swing.JPanel {
                 DefaultTableModel modelDevice = (DefaultTableModel) this.deviceTable.getModel();
                 modelDevice.setRowCount(0);
 
-                for (thongTinSd i : list) {
+                for (thongTinSd i : listInfor) {
                     String deviId = Integer.toString(i.getThietbi().getMatb());
                     String deviName = i.getThietbi().getTentb();
                     String deviDescript = i.getThietbi().getMotatb();
@@ -90,23 +94,23 @@ public class thongKeGUI extends javax.swing.JPanel {
                     this.deviceTable.updateUI();
                 }
                 break;
-//            case 3:
-//                DefaultTableModel modelPunish = (DefaultTableModel) this.punishmentTable.getModel();
-//                modelPunish.setRowCount(0);
-//
-//                for (int i = 0; i < this.listXuLy.size(); i++) {
-//                    String id = Integer.toString(this.listXuLy.get(i).getMaxl());
-//                    thanhVien offender = xuLyBLL.getPunishment(this.listXuLy.get(i).getMaxl()).getThanhvien();
-//                    String offenderName = offender.getHoten();
-//                    String phone = offender.getSdt();
-//                    String type = this.listXuLy.get(i).getHinhthucxl();
-//                    String money = Integer.toString(this.listXuLy.get(i).getSotien());
-//                    String punishDate =  this.listXuLy.get(i).getNgayxl() == null ? "" : this.listXuLy.get(i).getNgayxl().toString();
-//                    Object[] data = {id, offenderName, phone, type, money, punishDate};
-//                    model.addRow(data);
-//                    this.punishmentTable.updateUI();
-//                }
-//                break;
+            case 3:
+                DefaultTableModel modelPunish = (DefaultTableModel) this.punishmentTable.getModel();
+                modelPunish.setRowCount(0);
+
+                for (int i = 0; i < listPunish.size(); i++) {
+                    String id = Integer.toString(listPunish.get(i).getMaxl());
+                    thanhVien offender = thongKeBLL.getPunishment(listPunish.get(i).getMaxl()).getThanhvien();
+                    String offenderName = offender.getHoten();
+                    String phone = offender.getSdt();
+                    String type = listPunish.get(i).getHinhthucxl();
+                    String money = Integer.toString(listPunish.get(i).getSotien());
+                    String punishDate =  listPunish.get(i).getNgayxl() == null ? "" : listPunish.get(i).getNgayxl().toString();
+                    Object[] data = {id, offenderName, phone, type, money, punishDate};
+                    modelPunish.addRow(data);
+                    this.punishmentTable.updateUI();
+                }
+                break;
         }
     }
 
@@ -118,11 +122,6 @@ public class thongKeGUI extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        memberTable = new javax.swing.JTable(){
-            public boolean editCellAt(int row, int column, java.util.EventObject e) {
-                return false;
-            }
-        };
         memberStatistic = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
@@ -134,11 +133,6 @@ public class thongKeGUI extends javax.swing.JPanel {
         major = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         submajor = new javax.swing.JTextField();
-        deviceTable = new javax.swing.JTable(){
-            public boolean editCellAt(int row, int column, java.util.EventObject e) {
-                return false;
-            }
-        };
         deviceStatistic = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -149,16 +143,28 @@ public class thongKeGUI extends javax.swing.JPanel {
         jLabel5 = new javax.swing.JLabel();
         deviceNameBox = new javax.swing.JTextField();
         lendingBtn = new javax.swing.JToggleButton();
+        punishmentStatistic = new javax.swing.JPanel();
+        processed = new javax.swing.JButton();
+        processing = new javax.swing.JButton();
+        memberContainer = new javax.swing.JScrollPane();
+        memberTable = new javax.swing.JTable(){
+            public boolean editCellAt(int row, int column, java.util.EventObject e) {
+                return false;
+            }
+        };
+        deviceContainer = new javax.swing.JScrollPane();
+        deviceTable = new javax.swing.JTable(){
+            public boolean editCellAt(int row, int column, java.util.EventObject e) {
+                return false;
+            }
+        };
+        punishContainer = new javax.swing.JScrollPane();
         punishmentTable = new javax.swing.JTable(){
             public boolean editCellAt(int row, int column, java.util.EventObject e) {
                 return false;
             }
         };
-        punishmentStatistic = new javax.swing.JPanel();
-        processed = new javax.swing.JButton();
-        processing = new javax.swing.JButton();
         statisticContainer = new javax.swing.JPanel();
-        tableContainer = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         funcContainer = new javax.swing.JPanel();
         jpanel = new javax.swing.JPanel();
@@ -166,14 +172,6 @@ public class thongKeGUI extends javax.swing.JPanel {
         devicesBtn = new javax.swing.JButton();
         punishmentsBtn = new javax.swing.JButton();
         totalQuantity = new javax.swing.JLabel();
-
-        memberTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {{}},
-            new String [] {
-                "ID", "Name", "Major", "Submajor", "Phone", "Email", "Check in time"
-            }
-        ));
-        memberTable.setUpdateSelectionOnSort(false);
 
         memberStatistic.setMinimumSize(new java.awt.Dimension(900, 50));
         memberStatistic.setPreferredSize(new java.awt.Dimension(900, 50));
@@ -231,14 +229,6 @@ public class thongKeGUI extends javax.swing.JPanel {
         submajor.setPreferredSize(new java.awt.Dimension(100, 40));
         memberStatistic.add(submajor, new java.awt.GridBagConstraints());
 
-        deviceTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {{}},
-            new String [] {
-                "ID", "Device Name", "Descriptions"
-            }
-        ));
-        deviceTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-
         deviceStatistic.setPreferredSize(new java.awt.Dimension(900, 50));
         deviceStatistic.setLayout(new java.awt.GridBagLayout());
 
@@ -291,14 +281,6 @@ public class thongKeGUI extends javax.swing.JPanel {
         lendingBtn.setPreferredSize(new java.awt.Dimension(100, 40));
         deviceStatistic.add(lendingBtn, new java.awt.GridBagConstraints());
 
-        punishmentTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {{}},
-            new String [] {
-                "ID", "Offender", "Phone", "Punish type", "price", "Punish date"
-            }
-        ));
-        punishmentTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
-
         punishmentStatistic.setPreferredSize(new java.awt.Dimension(900, 50));
         punishmentStatistic.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 50, 5));
 
@@ -321,18 +303,49 @@ public class thongKeGUI extends javax.swing.JPanel {
         processing.setPreferredSize(new java.awt.Dimension(150, 40));
         punishmentStatistic.add(processing);
 
+        memberContainer.setMinimumSize(new java.awt.Dimension(900, 300));
+        memberContainer.setPreferredSize(new java.awt.Dimension(900, 500));
+
+        memberTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {{}},
+            new String [] {
+                "ID", "Name", "Major", "Submajor", "Phone", "Email", "Check in time"
+            }
+        ));
+        memberTable.setUpdateSelectionOnSort(false);
+        memberContainer.setViewportView(memberTable);
+
+        deviceContainer.setMinimumSize(new java.awt.Dimension(900, 300));
+        deviceContainer.setPreferredSize(new java.awt.Dimension(900, 500));
+
+        deviceTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {{}},
+            new String [] {
+                "ID", "Device Name", "Descriptions"
+            }
+        ));
+        deviceTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        deviceContainer.setViewportView(deviceTable);
+
+        punishContainer.setMinimumSize(new java.awt.Dimension(900, 300));
+        punishContainer.setPreferredSize(new java.awt.Dimension(900, 500));
+
+        punishmentTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {{}},
+            new String [] {
+                "ID", "Offender", "Phone", "Punish type", "price", "Punish date"
+            }
+        ));
+        punishmentTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_ALL_COLUMNS);
+        punishContainer.setViewportView(punishmentTable);
+
         setMinimumSize(new java.awt.Dimension(0, 0));
         setPreferredSize(new java.awt.Dimension(900, 600));
         setLayout(new java.awt.GridBagLayout());
 
         statisticContainer.setMinimumSize(new java.awt.Dimension(800, 310));
         statisticContainer.setPreferredSize(new java.awt.Dimension(900, 500));
-        statisticContainer.setLayout(new java.awt.GridLayout());
-
-        tableContainer.setMinimumSize(new java.awt.Dimension(900, 300));
-        tableContainer.setPreferredSize(new java.awt.Dimension(900, 500));
-        statisticContainer.add(tableContainer);
-
+        statisticContainer.setLayout(new java.awt.GridLayout(1, 0));
         add(statisticContainer, new java.awt.GridBagConstraints());
 
         jPanel1.setMinimumSize(new java.awt.Dimension(900, 200));
@@ -395,6 +408,7 @@ public class thongKeGUI extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private com.toedter.calendar.JDateChooser deviTimeEnd;
+    private javax.swing.JScrollPane deviceContainer;
     private javax.swing.JTextField deviceNameBox;
     private javax.swing.JPanel deviceStatistic;
     private javax.swing.JTable deviceTable;
@@ -418,17 +432,18 @@ public class thongKeGUI extends javax.swing.JPanel {
     private javax.swing.JTextField major;
     private com.toedter.calendar.JDateChooser memTimeEnd;
     private com.toedter.calendar.JDateChooser memTimeStart;
+    private javax.swing.JScrollPane memberContainer;
     private javax.swing.JPanel memberStatistic;
     private javax.swing.JTable memberTable;
     private javax.swing.JButton membersBtn;
     private javax.swing.JButton processed;
     private javax.swing.JButton processing;
+    private javax.swing.JScrollPane punishContainer;
     private javax.swing.JPanel punishmentStatistic;
     private javax.swing.JTable punishmentTable;
     private javax.swing.JButton punishmentsBtn;
     private javax.swing.JPanel statisticContainer;
     private javax.swing.JTextField submajor;
-    private javax.swing.JScrollPane tableContainer;
     private javax.swing.JLabel totalQuantity;
     // End of variables declaration//GEN-END:variables
 }

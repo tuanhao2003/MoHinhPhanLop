@@ -150,4 +150,8 @@ public class thongKeBLL {
         }
         return processing;
     }
+    
+    public xuLy getPunishment(int maxl){
+        return new xuLyBLL().getPunishment(maxl);
+    }
 }
