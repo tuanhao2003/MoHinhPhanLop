@@ -96,8 +96,10 @@ public class thongKeBLL {
     public ArrayList<thongTinSd> getInforByLendTime(Timestamp start, Timestamp end){
         ArrayList<thongTinSd> filtered = new ArrayList<thongTinSd>();
         for(thongTinSd i : getAllTTSD()){
-            if(i.getTgmuon().compareTo(start)>0 && i.getTgmuon().compareTo(end)<0){
-                filtered.add(i);
+            if(i.getTgmuon() != null){
+                if(i.getTgmuon().compareTo(start)>0 && i.getTgmuon().compareTo(end)<0){
+                    filtered.add(i);
+                }
             }
         }
         for(int i =0; i< filtered.size()-1; i++){
@@ -153,5 +155,13 @@ public class thongKeBLL {
     
     public xuLy getPunishment(int maxl){
         return new xuLyBLL().getPunishment(maxl);
+    }
+    
+    public thanhVien getMember(int matv){
+        return new thanhVienBLL().getMember(matv);
+    }
+    
+    public thietBi getDevice(int matb){
+        return new thietBiBLL().getDevice(matb);
     }
 }

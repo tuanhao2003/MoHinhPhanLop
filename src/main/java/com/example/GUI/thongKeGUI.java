@@ -2,12 +2,17 @@ package com.example.GUI;
 
 import com.example.BLL.thongKeBLL;
 import com.example.DAL.thanhVien;
+import com.example.DAL.thietBi;
 import com.example.DAL.thongTinSd;
 import com.example.DAL.xuLy;
 import java.util.*;
 import java.awt.event.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,8 +24,6 @@ public class thongKeGUI extends javax.swing.JPanel {
 
     public thongKeGUI() {
         this.thongKeBLL = new thongKeBLL();
-        this.listInfor = thongKeBLL.getInforByTime(Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atStartOfDay()), Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().plusDays(1).atStartOfDay()));
-        this.listPunish = thongKeBLL.getProcessingPunishment();
         initComponents();
         eventHandler();
     }
@@ -29,6 +32,9 @@ public class thongKeGUI extends javax.swing.JPanel {
         this.membersBtn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
+                Timestamp start = Timestamp.valueOf(new Timestamp(memTimeStart.getDate().getTime()).toLocalDateTime().toLocalDate().atStartOfDay());
+                Timestamp end = Timestamp.valueOf(new Timestamp(memTimeEnd.getDate().getTime()).toLocalDateTime().toLocalDate().atTime(23,59,59));
+                listInfor = thongKeBLL.getInforByTime(start, end);
                 funcContainer.removeAll();
                 statisticContainer.removeAll();
                 funcContainer.add(memberStatistic);
@@ -41,6 +47,9 @@ public class thongKeGUI extends javax.swing.JPanel {
         this.devicesBtn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
+                Timestamp start = Timestamp.valueOf(new Timestamp(diveTimeStart.getDate().getTime()).toLocalDateTime().toLocalDate().atStartOfDay());
+                Timestamp end = Timestamp.valueOf(new Timestamp(deviTimeEnd.getDate().getTime()).toLocalDateTime().toLocalDate().atTime(23,59,59));
+                listInfor = thongKeBLL.getInforByLendTime(start, end);
                 funcContainer.removeAll();
                 statisticContainer.removeAll();
                 funcContainer.add(deviceStatistic);
@@ -53,6 +62,7 @@ public class thongKeGUI extends javax.swing.JPanel {
         this.punishmentsBtn.addActionListener(new ActionListener(){
             @Override
             public void actionPerformed(ActionEvent e){
+                listPunish = thongKeBLL.getProcessedPunishment();
                 funcContainer.removeAll();
                 statisticContainer.removeAll();
                 funcContainer.add(punishmentStatistic);
@@ -60,6 +70,75 @@ public class thongKeGUI extends javax.swing.JPanel {
                 reload(funcContainer);
                 reload(statisticContainer);
                 renderTable(3);
+            }
+        });
+
+        this.memTimeStart.addPropertyChangeListener(new PropertyChangeListener() {
+            Timestamp start = Timestamp.valueOf(new Timestamp(memTimeStart.getDate().getTime()).toLocalDateTime().toLocalDate().atStartOfDay());
+            Timestamp end = Timestamp.valueOf(new Timestamp(memTimeEnd.getDate().getTime()).toLocalDateTime().toLocalDate().atTime(23,59,59));
+            @Override
+            public void propertyChange(PropertyChangeEvent e){
+                if(start.compareTo(end) > 0){
+                    JOptionPane.showMessageDialog(statisticContainer, "start date cannot after end date");
+                    memTimeStart.setDate(Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atStartOfDay()));
+                    memTimeEnd.setDate(Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atTime(23, 59, 59)));
+                    start = Timestamp.valueOf(new Timestamp(memTimeStart.getDate().getTime()).toLocalDateTime().toLocalDate().atStartOfDay());
+                    end = Timestamp.valueOf(new Timestamp(memTimeEnd.getDate().getTime()).toLocalDateTime().toLocalDate().atTime(23,59,59));
+                }
+                listInfor = thongKeBLL.getInforByTime(start, end);
+                renderTable(1);
+            }
+        });
+        
+        this.memTimeEnd.addPropertyChangeListener(new PropertyChangeListener() {
+            Timestamp start = Timestamp.valueOf(new Timestamp(memTimeStart.getDate().getTime()).toLocalDateTime().toLocalDate().atStartOfDay());
+            Timestamp end = Timestamp.valueOf(new Timestamp(memTimeEnd.getDate().getTime()).toLocalDateTime().toLocalDate().atTime(23,59,59));
+            @Override
+            public void propertyChange(PropertyChangeEvent e){
+                if(end.compareTo(start) < 0){
+                    JOptionPane.showMessageDialog(statisticContainer, "end date cannot before start date");
+                    memTimeStart.setDate(Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atStartOfDay()));
+                    memTimeEnd.setDate(Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atTime(23, 59, 59)));
+                    start = Timestamp.valueOf(new Timestamp(memTimeStart.getDate().getTime()).toLocalDateTime().toLocalDate().atStartOfDay());
+                    end = Timestamp.valueOf(new Timestamp(memTimeEnd.getDate().getTime()).toLocalDateTime().toLocalDate().atTime(23,59,59));
+                }
+                listInfor = thongKeBLL.getInforByTime(start, end);
+                renderTable(1);
+            }
+        });
+
+
+        this.deviTimeEnd.addPropertyChangeListener(new PropertyChangeListener() {
+            Timestamp start = Timestamp.valueOf(new Timestamp(diveTimeStart.getDate().getTime()).toLocalDateTime().toLocalDate().atStartOfDay());
+            Timestamp end = Timestamp.valueOf(new Timestamp(deviTimeEnd.getDate().getTime()).toLocalDateTime().toLocalDate().atTime(23,59,59));
+            @Override
+            public void propertyChange(PropertyChangeEvent e){
+                if(end.compareTo(start) < 0){
+                    JOptionPane.showMessageDialog(statisticContainer, "end date cannot before start date");
+                    diveTimeStart.setDate(Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atStartOfDay()));
+                    deviTimeEnd.setDate(Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atTime(23, 59, 59)));
+                    start = Timestamp.valueOf(new Timestamp(diveTimeStart.getDate().getTime()).toLocalDateTime().toLocalDate().atStartOfDay());
+                    end = Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atTime(23, 59, 59));
+                }
+                listInfor = thongKeBLL.getInforByLendTime(start, end);
+                renderTable(2);
+            }
+        });
+
+        this.diveTimeStart.addPropertyChangeListener(new PropertyChangeListener() {
+            Timestamp start = Timestamp.valueOf(new Timestamp(diveTimeStart.getDate().getTime()).toLocalDateTime().toLocalDate().atStartOfDay());
+            Timestamp end = Timestamp.valueOf(new Timestamp(deviTimeEnd.getDate().getTime()).toLocalDateTime().toLocalDate().atTime(23,59,59));
+            @Override
+            public void propertyChange(PropertyChangeEvent e){
+                if(start.compareTo(end) > 0){
+                    JOptionPane.showMessageDialog(statisticContainer, "start date cannot after end date");
+                    diveTimeStart.setDate(Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atStartOfDay()));
+                    deviTimeEnd.setDate(Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atTime(23, 59, 59)));
+                    start = Timestamp.valueOf(new Timestamp(diveTimeStart.getDate().getTime()).toLocalDateTime().toLocalDate().atStartOfDay());
+                    end = Timestamp.valueOf(Timestamp.from(Instant.now()).toLocalDateTime().toLocalDate().atTime(23, 59, 59));
+                }
+                listInfor = thongKeBLL.getInforByLendTime(start, end);
+                renderTable(2);
             }
         });
     }
@@ -70,12 +149,14 @@ public class thongKeGUI extends javax.swing.JPanel {
                 DefaultTableModel modelMember = (DefaultTableModel) this.memberTable.getModel();
                 modelMember.setRowCount(0);
                 for(thongTinSd i : listInfor){
+                    
                     String memid = Integer.toString(i.getThanhvien().getMatv());
-                    String memName = i.getThanhvien().getHoten();
-                    String memMajor = i.getThanhvien().getKhoa();
-                    String memSubmajor = i.getThanhvien().getNganh();
-                    String memPhone = i.getThanhvien().getSdt();
-                    String memMail = i.getThanhvien().getEmail();
+                    thanhVien mem = thongKeBLL.getMember(i.getThanhvien().getMatv());
+                    String memName = mem.getHoten();
+                    String memMajor = mem.getKhoa();
+                    String memSubmajor = mem.getNganh();
+                    String memPhone = mem.getSdt();
+                    String memMail = mem.getEmail();
                     Object[] data = {memid, memName, memMajor, memSubmajor, memPhone, memMail, i.getTgvao().toString()};
                     modelMember.addRow(data);
                     this.memberTable.updateUI();
@@ -87,8 +168,9 @@ public class thongKeGUI extends javax.swing.JPanel {
 
                 for (thongTinSd i : listInfor) {
                     String deviId = Integer.toString(i.getThietbi().getMatb());
-                    String deviName = i.getThietbi().getTentb();
-                    String deviDescript = i.getThietbi().getMotatb();
+                    thietBi devi = thongKeBLL.getDevice(i.getThietbi().getMatb());
+                    String deviName = devi.getTentb();
+                    String deviDescript = devi.getMotatb();
                     Object[] data = {deviId, deviName, deviDescript};
                     modelDevice.addRow(data);
                     this.deviceTable.updateUI();
@@ -98,14 +180,14 @@ public class thongKeGUI extends javax.swing.JPanel {
                 DefaultTableModel modelPunish = (DefaultTableModel) this.punishmentTable.getModel();
                 modelPunish.setRowCount(0);
 
-                for (int i = 0; i < listPunish.size(); i++) {
-                    String id = Integer.toString(listPunish.get(i).getMaxl());
-                    thanhVien offender = thongKeBLL.getPunishment(listPunish.get(i).getMaxl()).getThanhvien();
+                for (xuLy i : listPunish) {
+                    String id = Integer.toString(i.getMaxl());
+                    thanhVien offender = thongKeBLL.getPunishment(i.getMaxl()).getThanhvien();
                     String offenderName = offender.getHoten();
                     String phone = offender.getSdt();
-                    String type = listPunish.get(i).getHinhthucxl();
-                    String money = Integer.toString(listPunish.get(i).getSotien());
-                    String punishDate =  listPunish.get(i).getNgayxl() == null ? "" : listPunish.get(i).getNgayxl().toString();
+                    String type = i.getHinhthucxl();
+                    String money = Integer.toString(i.getSotien());
+                    String punishDate =  i.getNgayxl() == null ? "" : i.getNgayxl().toString();
                     Object[] data = {id, offenderName, phone, type, money, punishDate};
                     modelPunish.addRow(data);
                     this.punishmentTable.updateUI();

@@ -22,6 +22,5 @@
         <property name="tgvao" column="TGVao" type="timestamp" />
         <property name="tgmuon" column="TGMuon" type="timestamp" />
         <property name="tgtra" column="TGTra" type="timestamp" />
-
     </class>
 </hibernate-mapping>
