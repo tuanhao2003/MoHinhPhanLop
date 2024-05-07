@@ -2,6 +2,7 @@ package com.example.springweb.entity;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,10 +29,10 @@ public class thanhVien {
     @Column(name = "SDT")
     private String sdt;
 
-    @OneToMany(mappedBy = "thanhVien", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "thanhvien", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<xuLy> listXuLy;
 
-    @OneToMany(mappedBy = "thanhvien", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "thanhvien", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<thongTinSd> listThongTinSd;
 
     @Column(name = "Password")

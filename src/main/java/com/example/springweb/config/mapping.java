@@ -9,4 +9,9 @@ public class mapping {
     public String index(){
         return "index";
     }
+
+    @GetMapping("/members_management")
+    public String membersManagement(){
+        return "memberManage";
+    }
 }
