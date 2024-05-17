@@ -9,6 +9,7 @@ import com.example.springweb.repository.muonThietBiRepository;
 import com.example.springweb.repository.thietBiRepository;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,8 @@ public class muonThietBiService {
 
     public void cleanUpExpiredReservations() {
         LocalDateTime now = LocalDateTime.now();
-        List<Reservation> expiredReservations = muonThietBiRepository.findByEndTimeBefore(now);
-        muonThietBiRepository.deleteAll((java.awt.List) expiredReservations);
+        ArrayList<Reservation> expiredReservations = muonThietBiRepository.findByEndTimeBefore(now);
+        muonThietBiRepository.deleteAll(expiredReservations);
     }
 
     public static class Reservation {

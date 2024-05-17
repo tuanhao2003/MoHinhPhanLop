@@ -37,7 +37,7 @@ public class thietBiController {
     private DeviceService deviceService;
 
     @GetMapping
-    public List<thietBi> getAllDevices() {
+    public ArrayList<thietBi> getAllDevices() {
         return deviceService.getAllDevices();
     }
 

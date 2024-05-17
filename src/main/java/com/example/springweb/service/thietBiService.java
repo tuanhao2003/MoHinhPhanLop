@@ -2,7 +2,7 @@ package com.example.springweb.service;
 
 import com.example.springweb.entity.thietBi;
 import com.example.springweb.repository.thietBiRepository;
-import java.util.List;
+import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ public class thietBiService {
     @Autowired
     private thietBiRepository deviceRepository;
 
-    public List<thietBi> getAllthietBi() {
+    public ArrayList<thietBi> getAllthietBi() {
         return thietBiRepository.findAll();
     }
 
