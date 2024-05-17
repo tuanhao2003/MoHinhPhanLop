@@ -8,7 +8,7 @@ import com.example.springweb.entity.thietBi;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import com.example.springweb.entity.muonThietBi;
-import com.example.springweb.service.muonThietBiService;
+import com.example.springweb.service.Impl.muonThietBiServiceImpl;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
@@ -21,10 +21,10 @@ public interface muonThietBiRepository extends CrudRepository<muonThietBi, Long>
     //List<muonThietBi> findByDeviceAndEndTimeAfter(int matb, LocalDateTime time);
     //Optional<muonThietBi> findByDeviceAndStartTimeBeforeAndEndTimeAfter(int matb, LocalDateTime start, LocalDateTime end);
 
-    ArrayList<muonThietBiService.Reservation> findByDeviceAndStartTimeBeforeAndEndTimeAfter(thietBi device, LocalDateTime endTime, LocalDateTime startTime);
-    ArrayList<muonThietBiService.Reservation> findByEndTimeBefore(LocalDateTime endTime);
-    public muonThietBiService.Reservation save(muonThietBiService.Reservation reservation);
+    ArrayList<muonThietBiServiceImpl.Reservation> findByDeviceAndStartTimeBeforeAndEndTimeAfter(thietBi device, LocalDateTime endTime, LocalDateTime startTime);
+    ArrayList<muonThietBiServiceImpl.Reservation> findByEndTimeBefore(LocalDateTime endTime);
+    public muonThietBiServiceImpl.Reservation save(muonThietBiServiceImpl.Reservation reservation);
 
-    void deleteAll(ArrayList<muonThietBiService.Reservation> expiredReservations);
+    void deleteAll(ArrayList<muonThietBiServiceImpl.Reservation> expiredReservations);
 }
   

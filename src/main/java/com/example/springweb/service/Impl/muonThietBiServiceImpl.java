@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.example.springweb.service;
+package com.example.springweb.service.Impl;
 
 import com.example.springweb.entity.thietBi;
 import com.example.springweb.repository.muonThietBiRepository;
@@ -10,7 +10,6 @@ import com.example.springweb.repository.thietBiRepository;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ import org.springframework.stereotype.Service;
  * @author Hoang
  */
 @Service
-public class muonThietBiService {
+public class muonThietBiServiceImpl implements muonThietBiService {
 
     @Autowired
     private muonThietBiRepository muonThietBiRepository;

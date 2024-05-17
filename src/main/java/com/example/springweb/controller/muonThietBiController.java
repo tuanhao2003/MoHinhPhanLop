@@ -4,7 +4,7 @@
  */
 package com.example.springweb.controller;
 
-import com.example.springweb.service.muonThietBiService;
+import com.example.springweb.service.Impl.muonThietBiServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.spimportringframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +26,7 @@ import org.springframework.http.ResponseEntity;
 @RequestMapping("/thietbi-muon")
 public class muonThietBiController {
     @Autowired
-    private muonThietBiService muonThietBiService;
+    private muonThietBiServiceImpl muonThietBiService;
     
     @PostMapping("/muon")
     public ResponseEntity<String> reserveDevice(@RequestParam int maTV, @RequestParam int maTB, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startTime, @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endTime){
